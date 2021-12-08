@@ -31,7 +31,6 @@ boost_eff <- function(data_boost){
   max_imp <- rep(0,step_upd)
   elem <- rep(0,step_upd)
   eff <- rep(0,step_upd)
-  n_eff <- rep(0,step_upd)
   row <- rep(0, step_upd)
 
   for(i in 1: step_upd){
@@ -40,7 +39,6 @@ boost_eff <- function(data_boost){
     elem[i] <- c(diag(A), A[upper.tri(A)])[id_boost[1,1]]
     row[i] <- id_boost[1,1]
     eff[i] <- id_boost[1,2]
-    n_eff[i] <- data_boost$effects[eff[i]]
   }
   elab<-paste(elem, "-", eff)
   erow <- paste(row, "-", eff)
@@ -56,7 +54,7 @@ boost_eff <- function(data_boost){
                         uni_label =  uni_elab,
                         ele_rows = as.numeric(word(unique(erow),1)) ,
                         label  =  as.numeric(word(unique(elab),3)),
-                        name_eff = n_eff[as.numeric(word(unique(elab),3))])
+                        name_eff = data_boost$effects[as.numeric(word(uni_elab,3))])
 
   dsum_imp <- dsum_imp[order(dsum_imp$sum_imp, decreasing="TRUE"),]
   return(data_sum_imp = dsum_imp)
