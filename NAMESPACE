@@ -2,3 +2,7 @@
 
 export(plotECPD)
 importFrom(fields,image.plot)
+importFrom(grDevices,hcl.colors)
+importFrom(graphics,axis)
+importFrom(graphics,points)
+importFrom(graphics,title)

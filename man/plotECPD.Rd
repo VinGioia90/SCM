@@ -39,6 +39,6 @@ The empirical covariance, precision or decomposition matrix.
 plotECPD allows to plot the heatmap of the covariance,  precision and the decomposition matrix. The decomposition matrix  is obtained by using the modified cholesky decomposition or the matrix logarithm approach.
 }
 \examples{
-A <- matrix(c(1, 0.5, 0.25, 0.5, 2, 0.2, 0.25, 0.2, 3))
+A <- matrix(c(1, 0.5, 0.25, 0.5, 2, 0.2, 0.25, 0.2, 3),3,3)
 plotECPD(A, type = "dec", repar="mcd")
 }
