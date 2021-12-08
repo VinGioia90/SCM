@@ -2,31 +2,16 @@
 % Please edit documentation in R/heatmap_ecov.R
 \name{plotECPD}
 \alias{plotECPD}
-\title{Heatmap Empirical Covariance, Precision and Decomposition Matrix.}
+\title{Heatmap of the Empirical Covariance transformation.}
 \usage{
-plotECPD(
-  ecov,
-  type = c("cov", "prec", "dec"),
-  repar = c("mcd", "logm"),
-  ord = NULL,
-  lab = NULL,
-  neimat = NULL,
-  di = FALSE,
-  lev = NULL
-)
+plotECPD(ecov, trans = NULL, lab = NULL, di = FALSE, lev = NULL)
 }
 \arguments{
 \item{ecov}{empirical covariance matrix}
 
-\item{type}{the type of matrix to be plotted. It is allowed to plot the covariance matrix by type = "cov", the precision matrix by type = "prec" and the elements of the decomposition by type="dec". By default type = "cov".}
-
-\item{repar}{the parameterization considered if type = "dec". The modified Cholesky decomposition is obtained with repar = "mcd" and the matrix logarithm with repar = "logm".}
-
-\item{ord}{an optional vector that allows to specify the order of the variables.}
+\item{trans}{an optional function that allows to obtain a transformation of the empirical covariance matrix}
 
 \item{lab}{an optional vector that allows to specify the label of the variables.}
-
-\item{neimat}{an optional matrix to be used to marks neighbourhood variables.}
 
 \item{di}{logical. If FALSE (default) the diagonal elements are not showed.}
 
@@ -36,9 +21,12 @@ plotECPD(
 The empirical covariance, precision or decomposition matrix.
 }
 \description{
-plotECPD allows to plot the heatmap of the covariance,  precision and the decomposition matrix. The decomposition matrix  is obtained by using the modified cholesky decomposition or the matrix logarithm approach.
+plotECPD allows to plot the heatmap of the covariance matrix transformation.
 }
 \examples{
 A <- matrix(c(1, 0.5, 0.25, 0.5, 2, 0.2, 0.25, 0.2, 3),3,3)
-plotECPD(A, type = "dec", repar="mcd")
+plotECPD(A)
+plotECPD(A, trans = inverse)
+plotECPD(A, trans = mcd)
+plotECPD(A, trans = logm)
 }
