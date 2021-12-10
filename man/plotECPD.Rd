@@ -4,7 +4,7 @@
 \alias{plotECPD}
 \title{Heatmap of the Empirical Covariance transformation.}
 \usage{
-plotECPD(ecov, trans = NULL, lab = NULL, di = FALSE, lev = NULL)
+plotECPD(ecov, trans = NULL, lab = NULL, di = FALSE, ...)
 }
 \arguments{
 \item{ecov}{empirical covariance matrix}
@@ -15,7 +15,7 @@ plotECPD(ecov, trans = NULL, lab = NULL, di = FALSE, lev = NULL)
 
 \item{di}{logical. If FALSE (default) the diagonal elements are not showed.}
 
-\item{lev}{an optional integer that allows to specify the number of color levels used in legend strip.}
+\item{...}{optional arguments to pass to hcl.colors of the image.plot function}
 }
 \value{
 The empirical covariance, precision or decomposition matrix.
