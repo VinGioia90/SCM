@@ -15,7 +15,7 @@
 #' @importFrom graphics axis points title
 #'
 #' @examples
-#' A <- matrix(c(1, 0.5, 0.25, 0.5, 2, 0.2, 0.25, 0.2, 3),3,3)
+#' A <- matrix(c(1, 0.5, 0.25, 0.5, 2, 0.1, 0.25, 0.1, 3),3,3)
 #' plotECPD(A)
 #' plotECPD(A, trans = inverse)
 #' plotECPD(A, trans = mcd)
