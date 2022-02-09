@@ -1,8 +1,14 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
-// [[Rcpp::export(name = "ll_mcd")]]
-double logL_mcd(NumericMatrix& eta, NumericMatrix& y){
+//' Log-likelihood matrix mcd
+//'
+//' @param eta Linear predictor (n x (d + dx(d+1)/2) matrix).
+//' @param y Outcome (n x d matrix).
+//' @export
+
+// [[Rcpp::export(name="ll_mcd")]]
+double ll_mcd(NumericMatrix& eta, NumericMatrix& y){
  uint32_t n = y.rows();
  uint32_t d = y.cols();
 
