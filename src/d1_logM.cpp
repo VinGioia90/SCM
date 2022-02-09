@@ -1,13 +1,13 @@
 // [[Rcpp::depends(RcppArmadillo)]]
 #include <RcppArmadillo.h>
 
-//' Score
+//' Score logm
 //'
 //' @param eta Linear predictor (n x (d + dx(d+1)/2) matrix).
 //' @param y Outcome (n x d matrix).
 //' @param res Memory initialization
 //' @export
-// [[Rcpp::export(name = "score_logm")]]
+
 double  d1_logm(arma::mat& eta, arma::mat& y, arma::mat& res) {
  using namespace arma;
 
