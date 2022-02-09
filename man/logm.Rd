@@ -10,7 +10,7 @@ logm(X)
 \item{X}{A covariance matrix}
 }
 \value{
-A matrix the unconstrained elements of the matrix logarithm transform...
+The logarithm of the covariance matrix
 }
 \description{
 The logm function allows to obtain the unconstrained elements of the matrix logarithm transform
