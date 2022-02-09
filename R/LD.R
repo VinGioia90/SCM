@@ -1,4 +1,4 @@
-#' LD decomposition from mcd
+#' LD decomposition from modified cholesky decomposition
 #'
 #' @description ...
 #' @param x The additive predictor vector
