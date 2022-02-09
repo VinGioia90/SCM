@@ -10,8 +10,8 @@ mcd(X)
 \item{X}{A covariance matrix}
 }
 \value{
-A matrix the unconstrained elements of the modified Cholesky decomposition...
+A matrix with the unconstrained elements of the modified Cholesky decomposition of the precision matrix
 }
 \description{
-The mcd function allows to obtain the unconstrained elements of the modified Cholesky decomposition
+The mcd function allows to obtain the unconstrained elements of the modified Cholesky decomposition of the precision matrix
 }
