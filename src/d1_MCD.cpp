@@ -1,7 +1,14 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
-// [[Rcpp::export(name = "score_mcd")]]
+//' Score mcd
+//'
+//' @param eta Linear predictor (n x (d + dx(d+1)/2) matrix).
+//' @param y Outcome (n x d matrix).
+//' @param res Memory initialization
+//' @export
+
+// [[Rcpp::export(name="d1_mcd")]]
 double d1_mcd(NumericMatrix& eta, NumericMatrix& y, NumericMatrix& res) {
  uint32_t n = y.rows();
  uint32_t d = y.cols();
