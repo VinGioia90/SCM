@@ -1,7 +1,14 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
-//[[Rcpp::export(name = "hessian_mcd")]]
+//' Hessian mcd
+//'
+//' @param eta Linear predictor (n x (d + dx(d+1)/2) matrix).
+//' @param y Outcome (n x d matrix).
+//' @param res Memory initialization
+//' @export
+
+// [[Rcpp::export(name="d2_mcd")]]
 double d2_mcd(NumericMatrix& eta, NumericMatrix& y, NumericMatrix& res){
  uint32_t n = y.rows();
  uint32_t d = y.cols();
