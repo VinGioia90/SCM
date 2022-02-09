@@ -1,13 +1,12 @@
 // [[Rcpp::depends(RcppArmadillo)]]
 #include <RcppArmadillo.h>
 
-//' Log-likelihood matrix logarithm reparameterization
+//' Log-likelihood matrix logM
 //'
 //' @param eta Linear predictor (n x (d + dx(d+1)/2) matrix).
 //' @param y Outcome (n x d matrix).
 //' @export
-// [[Rcpp::export(name = "ll_logm")]]
-double logL_logm(arma::mat& eta, arma::mat& y) {
+double ll_logm(arma::mat& eta, arma::mat& y) {
    using namespace arma;
  uint32_t n = y.n_rows;
  uint32_t d = y.n_cols;
