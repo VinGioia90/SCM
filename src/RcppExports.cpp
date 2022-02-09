@@ -24,19 +24,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// d1_logm
-double d1_logm(arma::mat& eta, arma::mat& y, arma::mat& res);
-RcppExport SEXP _SCM_d1_logm(SEXP etaSEXP, SEXP ySEXP, SEXP resSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::mat& >::type eta(etaSEXP);
-    Rcpp::traits::input_parameter< arma::mat& >::type y(ySEXP);
-    Rcpp::traits::input_parameter< arma::mat& >::type res(resSEXP);
-    rcpp_result_gen = Rcpp::wrap(d1_logm(eta, y, res));
-    return rcpp_result_gen;
-END_RCPP
-}
 // d2_mcd
 double d2_mcd(NumericMatrix& eta, NumericMatrix& y, NumericMatrix& res);
 RcppExport SEXP _SCM_d2_mcd(SEXP etaSEXP, SEXP ySEXP, SEXP resSEXP) {
@@ -50,51 +37,76 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// d2_logm
-double d2_logm(arma::mat& eta, arma::mat& y, arma::mat& res);
-RcppExport SEXP _SCM_d2_logm(SEXP etaSEXP, SEXP ySEXP, SEXP resSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::mat& >::type eta(etaSEXP);
-    Rcpp::traits::input_parameter< arma::mat& >::type y(ySEXP);
-    Rcpp::traits::input_parameter< arma::mat& >::type res(resSEXP);
-    rcpp_result_gen = Rcpp::wrap(d2_logm(eta, y, res));
-    return rcpp_result_gen;
-END_RCPP
-}
-// logL_mcd
-double logL_mcd(NumericMatrix& eta, NumericMatrix& y);
-RcppExport SEXP _SCM_logL_mcd(SEXP etaSEXP, SEXP ySEXP) {
+// ll_mcd
+double ll_mcd(NumericMatrix& eta, NumericMatrix& y);
+RcppExport SEXP _SCM_ll_mcd(SEXP etaSEXP, SEXP ySEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericMatrix& >::type eta(etaSEXP);
     Rcpp::traits::input_parameter< NumericMatrix& >::type y(ySEXP);
-    rcpp_result_gen = Rcpp::wrap(logL_mcd(eta, y));
+    rcpp_result_gen = Rcpp::wrap(ll_mcd(eta, y));
     return rcpp_result_gen;
 END_RCPP
 }
-// logL_logm
-double logL_logm(arma::mat& eta, arma::mat& y);
-RcppExport SEXP _SCM_logL_logm(SEXP etaSEXP, SEXP ySEXP) {
+// lt_inversion
+NumericMatrix lt_inversion(NumericMatrix& X);
+RcppExport SEXP _SCM_lt_inversion(SEXP XSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::mat& >::type eta(etaSEXP);
-    Rcpp::traits::input_parameter< arma::mat& >::type y(ySEXP);
-    rcpp_result_gen = Rcpp::wrap(logL_logm(eta, y));
+    Rcpp::traits::input_parameter< NumericMatrix& >::type X(XSEXP);
+    rcpp_result_gen = Rcpp::wrap(lt_inversion(X));
+    return rcpp_result_gen;
+END_RCPP
+}
+// mcd_LD
+NumericMatrix mcd_LD(NumericVector& x, uint32_t& d);
+RcppExport SEXP _SCM_mcd_LD(SEXP xSEXP, SEXP dSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< uint32_t& >::type d(dSEXP);
+    rcpp_result_gen = Rcpp::wrap(mcd_LD(x, d));
+    return rcpp_result_gen;
+END_RCPP
+}
+// mcd_Sigma
+NumericMatrix mcd_Sigma(NumericMatrix& L, NumericMatrix& D, uint32_t& d);
+RcppExport SEXP _SCM_mcd_Sigma(SEXP LSEXP, SEXP DSEXP, SEXP dSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericMatrix& >::type L(LSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix& >::type D(DSEXP);
+    Rcpp::traits::input_parameter< uint32_t& >::type d(dSEXP);
+    rcpp_result_gen = Rcpp::wrap(mcd_Sigma(L, D, d));
+    return rcpp_result_gen;
+END_RCPP
+}
+// pred_mcd
+double pred_mcd(NumericMatrix& eta, NumericMatrix& res, uint32_t& d);
+RcppExport SEXP _SCM_pred_mcd(SEXP etaSEXP, SEXP resSEXP, SEXP dSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericMatrix& >::type eta(etaSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix& >::type res(resSEXP);
+    Rcpp::traits::input_parameter< uint32_t& >::type d(dSEXP);
+    rcpp_result_gen = Rcpp::wrap(pred_mcd(eta, res, d));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
     {"_SCM_d1_mcd", (DL_FUNC) &_SCM_d1_mcd, 3},
-    {"_SCM_d1_logm", (DL_FUNC) &_SCM_d1_logm, 3},
     {"_SCM_d2_mcd", (DL_FUNC) &_SCM_d2_mcd, 3},
-    {"_SCM_d2_logm", (DL_FUNC) &_SCM_d2_logm, 3},
-    {"_SCM_logL_mcd", (DL_FUNC) &_SCM_logL_mcd, 2},
-    {"_SCM_logL_logm", (DL_FUNC) &_SCM_logL_logm, 2},
+    {"_SCM_ll_mcd", (DL_FUNC) &_SCM_ll_mcd, 2},
+    {"_SCM_lt_inversion", (DL_FUNC) &_SCM_lt_inversion, 1},
+    {"_SCM_mcd_LD", (DL_FUNC) &_SCM_mcd_LD, 2},
+    {"_SCM_mcd_Sigma", (DL_FUNC) &_SCM_mcd_Sigma, 3},
+    {"_SCM_pred_mcd", (DL_FUNC) &_SCM_pred_mcd, 3},
     {NULL, NULL, 0}
 };
 
