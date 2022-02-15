@@ -9,6 +9,10 @@
 #' @export
 NULL
 
+d1_logm <- function(eta, y, res) {
+    .Call(`_SCM_d1_logm`, eta, y, res)
+}
+
 #' Score mcd
 #'
 #' @param eta Linear predictor (n x (d + dx(d+1)/2) matrix).
@@ -26,7 +30,12 @@ d1_mcd <- function(eta, y, res) {
 #' @param eta Linear predictor (n x (d + dx(d+1)/2) matrix).
 #' @param y Outcome (n x d matrix).
 #' @param res Memory initialization
+#' @export
 NULL
+
+d2_logm <- function(eta, y, res) {
+    .Call(`_SCM_d2_logm`, eta, y, res)
+}
 
 #' Hessian mcd
 #'
@@ -47,6 +56,10 @@ d2_mcd <- function(eta, y, res) {
 #' @export
 NULL
 
+ll_logm <- function(eta, y) {
+    .Call(`_SCM_ll_logm`, eta, y)
+}
+
 #' Log-likelihood matrix mcd
 #'
 #' @param eta Linear predictor (n x (d + dx(d+1)/2) matrix).
@@ -56,6 +69,10 @@ NULL
 
 ll_mcd <- function(eta, y) {
     .Call(`_SCM_ll_mcd`, eta, y)
+}
+
+logm_decomposition <- function(X) {
+    .Call(`_SCM_logm_decomposition`, X)
 }
 
 lt_inversion <- function(X) {
@@ -68,6 +85,14 @@ mcd_LD <- function(x, d) {
 
 mcd_Sigma <- function(L, D, d) {
     .Call(`_SCM_mcd_Sigma`, L, D, d)
+}
+
+mcd_decomposition <- function(X) {
+    .Call(`_SCM_mcd_decomposition`, X)
+}
+
+precision <- function(X) {
+    .Call(`_SCM_precision`, X)
 }
 
 pred_mcd <- function(eta, res, d) {
