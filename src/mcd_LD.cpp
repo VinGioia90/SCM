@@ -1,9 +1,9 @@
-#include<Rcpp.h>
-using namespace Rcpp;
 #include "scm.h"
 
 // [[Rcpp::export(name="mcd_LD")]]
-NumericMatrix mcd_LD(NumericVector& x, uint32_t& d){
+Rcpp::NumericMatrix mcd_LD(Rcpp::NumericVector& x, uint32_t& d){
+ using namespace Rcpp;
+
  NumericMatrix T(d,d);
  NumericMatrix Y(d,d);
  uint32_t j;
