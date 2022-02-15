@@ -6,7 +6,9 @@
 //' @param eta Linear predictor (n x (d + dx(d+1)/2) matrix).
 //' @param y Outcome (n x d matrix).
 //' @param res Memory initialization
+//' @export
 
+// [[Rcpp::export(name="d2_logm")]]
 double d2_logm(arma::mat& eta, arma::mat& y, arma::mat& res){
 using namespace arma;
  uint32_t n = y.n_rows;
