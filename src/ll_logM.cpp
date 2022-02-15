@@ -6,6 +6,8 @@
 //' @param eta Linear predictor (n x (d + dx(d+1)/2) matrix).
 //' @param y Outcome (n x d matrix).
 //' @export
+
+// [[Rcpp::export(name="ll_logm")]]
 double ll_logm(arma::mat& eta, arma::mat& y) {
    using namespace arma;
  uint32_t n = y.n_rows;
