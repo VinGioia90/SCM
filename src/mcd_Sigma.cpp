@@ -1,8 +1,8 @@
 #include <Rcpp.h>
-using namespace Rcpp;
-
 // [[Rcpp::export(name="mcd_Sigma")]]
-NumericMatrix mcd_Sigma(NumericMatrix& L, NumericMatrix& D,  uint32_t& d){
+Rcpp::NumericMatrix mcd_Sigma(Rcpp::NumericMatrix& L, Rcpp::NumericMatrix& D, uint32_t& d){
+ using namespace Rcpp;
+
  NumericMatrix P(d,d);
  NumericMatrix Sigma(d,d);
 
