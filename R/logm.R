@@ -8,9 +8,6 @@
 #'
 #' @examples
 logm <- function(X){
-  d <- ncol(X)
-  res <- matrix(0, d, d)
-  ed <- eigen(X)
-  res <- ed$vectors%*%diag(log(ed$values))%*%t(ed$vectors)
+  res <- logm_decomposition(X)
   return(res)
 }
