@@ -27,7 +27,6 @@ mvn_mcd <- function(d = 2){
   getno_eta <- function() get(".no_eta")
   putno_eta <- function(.x) assign(".no_eta", .x, envir = environment(sys.function()))
 
-
   initialize <- expression({
     my_init_fun <- function(y, nobs, E, x, family, offset){
       d <- family$getd() # d <- ncol(y)
