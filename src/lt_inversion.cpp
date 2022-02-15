@@ -1,8 +1,8 @@
 #include <Rcpp.h>
-using namespace Rcpp;
-
 // [[Rcpp::export(name="lt_inversion")]]
-NumericMatrix lt_inversion(NumericMatrix& X){
+Rcpp::NumericMatrix lt_inversion(Rcpp::NumericMatrix& X){
+ using namespace Rcpp;
+
  uint32_t d = X.cols();
  uint32_t j;
  uint32_t k;
