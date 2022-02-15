@@ -2,7 +2,7 @@
 % Please edit documentation in R/LD.R
 \name{LD}
 \alias{LD}
-\title{LD decomposition from mcd}
+\title{LD decomposition from modified cholesky decomposition}
 \usage{
 LD(x, d)
 }
