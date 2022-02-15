@@ -8,6 +8,7 @@
 #'
 #' @examples
 inverse <- function(X){
-  return(solve(X))
+ res <- precision(X)
+ return(res)
 }
 
