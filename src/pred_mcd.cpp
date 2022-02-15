@@ -1,9 +1,8 @@
-#include <Rcpp.h>
-using namespace Rcpp;
 #include "scm.h"
 
 // [[Rcpp::export(name="pred_mcd")]]
-double pred_mcd(NumericMatrix& eta, NumericMatrix& res,  uint32_t& d){
+double pred_mcd(Rcpp::NumericMatrix& eta, Rcpp::NumericMatrix& res,  uint32_t& d){
+using namespace Rcpp;
  uint32_t n = eta.rows();
  uint32_t i;
  uint32_t j;
