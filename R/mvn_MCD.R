@@ -197,42 +197,35 @@ mvn_mcd <- function(d = 2){
   } ## mvncm predict
 
   jacobian <- function(eta, jj){
-    no_eta <- ncol(eta)
+    #The following two lines could be unuseful
+    #no_eta <- ncol(eta) # delete in SCM
+    #d <- -3/2 + sqrt(9/4 + 2 * no_eta) # delete in SCM
     res <- matrix(0, nrow(eta), no_eta)
-    d <- -3/2 + sqrt(9/4 + 2 * no_eta) #why????
-    G <- G_mat(d)
+    G <- G_mat(d) #put in cpp??? 
 
     if(jj <= d){
       res[,jj] <- 1
     } else {
       jj <- jj - d
       idx_jj <- which(G == jj, arr.ind = TRUE)
-      S_row <- idx_jj[1, 1]
-      S_col <- idx_jj[1, 2]
+      S_row <- as.numeric(idx_jj[1, 1])
+      S_col <- as.numeric(idx_jj[1, 2])
 
-      for(i in 1:nrow(eta)){
-        Ld_mat <- LD(eta[i,],d)
+      rc_idx_s<-rep(NA, d*(d-1)/2)
+      rc_idx_s<-rep(NA, d*(d-1)/2)
 
-        for(j in 1:d){
-          res[i, j + d] <- Ld_mat$L[S_row, j]*Ld_mat$L[S_col, j]*(Ld_mat$D[j, j]^2)
-        }
-
-        for(j in (d + 1):(d + d * (d + 1)/2)){
-          rc_idx_s <- which(G == j, arr.ind=TRUE)[1, 1]
-          rc_idx_t <- which(G == j, arr.ind=TRUE)[1, 2]
-          aux_out1 <- 0
-          aux_out2 <- 0
-          for(k in 1:d){
-            aux_out1 <- aux_out1 - Ld_mat$L[rc_idx_t, k]*Ld_mat$L[S_col, k]*(Ld_mat$D[k, k]^2)
-            aux_out2 <- aux_out2 - Ld_mat$L[rc_idx_t, k]*Ld_mat$L[S_row, k]*(Ld_mat$D[k, k]^2)
-          }
-          res[i, j + d] <- Ld_mat$L[S_row, rc_idx_s]*aux_out1 + Ld_mat$L[S_col, rc_idx_s]*aux_out2
-        }
+      count <- 1
+      for(j in (d + 1):(d * (d + 1)/2)){
+        rc_idx_s[count] <- which(G == j, arr.ind=TRUE)[1, 1]
+        rc_idx_t[count] <- which(G == j, arr.ind=TRUE)[1, 2]
+        count <- count + 1
       }
-    }
+         
+      jacobian_mcd(eta, res, d, S_row - 1, S_col - 1, 
+                   as.numeric(rc_idx_s) - 1, as.numeric(rc_idx_t) - 1)
+    } 
     return(res)
   }
-
 
   structure(list(family = "Multivariate normal (MCD)", ll = ll, nlp = no_eta,
                  ##link=paste(link), ## unuseful?
