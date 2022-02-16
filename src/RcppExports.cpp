@@ -63,6 +63,23 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// jacobian_mcd
+double jacobian_mcd(Rcpp::NumericMatrix& eta, Rcpp::NumericMatrix& res, uint32_t& d, uint32_t& S_row, uint32_t& S_col, Rcpp::NumericVector rc_idx_s, Rcpp::NumericVector& rc_idx_t);
+RcppExport SEXP _SCM_jacobian_mcd(SEXP etaSEXP, SEXP resSEXP, SEXP dSEXP, SEXP S_rowSEXP, SEXP S_colSEXP, SEXP rc_idx_sSEXP, SEXP rc_idx_tSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::NumericMatrix& >::type eta(etaSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericMatrix& >::type res(resSEXP);
+    Rcpp::traits::input_parameter< uint32_t& >::type d(dSEXP);
+    Rcpp::traits::input_parameter< uint32_t& >::type S_row(S_rowSEXP);
+    Rcpp::traits::input_parameter< uint32_t& >::type S_col(S_colSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type rc_idx_s(rc_idx_sSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericVector& >::type rc_idx_t(rc_idx_tSEXP);
+    rcpp_result_gen = Rcpp::wrap(jacobian_mcd(eta, res, d, S_row, S_col, rc_idx_s, rc_idx_t));
+    return rcpp_result_gen;
+END_RCPP
+}
 // ll_logm
 double ll_logm(arma::mat& eta, arma::mat& y);
 RcppExport SEXP _SCM_ll_logm(SEXP etaSEXP, SEXP ySEXP) {
@@ -175,6 +192,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_SCM_d1_mcd", (DL_FUNC) &_SCM_d1_mcd, 3},
     {"_SCM_d2_logm", (DL_FUNC) &_SCM_d2_logm, 3},
     {"_SCM_d2_mcd", (DL_FUNC) &_SCM_d2_mcd, 3},
+    {"_SCM_jacobian_mcd", (DL_FUNC) &_SCM_jacobian_mcd, 7},
     {"_SCM_ll_logm", (DL_FUNC) &_SCM_ll_logm, 2},
     {"_SCM_ll_mcd", (DL_FUNC) &_SCM_ll_mcd, 2},
     {"_SCM_logm_decomposition", (DL_FUNC) &_SCM_logm_decomposition, 1},
