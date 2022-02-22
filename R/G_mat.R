@@ -8,7 +8,7 @@
 #'
 #' @examples
 
-G_mat <- function(d){
+mat2vec <- function(d){
   G <- matrix(0, d, d)
   diag(G) <- 1:d
   count <- d + 1
