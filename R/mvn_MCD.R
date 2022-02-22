@@ -201,7 +201,7 @@ mvn_mcd <- function(d = 2){
     #no_eta <- ncol(eta) # delete in SCM
     #d <- -3/2 + sqrt(9/4 + 2 * no_eta) # delete in SCM
     res <- matrix(0, nrow(eta), no_eta)
-    G <- G_mat(d) #put in cpp??? 
+    G <- mat2vec(d) #put in cpp???
 
     if(jj <= d){
       res[,jj] <- 1
@@ -220,10 +220,10 @@ mvn_mcd <- function(d = 2){
         rc_idx_t[count] <- which(G == j, arr.ind=TRUE)[1, 2]
         count <- count + 1
       }
-         
-      jacobian_mcd(eta, res, d, S_row - 1, S_col - 1, 
+
+      jacobian_mcd(eta, res, d, S_row - 1, S_col - 1,
                    as.numeric(rc_idx_s) - 1, as.numeric(rc_idx_t) - 1)
-    } 
+    }
     return(res)
   }
 
