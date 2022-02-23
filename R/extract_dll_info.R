@@ -10,21 +10,6 @@
 #' @examples
 #'
 boost_eff <- function(data_boost){
-
-  l_mat <- function(d){
-    mat <- matrix(NA, d, d)
-    for(i in 1:d){
-      for(j in 1:i){
-        if(i == j){
-          mat[i, i] <- paste0("logD2[", i, ",", i, "]")
-        } else {
-          mat[i, j] <- mat[j, i] <- paste0("T[", i, ",", j, "]")
-        }
-      }
-    }
-    return(mat = mat)
-  }
-
   A <- l_mat(data_boost$d)
 
   step_upd <- data_boost$nstep
@@ -41,7 +26,9 @@ boost_eff <- function(data_boost){
     eff[i] <- id_boost[1,2]
   }
   elab<-paste(elem, "-", eff)
+  el<-  as.numeric(word(unique(elab),3))
   erow <- paste(row, "-", eff)
+  er <- as.numeric(word(unique(erow),1))
 
   uni_elab <- unique(elab)
 
@@ -52,9 +39,9 @@ boost_eff <- function(data_boost){
 
   dsum_imp <-data.frame(sum_imp = s_imp,
                         uni_label =  uni_elab,
-                        ele_rows = as.numeric(word(unique(erow),1)) ,
-                        label  =  as.numeric(word(unique(elab),3)),
-                        name_eff = data_boost$effects[as.numeric(word(uni_elab,3))])
+                        ele_rows = er ,
+                        label  =  el,
+                        name_eff = data_boost$effects[el])
 
   dsum_imp <- dsum_imp[order(dsum_imp$sum_imp, decreasing="TRUE"),]
   return(data_sum_imp = dsum_imp)
