@@ -2,7 +2,7 @@
 % Please edit documentation in R/initialize_formula_mcd.R
 \name{formula_mcd_int}
 \alias{formula_mcd_int}
-\title{Initialization formula for the covariance model}
+\title{covariance model initialization formula}
 \usage{
 formula_mcd_int(d)
 }
@@ -13,7 +13,7 @@ formula_mcd_int(d)
 The initializing formula (a list) for the covariance model
 }
 \description{
-This function return the initialization formula for the covariance model,
+This function return the covariance model initialization formula
 }
 \examples{
 
