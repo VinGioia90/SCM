@@ -86,8 +86,11 @@ mvn_mcd <- function(d = 2){
           } else {
             startMu <- pen.reg(x1, e1, yt1)
           }
-
+          if(!is.matrix(x[ , jj[[k]]])){
+            resid[,k] <-  y[,k] - x[ , jj[[k]]]*startMu
+          } else{
           resid[,k] <-  y[,k] - x[ , jj[[k]]]%*%startMu
+          }
           start[jj[[k]]] <- startMu
         }
 

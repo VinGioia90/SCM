@@ -86,7 +86,11 @@ mvn_logm <- function(d = 2){
             startMu <- pen.reg(x1, e1, yt1)
           }
 
-          resid[,k] <-  y[,k] - x[ , jj[[k]]]%*%startMu
+          if(!is.matrix(x[ , jj[[k]]])){
+            resid[,k] <-  y[,k] - x[ , jj[[k]]]*startMu
+          } else {
+            resid[,k] <-  y[,k] - x[ , jj[[k]]]%*%startMu
+          }
           start[jj[[k]]] <- startMu
         }
 
