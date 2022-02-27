@@ -116,6 +116,60 @@ mvn_logm <- function(d = 2){
   } ## residuals
 
 
+  trind.generator <- function (K = 2, deriv = 0) {
+    m.start <- 1
+    i2 <- array(0, dim = c(K, K))
+    m <- m.start
+    for (k in 1:K) for (l in k:K) {
+      i2[k, l] <- i2[l, k] <- m
+      m <- m + 1
+    }
+
+    m <- m.start
+    i2r <- rep(0, max(i2))
+    for (k in 1:K) for (l in k:K) {
+      i2r[m] <- l + (k - 1) * K
+      m <- m + 1
+    }
+    if(deriv == 0){
+      i3 <- i3r <- i4 <- i4r <- NULL
+    } else {
+      i3 <- array(0, dim = c(K, K, K))
+      m <- m.start
+      for (j in 1:K) for (k in j:K) for (l in k:K) {
+        i3[j, k, l] <- i3[j, l, k] <- i3[k, l, j] <- i3[k, j,
+                                                        l] <- i3[l, j, k] <- i3[l, k, j] <- m
+        m <- m + 1
+      }
+      m <- m.start
+      i3r <- rep(0, max(i3))
+      for (j in 1:K) for (k in j:K) for (l in k:K) {
+        i3r[m] <- l + (k - 1) * K + (j - 1) * K^2
+        m <- m + 1
+      }
+      i4 <- array(0, dim = c(K, K, K, K))
+      m <- m.start
+      for (i in 1:K) for (j in i:K) for (k in j:K) for (l in k:K) {
+        i4[i, j, k, l] <- i4[i, j, l, k] <- i4[i, k, l, j] <- i4[i,
+                                                                 k, j, l] <- i4[i, l, j, k] <- i4[i, l, k, j] <- i4[j,
+                                                                                                                    i, k, l] <- i4[j, i, l, k] <- i4[j, k, l, i] <- i4[j,
+                                                                                                                                                                       k, i, l] <- i4[j, l, i, k] <- i4[j, l, k, i] <- i4[k,
+                                                                                                                                                                                                                          j, i, l] <- i4[k, j, l, i] <- i4[k, i, l, j] <- i4[k,
+                                                                                                                                                                                                                                                                             i, j, l] <- i4[k, l, j, i] <- i4[k, l, i, j] <- i4[l,
+                                                                                                                                                                                                                                                                                                                                j, k, i] <- i4[l, j, i, k] <- i4[l, k, i, j] <- i4[l,
+                                                                                                                                                                                                                                                                                                                                                                                   k, j, i] <- i4[l, i, j, k] <- i4[l, i, k, j] <- m
+        m <- m + 1
+      }
+      m <- m.start
+      i4r <- rep(0, max(i4))
+      for (i in 1:K) for (j in i:K) for (k in j:K) for (l in k:K) {
+        i4r[m] <- l + (k - 1) * K + (j - 1) * K^2 + (i - 1) * K^3
+        m <- m + 1
+      }
+    }
+    list(i2 = i2, i3 = i3, i4 = i4, i2r = i2r, i3r = i3r, i4r = i4r)
+  }
+
   ll <- function(y, X, coef, wt, family,  offset = NULL,
                  deriv = 0, d1b = NULL, d2b = NULL, Hp = NULL,
                  rank = 0, fh = NULL, D = NULL) {
@@ -165,7 +219,7 @@ mvn_logm <- function(d = 2){
 
   structure(list(family = "Multivariate normal (logM)", ll = ll, nlp = no_eta,
                  ##link=paste(link), ## unuseful?
-                 tri = trind.generator(no_eta), ## symmetric indices for accessing derivative arrays
+                 tri = trind.generator(no_eta, deriv = 0), ## symmetric indices for accessing derivative arrays
                  initialize = initialize,
                  getd=getd, putd=putd,
                  getno_eta=getno_eta, putno_eta=putno_eta,
