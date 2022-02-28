@@ -268,8 +268,8 @@ mvn_mcd <- function(d = 2){
       S_row <- as.numeric(idx_jj[1, 1])
       S_col <- as.numeric(idx_jj[1, 2])
 
-      rc_idx_s<-rep(NA, d*(d-1)/2)
-      rc_idx_s<-rep(NA, d*(d-1)/2)
+      rc_idx_s <- rep(NA, d * (d - 1)/2)
+      rc_idx_t <- rep(NA, d * (d - 1)/2)
 
       count <- 1
       for(j in (d + 1):(d * (d + 1)/2)){
