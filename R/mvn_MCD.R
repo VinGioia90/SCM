@@ -13,7 +13,7 @@
 mvn_mcd <- function(d = 2){
   #Multivariate model with covariance modelling via modified Cholesky decomposition
   if(d < 2) stop("mvn_mcd requires to or more dimensional data")
-  no_eta <- d + d * (d + 1)/2
+  no_eta <- d + d *(d + 1)/2
   stats <- list()
   for (j in 1:no_eta) stats[[j]] <- make.link("identity")
 
