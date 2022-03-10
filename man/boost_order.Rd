@@ -22,7 +22,7 @@ boost_order(
 
 \item{effects}{list of effects included in the boosting procedure}
 
-\item{constraints}{list of constranints on the effects}
+\item{constraints}{list of constraints on the effects}
 
 \item{nstep}{numbers of step of the boosting procedure}
 
