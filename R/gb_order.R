@@ -4,7 +4,7 @@
 #' @param y outcome (residual)
 #' @param X covariates
 #' @param effects list of effects included in the boosting procedure
-#' @param constraints list of constranints on the effects
+#' @param constraints list of constraints on the effects
 #' @param nstep numbers of step of the boosting procedure
 #' @param verbose to print the iteration summary of the procedure
 #' @param rate learning rate
