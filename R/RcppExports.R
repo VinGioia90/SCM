@@ -75,6 +75,10 @@ ll_mcd <- function(eta, y) {
     .Call(`_SCM_ll_mcd`, eta, y)
 }
 
+logM_Sigma <- function(x, d) {
+    .Call(`_SCM_logM_Sigma`, x, d)
+}
+
 logm_decomposition <- function(X) {
     .Call(`_SCM_logm_decomposition`, X)
 }
@@ -97,6 +101,10 @@ mcd_decomposition <- function(X) {
 
 precision <- function(X) {
     .Call(`_SCM_precision`, X)
+}
+
+pred_logm <- function(eta, res, d) {
+    .Call(`_SCM_pred_logm`, eta, res, d)
 }
 
 pred_mcd <- function(eta, res, d) {
