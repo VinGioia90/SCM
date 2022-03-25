@@ -104,6 +104,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// logM_Sigma
+Rcpp::NumericMatrix logM_Sigma(Rcpp::NumericVector& x, uint32_t& d);
+RcppExport SEXP _SCM_logM_Sigma(SEXP xSEXP, SEXP dSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::NumericVector& >::type x(xSEXP);
+    Rcpp::traits::input_parameter< uint32_t& >::type d(dSEXP);
+    rcpp_result_gen = Rcpp::wrap(logM_Sigma(x, d));
+    return rcpp_result_gen;
+END_RCPP
+}
 // logm_decomposition
 Rcpp::NumericMatrix logm_decomposition(Rcpp::NumericMatrix& X);
 RcppExport SEXP _SCM_logm_decomposition(SEXP XSEXP) {
@@ -173,6 +185,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// pred_logm
+double pred_logm(Rcpp::NumericMatrix& eta, Rcpp::NumericMatrix& res, uint32_t& d);
+RcppExport SEXP _SCM_pred_logm(SEXP etaSEXP, SEXP resSEXP, SEXP dSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Rcpp::NumericMatrix& >::type eta(etaSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericMatrix& >::type res(resSEXP);
+    Rcpp::traits::input_parameter< uint32_t& >::type d(dSEXP);
+    rcpp_result_gen = Rcpp::wrap(pred_logm(eta, res, d));
+    return rcpp_result_gen;
+END_RCPP
+}
 // pred_mcd
 double pred_mcd(Rcpp::NumericMatrix& eta, Rcpp::NumericMatrix& res, uint32_t& d);
 RcppExport SEXP _SCM_pred_mcd(SEXP etaSEXP, SEXP resSEXP, SEXP dSEXP) {
@@ -195,12 +220,14 @@ static const R_CallMethodDef CallEntries[] = {
     {"_SCM_jacobian_mcd", (DL_FUNC) &_SCM_jacobian_mcd, 7},
     {"_SCM_ll_logm", (DL_FUNC) &_SCM_ll_logm, 2},
     {"_SCM_ll_mcd", (DL_FUNC) &_SCM_ll_mcd, 2},
+    {"_SCM_logM_Sigma", (DL_FUNC) &_SCM_logM_Sigma, 2},
     {"_SCM_logm_decomposition", (DL_FUNC) &_SCM_logm_decomposition, 1},
     {"_SCM_lt_inversion", (DL_FUNC) &_SCM_lt_inversion, 1},
     {"_SCM_mcd_LD", (DL_FUNC) &_SCM_mcd_LD, 2},
     {"_SCM_mcd_Sigma", (DL_FUNC) &_SCM_mcd_Sigma, 3},
     {"_SCM_mcd_decomposition", (DL_FUNC) &_SCM_mcd_decomposition, 1},
     {"_SCM_precision", (DL_FUNC) &_SCM_precision, 1},
+    {"_SCM_pred_logm", (DL_FUNC) &_SCM_pred_logm, 3},
     {"_SCM_pred_mcd", (DL_FUNC) &_SCM_pred_mcd, 3},
     {NULL, NULL, 0}
 };
