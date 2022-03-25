@@ -218,8 +218,42 @@ mvn_logm <- function(d = 2){
      } else ret <- list()
     ret$l <- l
     ret
-   } ## end ll mvn_mcd
+   } ## end ll mvn_logm
 
+  predict <- function(family,se=FALSE,eta=NULL,y=NULL,X=NULL,
+                      beta=NULL,off=NULL,Vb=NULL) {
+    ## optional function to give predicted values - idea is that
+    ## predict.gam(...,type="response") will use this, and that
+    ## either eta will be provided, or {X, beta, off, Vb}. family$data
+    ## contains any family specific extra information.
+    ## if se = FALSE returns one item list containing matrix otherwise
+    ## list of two matrices "fit" and "se.fit"...
+
+
+    if (is.null(eta)) {
+      discrete <- is.list(X)
+      lpi <- attr(X,"lpi")
+      if (is.null(lpi)) {
+        lpi <- list(1:ncol(X))
+      }
+      K <- length(lpi) ## number of linear predictors
+      nobs <- if (discrete) nrow(X$kd) else nrow(X)
+      eta <- matrix(0,nobs,K)
+      for (i in 1:K) {
+        if (discrete) {
+          eta[,i] <- Xbd(X$Xd,beta,k=X$kd,ks=X$ks,ts=X$ts,dt=X$dt,v=X$v,qc=X$qc,drop=X$drop,lt=X$lpid[[i]])
+        } else {
+          Xi <- X[,lpi[[i]],drop=FALSE]
+          eta[,i] <- Xi%*%beta[lpi[[i]]] ## ith linear predictor
+        }
+        if (!is.null(off[[i]])) eta[,i] <- eta[,i] + off[[i]]
+      }
+    }
+
+    out <- matrix(0, nrow(eta), ncol(eta))
+    pred_logm(eta, out, d)
+    list(fit = out)
+  } ## mvncm predict
 
   structure(list(family = "Multivariate normal (logM)", ll = ll, nlp = no_eta,
                  ##link=paste(link), ## unuseful?
@@ -229,7 +263,7 @@ mvn_logm <- function(d = 2){
                  getno_eta=getno_eta, putno_eta=putno_eta,
                  #postproc=postproc, ##to do
                  residuals=residuals,
-                 #predict = predict,
+                 predict = predict,
                  #jacobian = jacobian,
                  linfo = stats, ## link information list
                  validmu = validmu,
