@@ -9,6 +9,6 @@ NumericMatrix mcd_LD(NumericVector& x, uint32_t& d);
 
 NumericMatrix mcd_Sigma(NumericMatrix& L, NumericMatrix& D,  uint32_t& d);
 
-
+NumericMatrix logM_Sigma(NumericVector& x,   uint32_t& d);
 
 #endif
