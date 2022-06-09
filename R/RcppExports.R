@@ -53,6 +53,10 @@ jacobian_mcd <- function(eta, res, d, S_row, S_col, rc_idx_s, rc_idx_t) {
     .Call(`_SCM_jacobian_mcd`, eta, res, d, S_row, S_col, rc_idx_s, rc_idx_t)
 }
 
+jacobian_mcd_rho <- function(eta, res, d, S_row, S_col, rc_idx_s, rc_idx_t, cor_flag) {
+    .Call(`_SCM_jacobian_mcd_rho`, eta, res, d, S_row, S_col, rc_idx_s, rc_idx_t, cor_flag)
+}
+
 #' Log-likelihood matrix logM
 #'
 #' @param eta Linear predictor (n x (d + dx(d+1)/2) matrix).
@@ -109,5 +113,9 @@ pred_logm <- function(eta, res, d) {
 
 pred_mcd <- function(eta, res, d) {
     .Call(`_SCM_pred_mcd`, eta, res, d)
+}
+
+pred_mcd_rho <- function(eta, res, d, cor_flag) {
+    .Call(`_SCM_pred_mcd_rho`, eta, res, d, cor_flag)
 }
 
