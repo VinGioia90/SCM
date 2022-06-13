@@ -1,7 +1,7 @@
 #include "scm.h"
 
 // [[Rcpp::export(name="pred_mcd")]]
-double pred_mcd(Rcpp::NumericMatrix& eta, Rcpp::NumericMatrix& res,  uint32_t& d){
+double pred_mcd(Rcpp::NumericMatrix& eta, Rcpp::NumericMatrix& res,  uint32_t& d, uint32_t& cor_flag){
 using namespace Rcpp;
  uint32_t n = eta.rows();
  uint32_t i;
@@ -32,7 +32,11 @@ using namespace Rcpp;
    res(i, j + d) = Sigma(j, j); 
     if(j > 0){
      for(k = 0; k < j; k++){
-      res(i, count + d) = Sigma(k, j);
+      if(cor_flag==0){
+        res(i, count + d) = Sigma(k, j);
+      } else {
+        res(i, count + d) = Sigma(k, j)/(sqrt(Sigma(k, k))*sqrt(Sigma(j, j)));
+      }
       count = count + 1;
      }
     }  

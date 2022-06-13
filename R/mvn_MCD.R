@@ -206,7 +206,7 @@ mvn_mcd <- function(d = 2){
 
     out <- matrix(0, nrow(eta), ncol(eta))
     cor_flag <- getcflag()
-    pred_mcd_rho(eta, out,d, as.integer(cor_flag))
+    pred_mcd(eta, out,d, as.integer(cor_flag))
     list(fit = out)
   } ## mvncm predict
 
@@ -237,7 +237,7 @@ mvn_mcd <- function(d = 2){
         count <- count + 1
       }
 
-      jacobian_mcd_rho(eta, res, d, S_row - 1, S_col - 1,
+      jacobian_mcd(eta, res, d, S_row - 1, S_col - 1,
                    as.numeric(rc_idx_s) - 1, as.numeric(rc_idx_t) - 1, as.integer(cor_flag))
     }
     return(res)
