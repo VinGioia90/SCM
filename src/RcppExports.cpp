@@ -64,25 +64,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // jacobian_mcd
-double jacobian_mcd(Rcpp::NumericMatrix& eta, Rcpp::NumericMatrix& res, uint32_t& d, uint32_t& S_row, uint32_t& S_col, Rcpp::NumericVector rc_idx_s, Rcpp::NumericVector& rc_idx_t);
-RcppExport SEXP _SCM_jacobian_mcd(SEXP etaSEXP, SEXP resSEXP, SEXP dSEXP, SEXP S_rowSEXP, SEXP S_colSEXP, SEXP rc_idx_sSEXP, SEXP rc_idx_tSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::NumericMatrix& >::type eta(etaSEXP);
-    Rcpp::traits::input_parameter< Rcpp::NumericMatrix& >::type res(resSEXP);
-    Rcpp::traits::input_parameter< uint32_t& >::type d(dSEXP);
-    Rcpp::traits::input_parameter< uint32_t& >::type S_row(S_rowSEXP);
-    Rcpp::traits::input_parameter< uint32_t& >::type S_col(S_colSEXP);
-    Rcpp::traits::input_parameter< Rcpp::NumericVector >::type rc_idx_s(rc_idx_sSEXP);
-    Rcpp::traits::input_parameter< Rcpp::NumericVector& >::type rc_idx_t(rc_idx_tSEXP);
-    rcpp_result_gen = Rcpp::wrap(jacobian_mcd(eta, res, d, S_row, S_col, rc_idx_s, rc_idx_t));
-    return rcpp_result_gen;
-END_RCPP
-}
-// jacobian_mcd_rho
-double jacobian_mcd_rho(Rcpp::NumericMatrix& eta, Rcpp::NumericMatrix& res, uint32_t& d, uint32_t& S_row, uint32_t& S_col, Rcpp::NumericVector rc_idx_s, Rcpp::NumericVector& rc_idx_t, uint32_t& cor_flag);
-RcppExport SEXP _SCM_jacobian_mcd_rho(SEXP etaSEXP, SEXP resSEXP, SEXP dSEXP, SEXP S_rowSEXP, SEXP S_colSEXP, SEXP rc_idx_sSEXP, SEXP rc_idx_tSEXP, SEXP cor_flagSEXP) {
+double jacobian_mcd(Rcpp::NumericMatrix& eta, Rcpp::NumericMatrix& res, uint32_t& d, uint32_t& S_row, uint32_t& S_col, Rcpp::NumericVector rc_idx_s, Rcpp::NumericVector& rc_idx_t, uint32_t& cor_flag);
+RcppExport SEXP _SCM_jacobian_mcd(SEXP etaSEXP, SEXP resSEXP, SEXP dSEXP, SEXP S_rowSEXP, SEXP S_colSEXP, SEXP rc_idx_sSEXP, SEXP rc_idx_tSEXP, SEXP cor_flagSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -94,7 +77,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< Rcpp::NumericVector >::type rc_idx_s(rc_idx_sSEXP);
     Rcpp::traits::input_parameter< Rcpp::NumericVector& >::type rc_idx_t(rc_idx_tSEXP);
     Rcpp::traits::input_parameter< uint32_t& >::type cor_flag(cor_flagSEXP);
-    rcpp_result_gen = Rcpp::wrap(jacobian_mcd_rho(eta, res, d, S_row, S_col, rc_idx_s, rc_idx_t, cor_flag));
+    rcpp_result_gen = Rcpp::wrap(jacobian_mcd(eta, res, d, S_row, S_col, rc_idx_s, rc_idx_t, cor_flag));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -217,21 +200,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // pred_mcd
-double pred_mcd(Rcpp::NumericMatrix& eta, Rcpp::NumericMatrix& res, uint32_t& d);
-RcppExport SEXP _SCM_pred_mcd(SEXP etaSEXP, SEXP resSEXP, SEXP dSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::NumericMatrix& >::type eta(etaSEXP);
-    Rcpp::traits::input_parameter< Rcpp::NumericMatrix& >::type res(resSEXP);
-    Rcpp::traits::input_parameter< uint32_t& >::type d(dSEXP);
-    rcpp_result_gen = Rcpp::wrap(pred_mcd(eta, res, d));
-    return rcpp_result_gen;
-END_RCPP
-}
-// pred_mcd_rho
-double pred_mcd_rho(Rcpp::NumericMatrix& eta, Rcpp::NumericMatrix& res, uint32_t& d, uint32_t& cor_flag);
-RcppExport SEXP _SCM_pred_mcd_rho(SEXP etaSEXP, SEXP resSEXP, SEXP dSEXP, SEXP cor_flagSEXP) {
+double pred_mcd(Rcpp::NumericMatrix& eta, Rcpp::NumericMatrix& res, uint32_t& d, uint32_t& cor_flag);
+RcppExport SEXP _SCM_pred_mcd(SEXP etaSEXP, SEXP resSEXP, SEXP dSEXP, SEXP cor_flagSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -239,7 +209,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< Rcpp::NumericMatrix& >::type res(resSEXP);
     Rcpp::traits::input_parameter< uint32_t& >::type d(dSEXP);
     Rcpp::traits::input_parameter< uint32_t& >::type cor_flag(cor_flagSEXP);
-    rcpp_result_gen = Rcpp::wrap(pred_mcd_rho(eta, res, d, cor_flag));
+    rcpp_result_gen = Rcpp::wrap(pred_mcd(eta, res, d, cor_flag));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -249,8 +219,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_SCM_d1_mcd", (DL_FUNC) &_SCM_d1_mcd, 3},
     {"_SCM_d2_logm", (DL_FUNC) &_SCM_d2_logm, 3},
     {"_SCM_d2_mcd", (DL_FUNC) &_SCM_d2_mcd, 3},
-    {"_SCM_jacobian_mcd", (DL_FUNC) &_SCM_jacobian_mcd, 7},
-    {"_SCM_jacobian_mcd_rho", (DL_FUNC) &_SCM_jacobian_mcd_rho, 8},
+    {"_SCM_jacobian_mcd", (DL_FUNC) &_SCM_jacobian_mcd, 8},
     {"_SCM_ll_logm", (DL_FUNC) &_SCM_ll_logm, 2},
     {"_SCM_ll_mcd", (DL_FUNC) &_SCM_ll_mcd, 2},
     {"_SCM_logM_Sigma", (DL_FUNC) &_SCM_logM_Sigma, 2},
@@ -261,8 +230,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_SCM_mcd_decomposition", (DL_FUNC) &_SCM_mcd_decomposition, 1},
     {"_SCM_precision", (DL_FUNC) &_SCM_precision, 1},
     {"_SCM_pred_logm", (DL_FUNC) &_SCM_pred_logm, 3},
-    {"_SCM_pred_mcd", (DL_FUNC) &_SCM_pred_mcd, 3},
-    {"_SCM_pred_mcd_rho", (DL_FUNC) &_SCM_pred_mcd_rho, 4},
+    {"_SCM_pred_mcd", (DL_FUNC) &_SCM_pred_mcd, 4},
     {NULL, NULL, 0}
 };
 
