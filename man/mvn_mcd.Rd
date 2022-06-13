@@ -2,7 +2,7 @@
 % Please edit documentation in R/mvn_MCD.R
 \name{mvn_mcd}
 \alias{mvn_mcd}
-\title{Family definition}
+\title{Family definition (internal use)}
 \usage{
 mvn_mcd(d = 2)
 }

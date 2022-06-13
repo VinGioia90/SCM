@@ -1,4 +1,4 @@
-#' Family definition
+#' Family definition (internal use)
 #'
 #' @description  ...
 #' @param d dimension of the outcome
@@ -14,18 +14,27 @@ mvn_mcd <- function(d = 2){
   #Multivariate model with covariance modelling via modified Cholesky decomposition
   if(d < 2) stop("mvn_mcd requires to or more dimensional data")
   no_eta <- d + d *(d + 1)/2
+
   stats <- list()
   for (j in 1:no_eta) stats[[j]] <- make.link("identity")
 
   validmu <- function(mu) all(is.finite(mu))
 
+  assign(".cflag", TRUE, envir = environment())
+  getcflag <- function() get(".cflag")
+  putcflag <- function(.clag) assign(".cflag", .cflag, envir = environment(sys.function()))
+
+
   assign(".d", d, envir = environment())
   getd <- function() get(".d")
-  putd <- function(.x) assign(".d", .x, envir = environment(sys.function()))
+  putd <- function(.d) assign(".d", .d, envir = environment(sys.function()))
+
+  getL2 <- function() get(".l2")
+  putL2 <- function(.l2) assign(".l2", .l2, envir = environment(sys.function()))
 
   assign(".no_eta", no_eta, envir = environment())
   getno_eta <- function() get(".no_eta")
-  putno_eta <- function(.x) assign(".no_eta", .x, envir = environment(sys.function()))
+  putno_eta <- function(.no_eta) assign(".no_eta", .no_eta, envir = environment(sys.function()))
 
   initialize <- expression({
     my_init_fun <- function(y, nobs, E, x, family, offset){
@@ -43,7 +52,7 @@ mvn_mcd <- function(d = 2){
                                           k = x$kd, ks = x$ks, ts = x$ts,
                                           dt = x$dt, v = x$v, qc = x$qc, nthreads = 1,
                                           drop = x$drop, lt = x$lpid[[k]]) +
-                                     crossprod(E[ , jj[[k]]]), pivot = TRUE))
+                                       crossprod(E[ , jj[[k]]]), pivot = TRUE))
           Xty <- XWyd(x$Xd, rep(1, nrow(y)), yt1, x$kd,
                       x$ks, x$ts, x$dt, x$v, x$qc, x$drop, lt = x$lpid[[k]])
           piv <- attr(R, "pivot")
@@ -59,19 +68,13 @@ mvn_mcd <- function(d = 2){
           start[jj[[k]]] <- startMu
           eta1 <- Xbd(x$Xd, start, k = x$kd, ks = x$ks,
                       ts = x$ts, dt = x$dt, v = x$v, qc = x$qc, drop = x$drop,
-                       lt = x$lpid[[k]])
+                      lt = x$lpid[[k]])
           resid[,k] <-  y[,k] -   eta1
         }
         Svcov <- cov(resid)
         MCD_dec <- mcd(Svcov)
         Theta_el<-c(diag(MCD_dec), MCD_dec[upper.tri(MCD_dec, diag=FALSE)])
 
-        #for(k in (d+1):no_eta){
-          #x1 <-  x[ , jj[[k]],drop=FALSE]
-          #startji <- qr.coef(qr(x1), c(rep(Theta_el[k-d],nrow(x1))))
-          #startji[!is.finite(startji)] <- 0
-          #start[jj[[k]]] <- startji
-        #}
       } else { #regular case
         start <- rep(0,ncol(x))
         for(k in 1:d){
@@ -89,7 +92,7 @@ mvn_mcd <- function(d = 2){
           if(!is.matrix(x[ , jj[[k]]])){
             resid[,k] <-  y[,k] - x[ , jj[[k]]]*startMu
           } else{
-          resid[,k] <-  y[,k] - x[ , jj[[k]]]%*%startMu
+            resid[,k] <-  y[,k] - x[ , jj[[k]]]%*%startMu
           }
           start[jj[[k]]] <- startMu
         }
@@ -119,60 +122,6 @@ mvn_mcd <- function(d = 2){
     res
   } ## residuals
 
-  trind.generator <- function (K = 2, deriv = 0) {
-    m.start <- 1
-    i2 <- array(0, dim = c(K, K))
-    m <- m.start
-    for (k in 1:K) for (l in k:K) {
-      i2[k, l] <- i2[l, k] <- m
-      m <- m + 1
-    }
-
-    m <- m.start
-    i2r <- rep(0, max(i2))
-    for (k in 1:K) for (l in k:K) {
-      i2r[m] <- l + (k - 1) * K
-      m <- m + 1
-    }
-    if(deriv == 0){
-      i3 <- i3r <- i4 <- i4r <- NULL
-    } else {
-      i3 <- array(0, dim = c(K, K, K))
-      m <- m.start
-      for (j in 1:K) for (k in j:K) for (l in k:K) {
-        i3[j, k, l] <- i3[j, l, k] <- i3[k, l, j] <- i3[k, j,
-                                                        l] <- i3[l, j, k] <- i3[l, k, j] <- m
-        m <- m + 1
-      }
-      m <- m.start
-      i3r <- rep(0, max(i3))
-      for (j in 1:K) for (k in j:K) for (l in k:K) {
-        i3r[m] <- l + (k - 1) * K + (j - 1) * K^2
-        m <- m + 1
-      }
-    i4 <- array(0, dim = c(K, K, K, K))
-    m <- m.start
-    for (i in 1:K) for (j in i:K) for (k in j:K) for (l in k:K) {
-      i4[i, j, k, l] <- i4[i, j, l, k] <- i4[i, k, l, j] <- i4[i,
-                                                               k, j, l] <- i4[i, l, j, k] <- i4[i, l, k, j] <- i4[j,
-                                                                                                                  i, k, l] <- i4[j, i, l, k] <- i4[j, k, l, i] <- i4[j,
-                                                                                                                                                                     k, i, l] <- i4[j, l, i, k] <- i4[j, l, k, i] <- i4[k,
-                                                                                                                                                                                                                        j, i, l] <- i4[k, j, l, i] <- i4[k, i, l, j] <- i4[k,
-                                                                                                                                                                                                                                                                           i, j, l] <- i4[k, l, j, i] <- i4[k, l, i, j] <- i4[l,
-                                                                                                                                                                                                                                                                                                                              j, k, i] <- i4[l, j, i, k] <- i4[l, k, i, j] <- i4[l,
-                                                                                                                                                                                                                                                                                                                                                                                 k, j, i] <- i4[l, i, j, k] <- i4[l, i, k, j] <- m
-      m <- m + 1
-    }
-    m <- m.start
-    i4r <- rep(0, max(i4))
-    for (i in 1:K) for (j in i:K) for (k in j:K) for (l in k:K) {
-      i4r[m] <- l + (k - 1) * K + (j - 1) * K^2 + (i - 1) * K^3
-      m <- m + 1
-     }
-    }
-    list(i2 = i2, i3 = i3, i4 = i4, i2r = i2r, i3r = i3r, i4r = i4r)
-  }
-
 
   ll <- function(y, X, coef, wt, family,  offset = NULL,
                  deriv = 0, d1b = NULL, d2b = NULL, Hp = NULL,
@@ -182,6 +131,13 @@ mvn_mcd <- function(d = 2){
 
     n <- nrow(y)
     eta <- matrix(0, n, no_eta)
+
+    l2 <- try(getL2(), TRUE)
+    if("try-error" %in% class(l2)){
+       l2 <-  matrix(0, n, no_eta * (no_eta + 1)/2) #initialization
+       putL2(l2)
+    }
+
     for(k in 1 : no_eta){
       eta[,k] <- if (discrete) Xbd(X$Xd,coef,k=X$kd,ks=X$ks,ts=X$ts,dt=X$dt,v=X$v,qc=X$qc,drop=X$drop,lt=X$lpid[[k]])
       else X[,jj[[k]],drop=FALSE]%*%coef[jj[[k]]]
@@ -199,24 +155,24 @@ mvn_mcd <- function(d = 2){
       d1_mcd(eta, y[,1:d], l1)
 
       ## the second derivatives
-      l2 <- matrix(0, n, no_eta * (no_eta + 1)/2) #initialization
+      #l2 <- matrix(0, n, no_eta * (no_eta + 1)/2) #initialization
       d2_mcd(eta,y[,1:d], l2)
 
-     }
+    }
 
-     l3 <- 0 ## defaults
+    l3 <- 0 ## defaults
 
-     if (deriv) {
-       i2 <- family$tri$i2
-       i3 <- family$tri$i3
+    if (deriv) {
+      i2 <- family$tri$i2
+      i3 <- family$tri$i3
 
-       ## get the gradient and Hessian...
-       ret <- gamlss.gH(X, jj, l1, l2, i2, l3 = l3, i3 = i3,
-                        d1b = d1b, deriv = deriv - 1, fh = fh, D = D)
-     } else ret <- list()
+      ## get the gradient and Hessian...
+      ret <- gamlss.gH(X, jj, l1, l2, i2, l3 = l3, i3 = i3,
+                       d1b = d1b, deriv = deriv - 1, fh = fh, D = D)
+    } else ret <- list()
     ret$l <- l
     ret
-   } ## end ll mvn_mcd
+  } ## end ll mvn_mcd
 
   predict <- function(family,se=FALSE,eta=NULL,y=NULL,X=NULL,
                       beta=NULL,off=NULL,Vb=NULL) {
@@ -249,7 +205,8 @@ mvn_mcd <- function(d = 2){
     }
 
     out <- matrix(0, nrow(eta), ncol(eta))
-    pred_mcd(eta, out,d)
+    cor_flag <- getcflag()
+    pred_mcd_rho(eta, out,d, as.integer(cor_flag))
     list(fit = out)
   } ## mvncm predict
 
@@ -259,6 +216,8 @@ mvn_mcd <- function(d = 2){
     #d <- -3/2 + sqrt(9/4 + 2 * no_eta) # delete in SCM
     res <- matrix(0, nrow(eta), no_eta)
     G <- mat2vec(d) #put in cpp???
+
+    cor_flag <- getcflag()
 
     if(jj <= d){
       res[,jj] <- 1
@@ -278,18 +237,20 @@ mvn_mcd <- function(d = 2){
         count <- count + 1
       }
 
-      jacobian_mcd(eta, res, d, S_row - 1, S_col - 1,
-                   as.numeric(rc_idx_s) - 1, as.numeric(rc_idx_t) - 1)
+      jacobian_mcd_rho(eta, res, d, S_row - 1, S_col - 1,
+                   as.numeric(rc_idx_s) - 1, as.numeric(rc_idx_t) - 1, as.integer(cor_flag))
     }
     return(res)
   }
 
   structure(list(family = "Multivariate normal (MCD)", ll = ll, nlp = no_eta,
                  ##link=paste(link), ## unuseful?
-                 tri = trind.generator(no_eta, deriv = 0), ## symmetric indices for accessing derivative arrays
+                 tri = trind.generator(no_eta,ifunc=TRUE),
                  initialize = initialize,
-                 getd=getd, putd=putd,
-                 getno_eta=getno_eta, putno_eta=putno_eta,
+                 getd = getd, putd = putd,
+                 getno_eta = getno_eta, putno_eta = putno_eta,
+                 getcflag = getcflag, put_cflag = putcflag,
+                 getL2 = getL2, putL2 = putL2,
                  #postproc=postproc, ##to do
                  residuals=residuals,
                  predict = predict,
@@ -301,6 +262,5 @@ mvn_mcd <- function(d = 2){
                  ls = 1, ## signals that ls not needed here
                  available.derivs = 0, ## can use full Newton here
                  discrete.ok = TRUE
-                 ),class = c("general.family", "extended.family", "family"))
+  ),class = c("general.family", "extended.family", "family"))
 } ## end mvn_cmd
-
