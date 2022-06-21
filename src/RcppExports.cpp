@@ -213,6 +213,19 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// res_dev_mcd
+double res_dev_mcd(NumericMatrix& eta, NumericMatrix& y, NumericMatrix& res);
+RcppExport SEXP _SCM_res_dev_mcd(SEXP etaSEXP, SEXP ySEXP, SEXP resSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericMatrix& >::type eta(etaSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix& >::type y(ySEXP);
+    Rcpp::traits::input_parameter< NumericMatrix& >::type res(resSEXP);
+    rcpp_result_gen = Rcpp::wrap(res_dev_mcd(eta, y, res));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_SCM_d1_logm", (DL_FUNC) &_SCM_d1_logm, 3},
@@ -231,6 +244,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_SCM_precision", (DL_FUNC) &_SCM_precision, 1},
     {"_SCM_pred_logm", (DL_FUNC) &_SCM_pred_logm, 3},
     {"_SCM_pred_mcd", (DL_FUNC) &_SCM_pred_mcd, 4},
+    {"_SCM_res_dev_mcd", (DL_FUNC) &_SCM_res_dev_mcd, 3},
     {NULL, NULL, 0}
 };
 

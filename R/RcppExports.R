@@ -111,3 +111,15 @@ pred_mcd <- function(eta, res, d, cor_flag) {
     .Call(`_SCM_pred_mcd`, eta, res, d, cor_flag)
 }
 
+#' Residuals vector via mcd parameterisation
+#'
+#' @param eta Linear predictor (n x (d + dx(d+1)/2) matrix).
+#' @param y Outcome (n x d matrix).
+#' @param y res (n x d matrix).
+#' @export
+NULL
+
+res_dev_mcd <- function(eta, y, res) {
+    .Call(`_SCM_res_dev_mcd`, eta, y, res)
+}
+

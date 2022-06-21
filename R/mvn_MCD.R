@@ -116,9 +116,15 @@ mvn_mcd <- function(d = 2){
   }) ## initialize
 
   ##To do residuals and postproc
-  residuals <- function(object,type=c("response","deviance")) {
+  residuals <- function(object, type=c("response","deviance")) {
     type <- match.arg(type)
-    res <- object$y[,1:d] - object$fitted.values[,1:d]
+    if(type == "deviance"){
+      n <- dim(object$fitted.values)[1]
+      res <- matrix(0, n, d)
+      res_dev_mcd(object$fitted.values, object$y, res)
+    } else {
+      res <- object$y - object$fitted.values[,1:d]
+    }
     res
   } ## residuals
 
@@ -146,17 +152,20 @@ mvn_mcd <- function(d = 2){
     l1 <- matrix(0, n, no_eta) #initialization
     ## log-likelihood: eta is a matrix n*w and y is a matrix n*d
 
-    l <- ll_mcd(eta, y[,1:d]) - 0.5 * n * d * log(2 * pi)
+    #l <- ll_mcd(eta, y[,1:d]) - 0.5 * n * d * log(2 * pi)
+    l <- ll_mcd(eta, y) - 0.5 * n * d * log(2 * pi)
 
 
     if (deriv>0) {
       ## the first derivative: eta is a matrix n*w, y is a matrix n*d,
       ##                         l1 is a matrix n*w
-      d1_mcd(eta, y[,1:d], l1)
+      #d1_mcd(eta, y[,1:d], l1)
+      d1_mcd(eta, y, l1)
 
       ## the second derivatives
       #l2 <- matrix(0, n, no_eta * (no_eta + 1)/2) #initialization
-      d2_mcd(eta,y[,1:d], l2)
+      #d2_mcd(eta,y[,1:d], l2)
+      d2_mcd(eta,y, l2)
 
     }
 
