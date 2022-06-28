@@ -12,10 +12,15 @@ mvn_logm <- function(d = 2){
   #Multivariate model with covariance modelling via matrix logarithm approach
   if(d < 2) stop("mvn_mcd requires to or more dimensional data")
   no_eta <- d + d * (d + 1)/2
+
   stats <- list()
   for (j in 1:no_eta) stats[[j]] <- make.link("identity")
 
   validmu <- function(mu) all(is.finite(mu))
+
+  assign(".cflag", TRUE, envir = environment())
+  getcflag <- function() get(".cflag")
+  putcflag <- function(.cflag) assign(".cflag", .cflag, envir = environment(sys.function()))
 
   assign(".d", d, envir = environment())
   getd <- function() get(".d")
@@ -24,6 +29,10 @@ mvn_logm <- function(d = 2){
   assign(".no_eta", no_eta, envir = environment())
   getno_eta <- function() get(".no_eta")
   putno_eta <- function(.x) assign(".no_eta", .x, envir = environment(sys.function()))
+
+  getL2 <- function() get(".l2")
+  putL2 <- function(.l2) assign(".l2", .l2, envir = environment(sys.function()))
+
 
 
   initialize <- expression({
@@ -42,7 +51,7 @@ mvn_logm <- function(d = 2){
                                           k = x$kd, ks = x$ks, ts = x$ts,
                                           dt = x$dt, v = x$v, qc = x$qc, nthreads = 1,
                                           drop = x$drop, lt = x$lpid[[k]]) +
-                                     crossprod(E[ , jj[[k]]]), pivot = TRUE))
+                                       crossprod(E[ , jj[[k]]]), pivot = TRUE))
           Xty <- XWyd(x$Xd, rep(1, nrow(y)), yt1, x$kd,
                       x$ks, x$ts, x$dt, x$v, x$qc, x$drop, lt = x$lpid[[k]])
           piv <- attr(R, "pivot")
@@ -58,7 +67,7 @@ mvn_logm <- function(d = 2){
           start[jj[[k]]] <- startMu
           eta1 <- Xbd(x$Xd, start, k = x$kd, ks = x$ks,
                       ts = x$ts, dt = x$dt, v = x$v, qc = x$qc, drop = x$drop,
-                       lt = x$lpid[[k]])
+                      lt = x$lpid[[k]])
           resid[,k] <-  y[,k] -   eta1
         }
         Svcov <- cov(resid)
@@ -66,10 +75,10 @@ mvn_logm <- function(d = 2){
         Theta_el<-c(diag(logM_dec), logM_dec[upper.tri(logM_dec, diag=FALSE)])
 
         #for(k in (d+1):no_eta){
-          #x1 <-  x[ , jj[[k]],drop=FALSE]
-          #startji <- qr.coef(qr(x1), c(rep(Theta_el[k-d],nrow(x1))))
-          #startji[!is.finite(startji)] <- 0
-          #start[jj[[k]]] <- startji
+        #x1 <-  x[ , jj[[k]],drop=FALSE]
+        #startji <- qr.coef(qr(x1), c(rep(Theta_el[k-d],nrow(x1))))
+        #startji[!is.finite(startji)] <- 0
+        #start[jj[[k]]] <- startji
         #}
       } else { #regular case
         start <- rep(0,ncol(x))
@@ -113,66 +122,25 @@ mvn_logm <- function(d = 2){
   }) ## initialize
 
   ##To do residuals and postproc
-  residuals <- function(object,type=c("response","deviance")) {
+  #residuals <- function(object,type=c("response","deviance")) {
+  #  type <- match.arg(type)
+  #  res <- object$y[,1:d] - object$fitted.values[,1:d]
+  #  res
+  #} ## residuals
+
+  residuals <- function(object, type=c("response","deviance")) {
     type <- match.arg(type)
-    res <- object$y[,1:d] - object$fitted.values[,1:d]
+    if(type == "deviance"){
+      n <- dim(object$fitted.values)[1]
+      res <- matrix(0, n, d)
+      res_dev_logm(object$fitted.values, object$y, res)
+    } else {
+      res <- object$y - object$fitted.values[,1:d]
+    }
     res
   } ## residuals
 
 
-  trind.generator <- function (K = 2, deriv = 0) {
-    m.start <- 1
-    i2 <- array(0, dim = c(K, K))
-    m <- m.start
-    for (k in 1:K) for (l in k:K) {
-      i2[k, l] <- i2[l, k] <- m
-      m <- m + 1
-    }
-
-    m <- m.start
-    i2r <- rep(0, max(i2))
-    for (k in 1:K) for (l in k:K) {
-      i2r[m] <- l + (k - 1) * K
-      m <- m + 1
-    }
-    if(deriv == 0){
-      i3 <- i3r <- i4 <- i4r <- NULL
-    } else {
-      i3 <- array(0, dim = c(K, K, K))
-      m <- m.start
-      for (j in 1:K) for (k in j:K) for (l in k:K) {
-        i3[j, k, l] <- i3[j, l, k] <- i3[k, l, j] <- i3[k, j,
-                                                        l] <- i3[l, j, k] <- i3[l, k, j] <- m
-        m <- m + 1
-      }
-      m <- m.start
-      i3r <- rep(0, max(i3))
-      for (j in 1:K) for (k in j:K) for (l in k:K) {
-        i3r[m] <- l + (k - 1) * K + (j - 1) * K^2
-        m <- m + 1
-      }
-      i4 <- array(0, dim = c(K, K, K, K))
-      m <- m.start
-      for (i in 1:K) for (j in i:K) for (k in j:K) for (l in k:K) {
-        i4[i, j, k, l] <- i4[i, j, l, k] <- i4[i, k, l, j] <- i4[i,
-                                                                 k, j, l] <- i4[i, l, j, k] <- i4[i, l, k, j] <- i4[j,
-                                                                                                                    i, k, l] <- i4[j, i, l, k] <- i4[j, k, l, i] <- i4[j,
-                                                                                                                                                                       k, i, l] <- i4[j, l, i, k] <- i4[j, l, k, i] <- i4[k,
-                                                                                                                                                                                                                          j, i, l] <- i4[k, j, l, i] <- i4[k, i, l, j] <- i4[k,
-                                                                                                                                                                                                                                                                             i, j, l] <- i4[k, l, j, i] <- i4[k, l, i, j] <- i4[l,
-                                                                                                                                                                                                                                                                                                                                j, k, i] <- i4[l, j, i, k] <- i4[l, k, i, j] <- i4[l,
-                                                                                                                                                                                                                                                                                                                                                                                   k, j, i] <- i4[l, i, j, k] <- i4[l, i, k, j] <- m
-        m <- m + 1
-      }
-      m <- m.start
-      i4r <- rep(0, max(i4))
-      for (i in 1:K) for (j in i:K) for (k in j:K) for (l in k:K) {
-        i4r[m] <- l + (k - 1) * K + (j - 1) * K^2 + (i - 1) * K^3
-        m <- m + 1
-      }
-    }
-    list(i2 = i2, i3 = i3, i4 = i4, i2r = i2r, i3r = i3r, i4r = i4r)
-  }
 
   ll <- function(y, X, coef, wt, family,  offset = NULL,
                  deriv = 0, d1b = NULL, d2b = NULL, Hp = NULL,
@@ -182,6 +150,12 @@ mvn_logm <- function(d = 2){
 
     n <- nrow(y)
     eta <- matrix(0, n, no_eta)
+    l2 <- try(getL2(), TRUE)
+    if("try-error" %in% class(l2)){
+      l2 <-  matrix(0, n, no_eta * (no_eta + 1)/2) #initialization
+      putL2(l2)
+    }
+
     for(k in 1 : no_eta){
       eta[,k] <- if (discrete) Xbd(X$Xd,coef,k=X$kd,ks=X$ks,ts=X$ts,dt=X$dt,v=X$v,qc=X$qc,drop=X$drop,lt=X$lpid[[k]])
       else X[,jj[[k]],drop=FALSE]%*%coef[jj[[k]]]
@@ -190,35 +164,35 @@ mvn_logm <- function(d = 2){
     l1 <- matrix(0, n, no_eta) #initialization
     ## log-likelihood: eta is a matrix n*w and y is a matrix n*d
 
-    l <- ll_logm(eta, y[,1:d]) - 0.5 * n * d * log(2 * pi)
+    l <- ll_logm(eta, y) - 0.5 * n * d * log(2 * pi)
 
 
 
     if (deriv>0) {
       ## the first derivative: eta is a matrix n*w, y is a matrix n*d,
       ##                         l1 is a matrix n*w
-      d1_logm(eta, y[,1:d], l1)
+      d1_logm(eta, y, l1)
 
 
       ## the second derivatives
       l2 <- matrix(0, n, no_eta * (no_eta + 1)/2) #initialization
-      d2_logm(eta, y[,1:d], l2)
+      d2_logm(eta, y, l2)
 
-     }
+    }
 
-     l3 <- 0 ## defaults
+    l3 <- 0 ## defaults
 
-     if (deriv) {
-       i2 <- family$tri$i2
-       i3 <- family$tri$i3
+    if (deriv) {
+      i2 <- family$tri$i2
+      i3 <- family$tri$i3
 
-       ## get the gradient and Hessian...
-       ret <- gamlss.gH(X, jj, l1, l2, i2, l3 = l3, i3 = i3,
-                        d1b = d1b, deriv = deriv - 1, fh = fh, D = D)
-     } else ret <- list()
+      ## get the gradient and Hessian...
+      ret <- gamlss.gH(X, jj, l1, l2, i2, l3 = l3, i3 = i3,
+                       d1b = d1b, deriv = deriv - 1, fh = fh, D = D)
+    } else ret <- list()
     ret$l <- l
     ret
-   } ## end ll mvn_logm
+  } ## end ll mvn_logm
 
   predict <- function(family,se=FALSE,eta=NULL,y=NULL,X=NULL,
                       beta=NULL,off=NULL,Vb=NULL) {
@@ -255,16 +229,39 @@ mvn_logm <- function(d = 2){
     list(fit = out)
   } ## mvncm predict
 
+  jacobian <- function(eta, jj){
+    #The following two lines could be unuseful
+    #no_eta <- ncol(eta) # delete in SCM
+    #d <- -3/2 + sqrt(9/4 + 2 * no_eta) # delete in SCM
+    res <- matrix(0, nrow(eta), no_eta)
+    G <- mat2vec(d) #put in cpp???
+
+    cor_flag <- getcflag()
+
+    if(jj <= d){
+      res[,jj] <- 1
+    } else {
+      jj <- jj - d
+      idx_jj <- which(G == jj, arr.ind = TRUE)
+      S_row <- as.numeric(idx_jj[1, 1])
+      S_col <- as.numeric(idx_jj[1, 2])
+
+      jacobian_logm(eta, res, d, S_row - 1, S_col - 1,
+                    as.integer(cor_flag))
+    }
+    return(res)
+  }
+
   structure(list(family = "Multivariate normal (logM)", ll = ll, nlp = no_eta,
                  ##link=paste(link), ## unuseful?
-                 tri = trind.generator(no_eta, deriv = 0), ## symmetric indices for accessing derivative arrays
+                 tri = trind.generator(no_eta, ifunc=TRUE), ## symmetric indices for accessing derivative arrays
                  initialize = initialize,
                  getd=getd, putd=putd,
                  getno_eta=getno_eta, putno_eta=putno_eta,
                  #postproc=postproc, ##to do
                  residuals=residuals,
                  predict = predict,
-                 #jacobian = jacobian,
+                 jacobian = jacobian,
                  linfo = stats, ## link information list
                  validmu = validmu,
                  #rd=rd,
@@ -272,5 +269,5 @@ mvn_logm <- function(d = 2){
                  ls = 1, ## signals that ls not needed here
                  available.derivs = 0, ## can use full Newton here
                  discrete.ok = TRUE
-                 ),class = c("general.family", "extended.family", "family"))
+  ),class = c("general.family", "extended.family", "family"))
 } ## end mvn_logm
