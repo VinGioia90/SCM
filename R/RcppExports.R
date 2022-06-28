@@ -49,6 +49,10 @@ d2_mcd <- function(eta, y, res) {
     .Call(`_SCM_d2_mcd`, eta, y, res)
 }
 
+jacobian_logm <- function(eta, res, d, S_row, S_col, cor_flag) {
+    .Call(`_SCM_jacobian_logm`, eta, res, d, S_row, S_col, cor_flag)
+}
+
 jacobian_mcd <- function(eta, res, d, S_row, S_col, rc_idx_s, rc_idx_t, cor_flag) {
     .Call(`_SCM_jacobian_mcd`, eta, res, d, S_row, S_col, rc_idx_s, rc_idx_t, cor_flag)
 }
@@ -109,6 +113,18 @@ pred_logm <- function(eta, res, d) {
 
 pred_mcd <- function(eta, res, d, cor_flag) {
     .Call(`_SCM_pred_mcd`, eta, res, d, cor_flag)
+}
+
+#' Residuals vector via logm parameterisation
+#'
+#' @param eta Linear predictor (n x (d + dx(d+1)/2) matrix).
+#' @param y Outcome (n x d matrix).
+#' @param y res (n x d matrix).
+#' @export
+NULL
+
+res_dev_logm <- function(eta, y, res) {
+    .Call(`_SCM_res_dev_logm`, eta, y, res)
 }
 
 #' Residuals vector via mcd parameterisation
