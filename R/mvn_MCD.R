@@ -22,7 +22,7 @@ mvn_mcd <- function(d = 2){
 
   assign(".cflag", TRUE, envir = environment())
   getcflag <- function() get(".cflag")
-  putcflag <- function(.clag) assign(".cflag", .cflag, envir = environment(sys.function()))
+  putcflag <- function(.cflag) assign(".cflag", .cflag, envir = environment(sys.function()))
 
 
   assign(".d", d, envir = environment())
