@@ -20,8 +20,6 @@
 #'
 #' @examples
 #'
-
-
 boost_order <- function(y, X, effects, constraints,
                               nstep = 1, verbose = FALSE,
                               rate = 1, ncores = 1){
@@ -30,7 +28,6 @@ boost_order <- function(y, X, effects, constraints,
   neta <- d * (d + 1)/2
   neff <- length(effects)
 
-  # Intercept initialization
   Svcov <- cov(y)
 
   MCD_dec <- mcd(Svcov)
@@ -55,15 +52,25 @@ boost_order <- function(y, X, effects, constraints,
       delta <- rep(0, neta)
       index <- constraints[[eff]]
       if( is.null(index) ) index <- 1:neta
+
+      # Build model matrix for effect and its QR decomposition
+      form_gam <- as.formula(paste0("score_init[,1] ~ ", eff))
+      Z <- gam(form_gam, data=X, fit = FALSE)$X
+      QR <- qr(Z)
+      R <- qr.R(QR)
+      Q <- qr.Q(QR)
+
+      # Fit effect to all relevant linear predictors
       for(jj in index){
-        form_gam <- as.formula(paste0("score_init[,jj + d] ~ ", eff))
-        fit <- try( gam(form_gam, data=X) )
-        if( inherits(fit, "try-error") ){
+        # Least squares fit to score vector
+        Qy <- t(Q) %*% score_init[ , jj + d]
+        betas <- try( drop(backsolve(R, Qy)) )
+        if( inherits(betas, "try-error") ){
           delta[jj] <- -Inf
         } else {
           # Improve the following steps: avoid creating a copy
           eta1 <- eta
-          eta1[,jj+d] <- eta1[ , jj+d] + rate * predict.gam(fit)
+          eta1[ , jj+d] <- eta1[ , jj+d] + rate * Z %*% betas
           delta[jj] <- ll_mcd(eta1, y) - l0
         }
       }
