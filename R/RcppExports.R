@@ -25,6 +25,36 @@ d1_mcd <- function(eta, y, res) {
     .Call(`_SCM_d1_mcd`, eta, y, res)
 }
 
+#' Score mcd in beta
+#'
+#' @param X model matrix
+#' @param jj List of lpi index
+#' @param K number of lpi
+#' @param lb matrix of the derivatives (initialization)
+#' @param eta lpi
+#' @param y outcome matrix
+#'
+#' @export
+NULL
+
+d1_mcd_beta <- function(X, jj, K, lb, eta, y, z, w, G) {
+    .Call(`_SCM_d1_mcd_beta`, X, jj, K, lb, eta, y, z, w, G)
+}
+
+#' Score mcd
+#'
+#' @param eta Linear predictor (n x (d + dx(d+1)/2) matrix).
+#' @param y Outcome (n x d matrix).
+#' @param z idx1
+#' @param w idx2
+#' @param G idx matrix
+#' @export
+NULL
+
+d1_mcd_eta <- function(eta, y, res, z, w, G) {
+    .Call(`_SCM_d1_mcd_eta`, eta, y, res, z, w, G)
+}
+
 #' Hessian logm
 #'
 #' @param eta Linear predictor (n x (d + dx(d+1)/2) matrix).
@@ -47,6 +77,18 @@ NULL
 
 d2_mcd <- function(eta, y, res) {
     .Call(`_SCM_d2_mcd`, eta, y, res)
+}
+
+d2_mcd_beta <- function(X, eta, y, jj, K, idx_jk, lbb, l2, l2_last, idx_g, z, w, G, t) {
+    .Call(`_SCM_d2_mcd_beta`, X, eta, y, jj, K, idx_jk, lbb, l2, l2_last, idx_g, z, w, G, t)
+}
+
+d2_mcd_eta <- function(eta, y, res, idx_jk, z, w, G, t) {
+    .Call(`_SCM_d2_mcd_eta`, eta, y, res, idx_jk, z, w, G, t)
+}
+
+idx_zwGt <- function(d, z, w, G, t) {
+    .Call(`_SCM_idx_zwGt`, d, z, w, G, t)
 }
 
 jacobian_logm <- function(eta, res, d, S_row, S_col, cor_flag) {
