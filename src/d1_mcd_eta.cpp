@@ -1,52 +1,58 @@
-#include <Rcpp.h>
-using namespace Rcpp;
+// [[Rcpp::depends(RcppArmadillo)]]
+#include <RcppArmadillo.h>
 
 //' Score mcd
 //'
 //' @param eta Linear predictor (n x (d + dx(d+1)/2) matrix).
 //' @param y Outcome (n x d matrix).
+//' @param res final results
 //' @param z idx1
 //' @param w idx2
 //' @param G idx matrix
 //' @export
 
 // [[Rcpp::export(name="d1_mcd_eta")]]
-double d1_mcd_eta(NumericVector& eta, NumericVector& y, NumericVector& res, IntegerVector& z, IntegerVector& w, IntegerMatrix& G){
-  uint32_t d = y.length();
+double d1_mcd_eta(const arma::mat& eta, const arma::mat& y, arma::mat& res, arma::vec& z, arma::vec& w, arma::mat& G){
+  using namespace arma;
+  uint32_t d = y.n_cols;
+  uint32_t n = y.n_rows;
 
+
+  uint32_t i;
   uint32_t j;
   uint32_t k;
 
   double aux_out = 0.0;
-  NumericVector s(d);
+  vec s(d, fill::zeros);
 
-    s(0) = y(0) - eta(0);
+  for(i = 0; i < n; i++){
+    s(0) = y(i, 0) - eta(i, 0);
     for(j = 1; j < d; j++){
       for(k = 0; k < j; k++){
-        aux_out = aux_out + (y(k) - eta(k)) * eta(G(j - 1,k));
+        aux_out = aux_out + (y(i, k) - eta(i, k)) * eta(i, G(j - 1, k));
       }
-      s(j) = aux_out + y(j) - eta(j);
+      s(j) = aux_out + y(i,j) - eta(i,j);
       aux_out = 0.0;
     }
 
-    res(d-1) = exp(-eta(2*d-1)) * s(d-1);
-    res(2*d-1) = -0.5 + 0.5*exp(-eta(2*d-1)) * s(d-1) * s(d-1);
+    res(i, d - 1) = exp(-eta(i, 2 * d - 1)) * s(d - 1);
+    res(i, 2 * d - 1) = -0.5 + 0.5*exp(-eta(i, 2 * d - 1)) * s(d - 1) * s(d - 1);
     if(d > 2){
-      res(3 * d - 1) = -exp(-eta(w(d-1) + d)) * s(w(d-1)) * (y(z(d-1)) - eta(z(d-1)));
+      res(i, 3 * d - 1) = -exp(-eta(i, w(d - 1) + d)) * s( w(d - 1) ) * (y(i, z(d - 1)) - eta(i, z(d - 1)));
     }
 
     for(j = 0; j < d - 1; j++){
-      res(j) = exp(-eta(j + d)) * s(j);
+      res(i, j) = exp(-eta(i, j + d)) * s(j);
       for(k = j + 1; k < d; k++){
-        res(j) = res(j) + exp(-eta(k + d)) * s(k) * eta(G(k - 1,j));
+        res(i, j) = res(i, j) + exp(-eta(i, k + d)) * s(k) * eta(i, G(k - 1,j));
       }
-      res(j + d) = -0.5 + 0.5*exp(-eta(j + d)) * s(j) * s(j);
-      res(j + 2 * d) = -exp(-eta(w(j) + d)) * s(w(j)) * (y(z(j)) - eta(z(j)));
+      res(i, j + d) = -0.5 + 0.5*exp(-eta(i, j + d)) * s(j) * s(j);
+      res(i, j + 2 * d) = -exp(-eta(i, w(j) + d)) * s(w(j)) * (y(i, z(j)) - eta(i, z(j)));
     }
 
     for(j = d; j < d * (d - 1)/2; j++){
-      res(j + 2 * d) = -exp(-eta(w(j) + d)) * s(w(j)) * (y(z(j)) - eta(z(j)));
+      res(i, j + 2 * d) = -exp(-eta(i, w(j) + d)) * s(w(j)) * (y(i, z(j)) - eta(i, z(j)));
     }
-
+  }
   return(1.0);
 }

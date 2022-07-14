@@ -38,36 +38,37 @@ BEGIN_RCPP
 END_RCPP
 }
 // d1_mcd_beta
-double d1_mcd_beta(NumericMatrix& X, List& jj, uint32_t& K, NumericVector& lb, NumericMatrix& eta, NumericMatrix& y, IntegerVector& z, IntegerVector& w, IntegerMatrix& G);
-RcppExport SEXP _SCM_d1_mcd_beta(SEXP XSEXP, SEXP jjSEXP, SEXP KSEXP, SEXP lbSEXP, SEXP etaSEXP, SEXP ySEXP, SEXP zSEXP, SEXP wSEXP, SEXP GSEXP) {
+double d1_mcd_beta(arma::mat& X, Rcpp::List& jj, uint32_t& K, arma::vec& lb, arma::mat& l1, arma::mat& eta, arma::mat& y, arma::vec& z, arma::vec& w, arma::mat& G);
+RcppExport SEXP _SCM_d1_mcd_beta(SEXP XSEXP, SEXP jjSEXP, SEXP KSEXP, SEXP lbSEXP, SEXP l1SEXP, SEXP etaSEXP, SEXP ySEXP, SEXP zSEXP, SEXP wSEXP, SEXP GSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericMatrix& >::type X(XSEXP);
-    Rcpp::traits::input_parameter< List& >::type jj(jjSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type X(XSEXP);
+    Rcpp::traits::input_parameter< Rcpp::List& >::type jj(jjSEXP);
     Rcpp::traits::input_parameter< uint32_t& >::type K(KSEXP);
-    Rcpp::traits::input_parameter< NumericVector& >::type lb(lbSEXP);
-    Rcpp::traits::input_parameter< NumericMatrix& >::type eta(etaSEXP);
-    Rcpp::traits::input_parameter< NumericMatrix& >::type y(ySEXP);
-    Rcpp::traits::input_parameter< IntegerVector& >::type z(zSEXP);
-    Rcpp::traits::input_parameter< IntegerVector& >::type w(wSEXP);
-    Rcpp::traits::input_parameter< IntegerMatrix& >::type G(GSEXP);
-    rcpp_result_gen = Rcpp::wrap(d1_mcd_beta(X, jj, K, lb, eta, y, z, w, G));
+    Rcpp::traits::input_parameter< arma::vec& >::type lb(lbSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type l1(l1SEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type eta(etaSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type y(ySEXP);
+    Rcpp::traits::input_parameter< arma::vec& >::type z(zSEXP);
+    Rcpp::traits::input_parameter< arma::vec& >::type w(wSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type G(GSEXP);
+    rcpp_result_gen = Rcpp::wrap(d1_mcd_beta(X, jj, K, lb, l1, eta, y, z, w, G));
     return rcpp_result_gen;
 END_RCPP
 }
 // d1_mcd_eta
-double d1_mcd_eta(NumericVector& eta, NumericVector& y, NumericVector& res, IntegerVector& z, IntegerVector& w, IntegerMatrix& G);
+double d1_mcd_eta(const arma::mat& eta, const arma::mat& y, arma::mat& res, arma::vec& z, arma::vec& w, arma::mat& G);
 RcppExport SEXP _SCM_d1_mcd_eta(SEXP etaSEXP, SEXP ySEXP, SEXP resSEXP, SEXP zSEXP, SEXP wSEXP, SEXP GSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector& >::type eta(etaSEXP);
-    Rcpp::traits::input_parameter< NumericVector& >::type y(ySEXP);
-    Rcpp::traits::input_parameter< NumericVector& >::type res(resSEXP);
-    Rcpp::traits::input_parameter< IntegerVector& >::type z(zSEXP);
-    Rcpp::traits::input_parameter< IntegerVector& >::type w(wSEXP);
-    Rcpp::traits::input_parameter< IntegerMatrix& >::type G(GSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type eta(etaSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type y(ySEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type res(resSEXP);
+    Rcpp::traits::input_parameter< arma::vec& >::type z(zSEXP);
+    Rcpp::traits::input_parameter< arma::vec& >::type w(wSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type G(GSEXP);
     rcpp_result_gen = Rcpp::wrap(d1_mcd_eta(eta, y, res, z, w, G));
     return rcpp_result_gen;
 END_RCPP
@@ -351,7 +352,7 @@ END_RCPP
 static const R_CallMethodDef CallEntries[] = {
     {"_SCM_d1_logm", (DL_FUNC) &_SCM_d1_logm, 3},
     {"_SCM_d1_mcd", (DL_FUNC) &_SCM_d1_mcd, 3},
-    {"_SCM_d1_mcd_beta", (DL_FUNC) &_SCM_d1_mcd_beta, 9},
+    {"_SCM_d1_mcd_beta", (DL_FUNC) &_SCM_d1_mcd_beta, 10},
     {"_SCM_d1_mcd_eta", (DL_FUNC) &_SCM_d1_mcd_eta, 6},
     {"_SCM_d2_logm", (DL_FUNC) &_SCM_d2_logm, 3},
     {"_SCM_d2_mcd", (DL_FUNC) &_SCM_d2_mcd, 3},

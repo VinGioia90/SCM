@@ -30,21 +30,24 @@ d1_mcd <- function(eta, y, res) {
 #' @param X model matrix
 #' @param jj List of lpi index
 #' @param K number of lpi
-#' @param lb matrix of the derivatives (initialization)
+#' @param lb matrix of the derivatives beta (initialization)
+#' @param l1 matrix of the derivatives eta (initialization)
 #' @param eta lpi
 #' @param y outcome matrix
+#' @param z auxiliary index vector z
+#' @param w auxiliary index vector w
+#' @param G auxiliary index matrix G
 #'
 #' @export
-NULL
-
-d1_mcd_beta <- function(X, jj, K, lb, eta, y, z, w, G) {
-    .Call(`_SCM_d1_mcd_beta`, X, jj, K, lb, eta, y, z, w, G)
+d1_mcd_beta <- function(X, jj, K, lb, l1, eta, y, z, w, G) {
+    .Call(`_SCM_d1_mcd_beta`, X, jj, K, lb, l1, eta, y, z, w, G)
 }
 
 #' Score mcd
 #'
 #' @param eta Linear predictor (n x (d + dx(d+1)/2) matrix).
 #' @param y Outcome (n x d matrix).
+#' @param res final results
 #' @param z idx1
 #' @param w idx2
 #' @param G idx matrix

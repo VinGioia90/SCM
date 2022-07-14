@@ -32,7 +32,7 @@
 #'
 #' @examples
 #'
-gamlss.gH_ef <- function (X, jj, eta, y, i2, n_block = 1, w, z, t, Gmat, idx_jk, l3 = 0, i3 = 0,  l2, l2_last, idx_block,
+gamlss.gH_ef <- function (X, jj, eta, y, i2, n_block = 1, w, z, t, Gmat, idx_jk, l3 = 0, i3 = 0, l1,  l2, l2_last, idx_block,
                           l4 = 0, i4 = 0, d1b = 0, d2b = 0, deriv = 0, fh = NULL, D = NULL){
   K <- length(jj) # no_eta
   sparse <- discrete <- FALSE
@@ -48,7 +48,7 @@ gamlss.gH_ef <- function (X, jj, eta, y, i2, n_block = 1, w, z, t, Gmat, idx_jk,
   # Chiamata funzione cpp per ottenere lb (derivate parziali in beta)
   #print("ciao")
   #print(microbenchmark({
-   d1_mcd_beta(X,jj,K,lb,eta,y, z, w, Gmat)
+   d1_mcd_beta(X,lapply(jj,function(x) x -1),K,lb,l1, eta,y, z, w, Gmat)
   #}, times=2L))
 
   #print("saluti")

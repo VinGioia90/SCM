@@ -27,6 +27,9 @@ mvn_mcd_ef <- function(d = 2, nb=1){
 
    nel_Heta<- as.integer(length(unlist(idx_jk)))
 
+   getL1 <- function() get(".l1")
+   putL1 <- function(.l1) assign(".l1", .l1, envir = environment(sys.function()))
+
    getL2 <- function() get(".l2")
    putL2 <- function(.l2) assign(".l2", .l2, envir = environment(sys.function()))
 
@@ -157,6 +160,12 @@ mvn_mcd_ef <- function(d = 2, nb=1){
     n <- nrow(y)
     eta <- matrix(0, n, no_eta)
 
+    l1 <- try(getL1(), TRUE)
+    if("try-error" %in% class(l1)){
+      l1 <-   matrix(0, n, no_eta) #initialization
+      putL1(l1)
+    }
+
 
 
     nlast<- n%%nb
@@ -215,7 +224,7 @@ mvn_mcd_ef <- function(d = 2, nb=1){
      #print(microbenchmark( ret = gamlss.gH_ef(X, jj, eta, y, i2, n_block=nb,   w, z, t, Gmat, idx_jk,   l3 = l3, i3 = i3, l2, l2_last, idx_block,
      #                                     d1b = d1b, deriv = deriv - 1, fh = fh, D = D), times=10L)) # si può rimuovere il passaggio di i2 (non più utilizzzato))
      #print("saluti")
-      ret <- gamlss.gH_ef(X, jj, eta, y, i2, n_block=nb,   w, z, t, Gmat, idx_jk,   l3 = l3, i3 = i3, l2, l2_last, idx_block,
+      ret <- gamlss.gH_ef(X, jj, eta, y, i2, n_block=nb,   w, z, t, Gmat, idx_jk,   l3 = l3, i3 = i3, l1, l2, l2_last, idx_block,
                         d1b = d1b, deriv = deriv - 1, fh = fh, D = D) # si può rimuovere il passaggio di i2 (non più utilizzzato)
 
     } else ret <- list()
@@ -303,6 +312,7 @@ mvn_mcd_ef <- function(d = 2, nb=1){
                  #get_t=get_t, put_t=put_t, get_G=get_G, put_G=put_G,
                  #getidx_jk = getidx_jk, putidx_jk = putidx_jk,
                  getL2 = getL2, putL2 = putL2,
+                 getL1 = getL1, putL1 = putL1,
                  getL2_last = getL2_last, putL2_last = putL2_last,
                  getidx_block = getidx_block, putidx_block = putidx_block,
                  #postproc=postproc, ##to do
