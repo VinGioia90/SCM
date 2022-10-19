@@ -1,45 +1,39 @@
 // [[Rcpp::depends(RcppArmadillo)]]
 #include <RcppArmadillo.h>
 
-//' Log-likelihood matrix logM
-//'
-//' @param eta Linear predictor (n x (d + dx(d+1)/2) matrix).
-//' @param y Outcome (n x d matrix).
-//' @export
-
 // [[Rcpp::export(name="ll_logm")]]
 double ll_logm(arma::mat& eta, arma::mat& y) {
-   using namespace arma;
- uint32_t n = y.n_rows;
- uint32_t d = y.n_cols;
- uint32_t count = 0;
+  using namespace arma;
 
- uint32_t i;
- uint32_t j;
- uint32_t k;
+  uint32_t n = y.n_rows;
+  uint32_t d = y.n_cols;
+  uint32_t c1 = 0;
 
- double nll = 0.0;
+  uint32_t i;
+  uint32_t j;
+  uint32_t k;
 
- mat nAi(d,d,fill::zeros);
- rowvec ri(d,fill::zeros);
+  double nll = 0.0;
+
+  mat Theta(d, d, fill::zeros); //(negative) log Sigma matrix
+  rowvec r(d, fill::zeros); // i-th residual vector
 
   for(i = 0; i < n; i++){
+    // i-th residual
+    r = y.row(i) - eta(i, span(0, d - 1));
 
-   for(j = 0; j < d; j++){
-    ri(j) = y(i,j) - eta(i,j);
-    nAi(j,j) = -eta(i,j + d);
-   }
-
-   count = 0;
-   for(j=1; j<d; j++){
-    for(k = 0; k < j; k++){
-     nAi(j,k)= -eta(i,count+2*d);
-     nAi(k,j) = -eta(i,count+2*d);
-     count += 1;
+    //(negative) log Sigma matrix
+    c1 = 0;
+    for(j = 1; j < d; j++){
+      for(k = 0; k < j; k++){
+        Theta(j, k) = -eta(i, c1 + 2 * d);
+        Theta(k, j) = Theta(j, k);
+        c1 += 1;
+      }
     }
-   }
-   nll += 0.5 * as_scalar(ri * expmat_sym(nAi) * ri.t()) - 0.5 * trace(nAi);
- }
+    Theta.diag() = -eta(i, span(d, 2 * d - 1));
+    nll += 0.5 * as_scalar(r * expmat_sym(Theta) * r.t()) - 0.5 * trace(Theta);
+  }
 
  return -nll;
 }
