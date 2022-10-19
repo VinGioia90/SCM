@@ -2,7 +2,7 @@
 % Please edit documentation in R/mcd.R
 \name{mcd}
 \alias{mcd}
-\title{Modified Cholesky decomposition 2}
+\title{Modified Cholesky decomposition}
 \usage{
 mcd(X)
 }
