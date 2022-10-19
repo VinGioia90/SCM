@@ -2,108 +2,135 @@
 #include <RcppArmadillo.h>
 
 // [[Rcpp::export(name="d2_mcd_eta")]]
-double d2_mcd_eta(const arma::mat& eta, const arma::mat& y, arma::mat& res,  Rcpp::List&  idx_jk, arma::vec& z, arma::vec& w, arma::mat& G, arma::vec& t){
+double d2_mcd_eta(const arma::mat& eta, const arma::mat& y, arma::mat& d2l, arma::vec& d2l_v,   arma::vec& z, arma::vec& w, arma::mat& G, arma::vec& t, Rcpp::List&  b1_eta, Rcpp::List&  b3, arma::vec& ib1_eta, arma::vec& ib3){
   using namespace arma;
   uint32_t n = y.n_rows;
   uint32_t d = y.n_cols;
   uint32_t l = eta.n_cols;
+  double ee_s;
+  double ee;
+  double eee;
+  double sj;
+  uint32_t wj;
+  uint32_t k1;
+  double swj;
+  uint32_t zj;
+  double ee_r;
 
-  double aux_out = 0.0;
-  double aux_out2 = 0.0;
-  mat out(l,l, fill::zeros);
+  double aux1 = 0.0;
+
+  mat out(l, l, fill::zeros);
   vec s(d, fill::zeros);
-  Rcpp::IntegerVector idx_k1;
+  rowvec r(d, fill::zeros);
+  Rcpp::IntegerVector ik1;
 
-  uint32_t count = 0;
-
+  uint32_t c1 = 0;
   uint32_t i;
   uint32_t j;
   uint32_t k;
   uint32_t q;
 
-   //vec z(d*(d - 1)/2, fill::zeros);
-   //vec w(d*(d - 1)/2, fill::zeros);
-   //mat G(d - 1,d - 1, fill::zeros);
-
-   //uint32_t count2 = 0;
-
-   //for(i = 0; i < d; i++){
-  //   if(i < d - 1){
-  //     for(j = 0; j < i + 1; j++){
-  //       G(i,j) = count2 + 2*d;
-  //       count2 = count2 + 1;
-  //     }
-  //   }
-  //   for(j = 0; j < i; j++){
-  //     z(count) = j;
-  //     w(count) = i;
-  //     count = count + 1;
-  //   }
-  // }
-
-  // vec t = w-z;
+  vec::iterator it_b1;
+  vec::iterator it_b1_end;
+  vec::iterator it_b3;
+  vec::iterator it_b3_end;
 
   for(i = 0; i < n; i++){
+    r = y.row(i) - eta(i,span(0, d - 1));
 
-    s(0) = y(i,0) - eta(i,0);
+    // sum in brackets (computed one time and used below)
+    s[0] = r[0];
     for(j = 1; j < d; j++){
       for(k = 0; k < j; k++){
-        aux_out = aux_out + (y(i,k) - eta(i,k)) * eta(i,G(j - 1,k));
+        aux1 += r[k] * eta.at(i, G.at(j - 1, k));
       }
-      s(j) = aux_out + y(i,j) - eta(i,j);
-      aux_out = 0.0;
+      s[j] = aux1 + r[j];
+      aux1 = 0.0;
     }
 
     for(j = 0; j < d; j++){
-      // Blocco (1,1)
-      out(j,j) = -exp(-eta(i,j + d));
+      sj = s[j];
+      ee = -exp(-eta.at(i, j + d));
+      ee_s =  ee * sj;
+
+      // Block (1,1) - mean vs mean
+      out.at(j, j) = ee;
+
       for(k = j + 1; k < d; k++){
-        // Blocco (1,1)
-        out(j,k) = -exp(-eta(i,k + d))*eta(i,G(k - 1,j));
+        eee = exp(-eta.at(i, k + d)) * eta.at(i, G.at(k - 1, j));
+        // Block (1,1) - mean vs mean
+        out.at(j, k) = -eee;
         for(q = k + 1; q < d; q++){
-          aux_out2 = aux_out2 - exp(-eta(i,q + d))*eta(i,G(q - 1,j))*eta(i,G(q - 1,k));
+          aux1 +=  -exp(-eta.at(i, q + d)) * eta.at(i, G.at(q - 1, j)) * eta(i, G.at(q - 1,k));
         }
-        // Blocco (1,1)
-        out(j,k) = out(j,k) + aux_out2;
-        aux_out2 = 0.0;
-        // Blocco (1,2)
-        out(j,k + d) = -exp(-eta(i,k + d))*s(k)*eta(i,G(k - 1,j));
-        aux_out = aux_out - exp(-eta(i,k + d))*eta(i,G(k - 1,j))*eta(i,G(k - 1,j));
-      }
-      //Blocco (1,1)
-      out(j,j) = out(j,j) + aux_out;
-      aux_out = 0.0;
 
-      // Blocco (1,2)
-      out(j,j + d) = -exp(-eta(i,j + d))*s(j);
-      // Blocco (2,2)
-      out(j + d,j + d) = -0.5*exp(-eta(i,j + d))*s(j)*s(j);
+        // Block (1,1) - mean vs mean
+        out.at(j, k) += aux1;
+        aux1 = 0.0;
+
+        // Block (1,2) - mean vs logD2
+        out.at(j, k + d) = -eee * s[k] ;
+        //Block (1,1) - mean vs mean
+        out.at(j, j) -=  eee * eta.at(i, G.at(k - 1, j));
+      }
+
+
+      // Block (1,2) - mean vs logD2
+      out.at(j, j + d) = ee_s;
+
+      // Block (2,2) - logD2 vs logD2
+      out.at(j + d, j + d) = 0.5 * ee_s * sj;
     }
 
-    for(k = 0; k < d*(d - 1)/2; k++){
-      //Blocco (1,3)
-      for(int j = 0; j < w(k); j++){
-        out(j,k + 2*d) = exp(-eta(i,w(k) + d))*(y(i,z(k)) - eta(i,z(k)))*eta(i,G(w(k) - 1,j));
+    for(k = 0; k < d * (d - 1)/2; k++){
+      k1 = k + 2 * d;
+      wj = w[k];
+      swj = s[wj];
+      zj = z[k];
+      ee = exp(-eta.at(i, wj + d));
+      ee_r = ee * r[zj];
+      //Block (1,3) - mean vs T
+      for(j = 0; j < wj; j++){
+        out.at(j, k1) = ee_r * eta.at(i, G.at(wj - 1, j));
       }
-      out(z(k),k + 2*d) = out(z(k),k + 2*d) + exp(-eta(i,w(k) + d))*s(w(k));
-      out(w(k),k + 2*d) = exp(-eta(i,w(k) + d))*(y(i,z(k)) - eta(i,z(k)));
-      //Blocco (2,3)
-      out(w(k) + d,k + 2*d) = exp(-eta(i,w(k) + d))*s(w(k))*(y(i,z(k)) - eta(i,z(k)));
-      //Blocco (3,3)
-      for(int j = 0; j < t(k); j++){
-        out(k+2*d,k+2*d+j) = -exp(-eta(i,w(k) + d))*(y(i,z(k+j)) - eta(i,z(k+j)))*(y(i,z(k)) - eta(i,z(k)));
+      out.at(zj, k1) += ee * swj;
+      out.at(wj, k1) = ee_r;
+
+      //Block (2,3) - logD2 vs T
+      out.at(wj + d, k1) = ee_r * swj;
+
+      //Block (3,3) - T vs T
+      for(j = 0; j < t[k]; j++){
+        out.at(k1, k1 + j) = -ee_r * r(z[k+j]);
       }
     }
 
-    count = 0;
-    for(j = 0; j < l; j++){
-      idx_k1 = idx_jk[j];
-      Col<int> idx_ka(idx_k1.begin(),idx_k1.length(),false);
-      for(k = 0; k < idx_k1.length(); k++){
-        res(i, count) = out(j,idx_k1(k));
-        count = count + 1;
+    //Saving the nonzero elements in a vector or a matrix according if they involve the intercepts or not
+    it_b1     = ib1_eta.begin();
+    it_b1_end = ib1_eta.end();
+    it_b3     = ib3.begin();
+    it_b3_end = ib3.end();
+
+    // Full + partial
+    c1 = 0;
+    for(; it_b1 !=  it_b1_end; ++it_b1){
+      ik1 = b1_eta[(*it_b1)];
+      for(k = 0; k < ik1.length(); k++){
+        d2l.at(i, c1) = out((*it_b1), ik1[k]);
+        c1 += 1;
+      }
+    }
+
+    // intercepts
+    c1 = 0;
+    for(; it_b3 !=  it_b3_end; ++it_b3){
+      ik1 = b3[(*it_b3)];
+      for(k = 0; k < ik1.length(); k++){
+        d2l_v[c1] += out((*it_b3), ik1[k]);
+        c1 += 1;
       }
     }
   }
   return(1.0);
 }
+
