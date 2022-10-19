@@ -6,7 +6,6 @@
 #' @return The precision matrix
 #' @export
 #'
-#' @examples
 inverse <- function(X){
  res <- precision(X)
  return(res)
