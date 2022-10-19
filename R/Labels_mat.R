@@ -1,13 +1,3 @@
-#' Labels of mcd decomposition
-#' @description This function return the labels of the unconstrained mcd elements
-#'
-#' @param d The dimension of the outcome
-#'
-#' @return A matrix with the labels of the uncostrained mcd elements
-#' @export
-#'
-#' @examples
-#'
 l_mat <- function(d){
   mat <- matrix(NA, d, d)
   for(i in 1:d){
