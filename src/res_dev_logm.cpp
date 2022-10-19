@@ -1,45 +1,32 @@
 #include "scm.h"
 
-//' Residuals vector via logm parameterisation
-//'
-//' @param eta Linear predictor (n x (d + dx(d+1)/2) matrix).
-//' @param y Outcome (n x d matrix).
-//' @param y res (n x d matrix).
-//' @export
-
 // [[Rcpp::export(name="res_dev_logm")]]
-double res_dev_logm(Rcpp::NumericMatrix& eta, Rcpp::NumericMatrix& y, Rcpp::NumericMatrix& res){
-  using namespace Rcpp;
-  uint32_t n = y.rows();
-  uint32_t d = y.cols();
+double res_dev_logm(arma::mat& eta, arma::mat& y, arma::mat& resD){
+  using namespace arma;
+  uint32_t n = y.n_rows;
+  uint32_t d = y.n_cols;
 
   uint32_t i;
   uint32_t j;
 
-  NumericVector ri(d);
-  arma::vec ri_a(d,arma::fill::zeros);
-  NumericVector etai(d+d*(d+1)/2);
+  rowvec r(d, fill::zeros);
 
-  NumericMatrix Sigma(d, d);
-  arma::mat iSigma(d, d, arma::fill::zeros);
-  arma::mat isqrtSigma(d, d, arma::fill::zeros);
-  arma::mat isqrtSigmaj(1,d, arma::fill::zeros);
+  mat Sigma(d,d,fill::zeros);//NumericMatrix Sigma(d, d);
+  mat iSigma(d, d, arma::fill::zeros);
+  mat isqrtSigma(d, d, arma::fill::zeros);
+  mat isqrtSigmaj(1, d, arma::fill::zeros);
+  rowvec etai(d, fill::zeros);
+
   for(i = 0; i < n; i++){
-    etai = eta(i,_);
+    etai = eta.row(i);
     Sigma = logM_Sigma(etai, d);
-    iSigma = arma::inv_sympd(as<arma::mat>(Sigma));
-    isqrtSigma = arma::sqrtmat_sympd(iSigma);
-
-    for(j = d; j < 2*d; j++){
-      ri(j - d) = y(i, j-d) - eta(i,j-d);
+    iSigma = inv_sympd(Sigma);
+    isqrtSigma = sqrtmat_sympd(iSigma);
+    r = y.row(i) - eta(i, span(0, d - 1));
+    for(j = 0; j < d; j++){
+      isqrtSigmaj = isqrtSigma.row(j);
+      resD(i, j) = as_scalar(isqrtSigmaj * r.t());
     }
-    ri_a = as<arma::vec>(ri);
-
-    for(j = d; j < 2*d; j++){
-      isqrtSigmaj =isqrtSigma.row(j-d);
-      res(i, j-d) = as_scalar( isqrtSigmaj*ri_a);
-    }
-
   }
   return(1.0);
 }
