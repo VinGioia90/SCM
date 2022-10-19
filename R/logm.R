@@ -6,7 +6,6 @@
 #' @return The logarithm of the covariance matrix
 #' @export
 #'
-#' @examples
 logm <- function(X){
   res <- logm_decomposition(X)
   return(res)
