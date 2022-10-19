@@ -1,10 +1,10 @@
 #include "scm.h"
 
 // [[Rcpp::export(name="jacobian_logm")]]
-double jacobian_logm(Rcpp::NumericMatrix& eta,  Rcpp::NumericMatrix& res, uint32_t& d,
+double jacobian_logm(arma::mat& eta,  arma::mat& res, uint32_t& d,
                      uint32_t& S_row, uint32_t& S_col, uint32_t& cor_flag){
-  using namespace Rcpp;
-  uint32_t n = eta.rows();
+  using namespace arma;
+  uint32_t n = eta.n_rows;
   uint32_t i;
   uint32_t j;
   uint32_t k;
@@ -21,8 +21,8 @@ double jacobian_logm(Rcpp::NumericMatrix& eta,  Rcpp::NumericMatrix& res, uint32
   arma::mat loewner(d,d,arma::fill::zeros);
   arma::cube V_j (d,d,d*(d+1)/2,arma::fill::zeros);
 
-  NumericVector etai(d);
-  NumericMatrix Sigma(d,d);
+  rowvec etai(d, fill::zeros);
+  mat Sigma(d,d, fill::zeros);
 
 
   for(j = 0; j < d; j++){
