@@ -21,19 +21,19 @@
 #' plotECPD(A, trans = mcd)
 #' plotECPD(A, trans = logm)
 plotECPD <- function(ecov,
-                      trans = NULL,
-                      lab = NULL,
-                      di = FALSE,
-                      ...){
+                     trans = NULL,
+                     lab = NULL,
+                     di = FALSE,
+                     ...){
   d <- ncol(ecov)
-  if(is.null(lab)) lab <- 1:d
-  if(is.null(trans)){
+  if ( is.null(lab) ) lab <- 1 : d
+  if (is.null(trans) ) {
     res <- ecov
   } else {
     res <- trans(ecov)
   }
   arg <- list(...)
-  if(is.null(arg$col) ){
+  if ( is.null(arg$col) ) {
     arg$col <- hcl.colors(ifelse(di == TRUE, d * (d + 1)/2, d * (d - 1)/2),
                           "YlOrRd", rev = TRUE)
   }
