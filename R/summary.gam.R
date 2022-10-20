@@ -63,8 +63,12 @@ summary.scm <- function(obj, intercept = FALSE){
     } else {
       # Detect the lhs of the formula of the first terms
       lhs_foo <- word(as.character(obj$foo_summary[[ as.integer(substring(lab_pt[i], first = detlp[[1]][length(detlp[[1]])]+1)) + 1]]), 1, sep = "\\~")[2]
-      lab_pt[i] <- paste0(substring(lab_pt[i], first=1, last = detlp[[1]][length(detlp[[1]])]), lhs_foo)
-    }
+      if(!is.na(lhs_foo)){
+        lab_pt[i] <- paste0(substring(lab_pt[i], first=1, last = detlp[[1]][length(detlp[[1]])]), lhs_foo)
+      } else {
+        lab_pt[i] <- paste0("(Intercept).",internal()$labTh(family$getd(), as.integer(substring(lab_pt[i], first = detlp[[1]][length(detlp[[1]])]+1)) + 1))
+      }
+      }
   }
   rownames(sgam.pt) <- lab_pt
 
@@ -80,13 +84,13 @@ summary.scm <- function(obj, intercept = FALSE){
     } else {
     # Detect the lhs of the formula of the first terms
     lhs_foo <- word(as.character(obj$foo_summary[[ as.integer(substring(lab_st[i], first = detlp[[1]][length(detlp[[1]])]+1,last = detlpbl[[1]][length(detlpbl[[1]])]-1)) + 1]]), 1, sep = "\\~")[2]
-    lab_st[i] <- paste0(substring(lab_st[i], first=1, last=1), substring(lab_st[i], first = detlpbl[[1]][length(detlp[[1]])], last=nchar(lab_st[i])),".", lhs_foo)
+    lab_st[i] <- paste0(substring(lab_st[i], first=1, last=1), substring(lab_st[i], first = detlpbl[[1]][length(detlp[[1]])], last=nchar(lab_st[i])),".",lhs_foo)
     }
   }
   rownames(sgam.st) <- lab_st
 
   #sgam$formula <-  foo$foo_print # Formula user (ordered)
   if ( !intercept ) sgam.pt <- sgam.pt[-which(grepl( "(Intercept)", row.names(sgam.pt), fixed = TRUE)),] #(rimuovo le intercette)
-  class(sgam) <- c("summary.scm", "summary.gam")
+  class(sgam) <- "summary.scm" #c("summary.scm", "summary.gam")
   return(print.summary.gam(obj, sgam.pt, sgam.st))
 }
