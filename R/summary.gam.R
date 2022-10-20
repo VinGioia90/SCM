@@ -49,7 +49,6 @@ summary.scm <- function(obj, intercept = FALSE){
     invisible(x)
   }
 
-
   sgam <- summary.gam(obj)
 
   sgam.pt <- sgam$p.table
