@@ -2,9 +2,7 @@
 
 S3method(summary,scm)
 export(gam_scm)
-export(gam_scm2)
 export(get_foo)
-export(get_foo2)
 export(internal)
 export(inverse)
 export(logm)
