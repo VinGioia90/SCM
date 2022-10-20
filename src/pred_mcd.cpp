@@ -9,12 +9,6 @@ double pred_mcd(arma::mat& eta, arma::mat& pred,  uint32_t& d, uint32_t& cor_fla
   uint32_t k;
   uint32_t count;
 
-  //NumericMatrix aux_LD(d, d);
-  //NumericMatrix L(d, d);
-  //NumericMatrix D(d, d);
-  //NumericMatrix Sigma(d, d);
-  //NumericVector etai(d);
-
   mat aux_LD(d, d, fill::zeros);
   mat L(d, d, fill::zeros);
   mat D(d, d, fill::zeros);
@@ -23,7 +17,6 @@ double pred_mcd(arma::mat& eta, arma::mat& pred,  uint32_t& d, uint32_t& cor_fla
 
 
   for(i = 0; i < n; i++){
-    //etai = eta(i,_);
     etai = eta.row(i);
     aux_LD = mcd_LD(etai, d);
     L = aux_LD;
