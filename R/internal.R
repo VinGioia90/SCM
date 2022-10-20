@@ -16,6 +16,7 @@ internal <- function(){
               "aux_idx" = aux_idx,
               "d1_beta" = d1_beta,
               "d2_beta"  = d2_beta,
+              "labTh" = labTh,
               # mcd functions:
               "ll_mcd" =  ll_mcd,
               "res_dev_mcd" = res_dev_mcd,
