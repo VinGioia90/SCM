@@ -4,8 +4,6 @@
 arma::mat mcd_LD(arma::rowvec& x, uint32_t& d){
   using namespace arma;
 
-  //NumericMatrix T(d, d);
-  //NumericMatrix Y(d, d);
   mat T(d, d, fill::zeros);
   mat Y(d, d, fill::zeros);
 
