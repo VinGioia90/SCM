@@ -27,7 +27,7 @@ gam_scm <- function(formula, family = mvn_scm(d = 2, nb = 1, param = NULL), opti
   if ( !(identical(idxTh,integer(0))) ) {
     Th_v<- rep(0, length(idxTh))
     for(j in 1 : length(idxTh)) Th_v[j] <- gregexpr("Th_", colnames(data[idxTh[j]]))[[1]][1]
-    if(1 %in% Th_v) stop("One (or more) variable in the data frame is specified as Th_<something>: Please change the label of such variable")
+    if(1 %in% Th_v) stop("Some variables in the data frame are specified as Th_<something>: Please change the label of such variables")
   }
 
   # !!! In the new formulation Iwe need to use q+1 to deal with the case where there are formulae specified by using |; We need to avoid the possibility to specify two formulas for the same element as
