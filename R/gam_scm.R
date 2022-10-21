@@ -6,7 +6,7 @@
 #' @param family set the family to mvn_scm (whose parameters are d - dimension of the outcome; nb - number of observations' blocks; param - the type of parametrisation: cuurently only mcd (default) and logm are available)
 #' @param optimizer set to the Fellner-Schall or the bfgs (avialable for the mcd)   to optimize the smoothing parameters
 #' @param data  same arguments as in [mgcv::gam]
-#' @param auxGam list of further arguments to be passed to [mgcv::gam]
+#' @param aGam list of further arguments to be passed to [mgcv::gam]
 #' @return An object of class "scm"
 #' @name gam_scm
 #' @export
