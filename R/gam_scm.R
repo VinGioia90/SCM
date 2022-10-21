@@ -15,7 +15,7 @@
 #' @importFrom mgcv gam summary.gam print.summary.gam
 #'
 #' @examples
-gam_scm <- function(formula, family = mvn_scm(d = 2, nb = 1, param = NULL), optimizer = NULL, data = list(), auxGam = list()){ #passare nb come auxSCM
+gam_scm <- function(formula, family = mvn_scm(d = 2, nb = 1, param = NULL), optimizer = NULL, data = list(), aGam = list()){ #passare nb come auxSCM
   d <- family$getd()
   q <- d + d * (d + 1)/2
 
@@ -41,7 +41,7 @@ gam_scm <- function(formula, family = mvn_scm(d = 2, nb = 1, param = NULL), opti
 
   # Fit the model
   obj <- do.call("gam", c(list("formula" = foo$foo_eval, "family" = family,
-                              "data"= data, "optimizer" = opt), auxGam))
+                              "data"= data, "optimizer" = opt), aGam))
   obj$foo_print <- foo$foo_print
   obj$foo_summary <- foo$foo_summary
   class(obj) <- c("scm", class(obj))
