@@ -5,9 +5,9 @@
 #'
 #' @return A matrix with the unconstrained elements of the modified Cholesky decomposition of the precision matrix
 #' @export
-#'
 mcd <- function(X){
- res <- mcd_decomposition(X)
+ #such function returns a matrix containing the elements of log(D^2) on diagonal and the elements of T off-diagonal
+ res <- mcd_decomposition(X) #call to cpp function
  return(res)
 }
 

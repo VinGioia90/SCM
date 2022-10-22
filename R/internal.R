@@ -1,10 +1,9 @@
-#' Internal function used by the  family (please do not modify this function)
+#' A pool of internal functions used by the family (please do not modify this function)
 #'
 #' @description Such function masks some functions used internally
 #'
 #' @return a list of building functions
 #' @export
-#'
 internal <- function(){
   return(list(# Common functions (between mcd and logm):
               "gamlss.gH_scm" = gamlss.gH_scm,

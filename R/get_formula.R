@@ -1,16 +1,15 @@
-#' This function take the list of formulas provide by the user, then processing it  to be passed to the gam function to estimate gam_scm model
+#' Processing the model formula provided by the users
 #'
-#' @description These is a function that fits a GAM model via covariance modelling using [mgcv::gam]
+#' @description This function take the list of formulas provided by the user, then they are  processed to be passed to the gam function and to be estimated by gam_scm model
 #'
 #' @param foo_user formula provided by the user
 #' @param d dimension of the outcome
-#' @return A list of formulas
+#' @return Three list of formulas:one need to be passed to the gam function and the other two are useful for the summary function
 #' @export
 #'
 #' @importFrom stringr word
 #' @importFrom BMisc rhs lhs.vars
 #' @examples
-
 get_foo <- function ( foo_user, d) {
   d_len <- nchar(d)
   foo_len <- length(foo_user)
