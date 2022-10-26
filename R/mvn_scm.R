@@ -571,6 +571,6 @@ mvn_scm <- function(d = 2, nb = 1, param = NULL){ # manage internally the blocks
                  d2link = 1, d3link = 1, d4link = 1, ## signals to fix.family.link that all done
                  ls = 1, ## signals that ls not needed here
                  available.derivs = a.der, ## can use full Newton here for the mcd parametrisation
-                 discrete.ok = TRUE
+                 discrete.ok = TRUE #?????
   ),class = c("general.family", "extended.family", "family"))
 } ## end mvn_scm
