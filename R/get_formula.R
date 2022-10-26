@@ -36,30 +36,35 @@ get_foo <- function ( foo_user, d) {
     }
   }
 
+
   if ( length(unique(unlist(foo_bar_lhs))) <  length(unlist(foo_bar_lhs)) ) stop ("It is not possible to specify two formulas for the same element in common formula statement specification")
   nsp_foonames <- lapply((1 : foo_len)[-el_bar], function(x) lhs.vars(foo_user[[x]]))
   if ( length(unique(unlist(nsp_foonames))) <  length(unlist(nsp_foonames)) ) stop ("It is not possible to specify two formulas for the same element in term specific formula statement specification")
 
   foob_len <- length(foo_bar)
-
-  for(j in (1 : foo_len)[-el_bar]){
-    for(k in 1 : foob_len) {
-      if ( lhs.vars(foo_user[[j]]) ==  lhs.vars(formula(foo_bar[[k]])) ) {
-        foo_bar[[k]] <- paste(foo_bar[[k]], as.character(rhs(foo_user[[j]]))[2], sep = "+")
-        el_bar2[j] <- j
+  if(foob_len > 0){
+    for(j in (1 : foo_len)[-el_bar]){
+      for(k in 1 : foob_len) {
+        if ( lhs.vars(foo_user[[j]]) ==  lhs.vars(formula(foo_bar[[k]])) ) {
+          foo_bar[[k]] <- paste(foo_bar[[k]], as.character(rhs(foo_user[[j]]))[2], sep = "+")
+          el_bar2[j] <- j
+        }
       }
     }
+  } else {
+    for(j in (1 : foo_len)) foo_bar[[j]] <- foo_user[[j]]
   }
 
-  name_lhs <- rep(0, foob_len)
-  for(j in 1 : foob_len) name_lhs[j] <- gsub("[[:space:]]", "",  word(as.character(foo_bar[[j]]), 1, sep = "\\~"))
+  if(foob_len > 0){
+   name_lhs <- rep(0, foob_len)
+   for(j in 1 : foob_len) name_lhs[j] <- gsub("[[:space:]]", "",  word(as.character(foo_bar[[j]]), 1, sep = "\\~"))
 
   count <- foob_len + 1
   for(j in (1 : foo_len)[-c(el_bar, el_bar2)]){
     if ( !(as.character(lhs.vars(foo_user[[j]])) %in%   name_lhs) ) foo_bar[[count]] <- foo_user[[j]]
     count <- count + 1
   }
-
+  }
 
   foo_user2 <- lapply(foo_bar, formula, env = globalenv())
 
