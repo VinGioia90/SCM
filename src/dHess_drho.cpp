@@ -21,7 +21,7 @@ double dHess_drho(arma::mat& X, arma::mat& eta,  arma::mat& y,  Rcpp::List& jj, 
   Rcpp::List idxq = idx_jkq[1];
   Rcpp::IntegerVector idxj = idx_jkq[2];
   Rcpp::IntegerVector idxk = idx_jkq[3];
-  Rcpp::IntegerVector csj = idx_jkq[4];
+
 
   Rcpp::IntegerVector idxl3j;
   Rcpp::IntegerVector idxqj;
@@ -94,22 +94,12 @@ double dHess_drho(arma::mat& X, arma::mat& eta,  arma::mat& y,  Rcpp::List& jj, 
         idxl3j = idxl3[j];
         idxqj = idxq[j];
         idxjk = idxk(j)-1;
-
         idxjj = idxj(j)-1;
+
         ijjj = jj[idxjj];
         ljjj =  ijjj.length() - 1;
         ijjjf = ijjj(0);
         ijjjl = ijjj(ljjj);
-
-        //if(j == csj(c3)){
-        //  idxjj = idxj(j)-1;
-        //  ijjj = jj[idxjj];
-        //  ljjj =  ijjj.length() - 1;
-        //  ijjjf = ijjj(0);
-        //  ijjjl = ijjj(ljjj);
-        //   XX = X(span(igf, igl), span(ijjjf,ijjjl));
-        //   c3 += 1;
-        //}
 
 
         ijjk = jj[idxjk];
@@ -126,12 +116,6 @@ double dHess_drho(arma::mat& X, arma::mat& eta,  arma::mat& y,  Rcpp::List& jj, 
            V_l += l3_l.col(il3jq) % d1eta_l.col(idxqq);
           }
         }
-        //if ( i < (size_g - 1) ) {
-        //  Aa(span(ijjjf, ijjjl), span(ijjkf, ijjkl)) += XX.t() * (X(span(igf, igl), span(ijjkf,ijjkl)).each_col() % V);
-        //} else {
-        //  Aa(span(ijjjf, ijjjl), span(ijjkf, ijjkl)) += XX.t() * (X(span(igf, igl), span(ijjkf,ijjkl)).each_col() % V_l);
-        //}
-        //if((i == (size_g - 1)) && (idxjk > idxjj)) Aa(span(ijjkf, ijjkl), span(ijjjf, ijjjl)) = Aa(span(ijjjf, ijjjl), span(ijjkf, ijjkl)).t();
 
         if ( i < (size_g - 1) ) {
           Aa(span(ijjjf, ijjjl), span(ijjkf, ijjkl)) += X(span(igf, igl), span(ijjjf,ijjjl)).t() * (X(span(igf, igl), span(ijjkf,ijjkl)).each_col() % V);
