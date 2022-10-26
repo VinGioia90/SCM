@@ -1,6 +1,6 @@
-#' A pool of internal functions used by the family (please do not modify this function)
+#' A pool of internal functions used by the family
 #'
-#' @description Such function masks some functions used internally
+#' @description Such function masks some functions used internally (please do not modify this function)
 #'
 #' @return a list of building functions
 #' @export
