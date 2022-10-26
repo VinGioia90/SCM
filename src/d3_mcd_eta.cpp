@@ -4,7 +4,10 @@
 
 // [[Rcpp::export(name="d3_mcd_eta")]]
 double d3_mcd_eta(const arma::mat& eta, const arma::mat& y, arma::mat& res,
-                      arma::vec& z, arma::vec& w, arma::mat& G, arma::vec& t, Rcpp::IntegerVector& h, Rcpp::IntegerVector& h2, Rcpp::IntegerVector& h3, Rcpp::List& idx3_1, Rcpp::List& idx3_2,  Rcpp::List& idx3_3, Rcpp::List& idx3_4, Rcpp::List& idx3_5, Rcpp::List& idx3_6, Rcpp::List& idx_neq0){
+                  arma::vec& z, arma::vec& w, arma::mat& G, arma::vec& t,
+                  Rcpp::IntegerVector& h, Rcpp::IntegerVector& h2, Rcpp::IntegerVector& h3,
+                  Rcpp::List& idx3_1, Rcpp::List& idx3_2,  Rcpp::List& idx3_3,
+                  Rcpp::List& idx3_4, Rcpp::List& idx3_5, Rcpp::List& idx3_6, Rcpp::List& idx_neq0){
   using namespace arma;
   uint32_t n = y.n_rows;
   uint32_t d = y.n_cols;
