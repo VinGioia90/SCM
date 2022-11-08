@@ -1,10 +1,10 @@
 #' Processing the summary to be printed
-#' @description  This function allows to modify the summary to be printed
+#' @description  This function allows to modify the summary.gam function, in order to have a bespoke summary
 #'
 #' @param obj an object of class scm
 #' @param intercept set to TRUE if you want print the inctercept
 #'
-#' @return summary
+#' @return The summary is printed
 #' @export summary.scm
 #' @export
 #'
@@ -66,7 +66,7 @@ summary.scm <- function(obj, intercept = FALSE){
       if(!is.na(lhs_foo)){
         lab_pt[i] <- paste0(substring(lab_pt[i], first=1, last = detlp[[1]][length(detlp[[1]])]), lhs_foo)
       } else {
-        lab_pt[i] <- paste0("(Intercept).",internal()$labTh(family$getd(), as.integer(substring(lab_pt[i], first = detlp[[1]][length(detlp[[1]])]+1)) + 1))
+        lab_pt[i] <- paste0("(Intercept).",internal()$labTh(obj$family$getd(), as.integer(substring(lab_pt[i], first = detlp[[1]][length(detlp[[1]])]+1)) + 1))
       }
       }
   }
@@ -89,8 +89,7 @@ summary.scm <- function(obj, intercept = FALSE){
   }
   rownames(sgam.st) <- lab_st
 
-  #sgam$formula <-  foo$foo_print # Formula user (ordered)
-  if ( !intercept ) sgam.pt <- sgam.pt[-which(grepl( "(Intercept)", row.names(sgam.pt), fixed = TRUE)),] #(rimuovo le intercette)
-  class(sgam) <- "summary.scm" #c("summary.scm", "summary.gam")
+  if ( !intercept ) sgam.pt <- sgam.pt[-which(grepl( "(Intercept)", row.names(sgam.pt), fixed = TRUE)),] #(intercepts are removed)
+  class(sgam) <- "summary.scm"
   return(print.summary.gam(obj, sgam.pt, sgam.st))
 }
