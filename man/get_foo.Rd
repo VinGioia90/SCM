@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_formula.R
 \name{get_foo}
 \alias{get_foo}
-\title{This function take the list of formulas provide by the user, then processing it  to be passed to the gam function to estimate gam_scm model}
+\title{Processing the model formula provided by the users}
 \usage{
 get_foo(foo_user, d)
 }
@@ -12,8 +12,8 @@ get_foo(foo_user, d)
 \item{d}{dimension of the outcome}
 }
 \value{
-A list of formulas
+Three list of formulas:one need to be passed to the gam function and the other two are useful for the summary function
 }
 \description{
-These is a function that fits a GAM model via covariance modelling using \link[mgcv:gam]{mgcv::gam}
+This function take the list of formulas provided by the user, then they are  processed to be passed to the gam function and to be estimated by gam_scm model
 }

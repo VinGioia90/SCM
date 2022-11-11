@@ -2,7 +2,7 @@
 % Please edit documentation in R/heatmap_ecov.R
 \name{plotECPD}
 \alias{plotECPD}
-\title{Heatmap of the Empirical Covariance transformation.}
+\title{Heatmap of the Empirical Covariance transformations}
 \usage{
 plotECPD(ecov, trans = NULL, lab = NULL, di = FALSE, ...)
 }
@@ -11,9 +11,9 @@ plotECPD(ecov, trans = NULL, lab = NULL, di = FALSE, ...)
 
 \item{trans}{an optional function that allows to obtain a transformation of the empirical covariance matrix}
 
-\item{lab}{an optional vector that allows to specify the label of the variables.}
+\item{lab}{an optional vector that allows to specify the label of the variables}
 
-\item{di}{logical. If FALSE (default) the diagonal elements are not showed.}
+\item{di}{logical. If FALSE (default) the diagonal elements are not showed}
 
 \item{...}{optional arguments to pass to hcl.colors of the image.plot function}
 }
@@ -21,7 +21,7 @@ plotECPD(ecov, trans = NULL, lab = NULL, di = FALSE, ...)
 The empirical covariance, precision or decomposition matrix.
 }
 \description{
-plotECPD allows to plot the heatmap of the covariance matrix transformation.
+plotECPD allows to plot the heatmap of the covariance matrix transformations
 }
 \examples{
 A <- matrix(c(1, 0.5, 0.25, 0.5, 2, 0.1, 0.25, 0.1, 3),3,3)

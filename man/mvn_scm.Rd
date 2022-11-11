@@ -2,20 +2,20 @@
 % Please edit documentation in R/mvn_scm.R
 \name{mvn_scm}
 \alias{mvn_scm}
-\title{Multivariate gaussian attive model with covariance modelling}
+\title{Multivariate Gaussian Additive model (family) with covariance modelling}
 \usage{
 mvn_scm(d = 2, nb = 1, param = NULL)
 }
 \arguments{
 \item{d}{dimension of the outcome}
 
-\item{nb}{number of blocks}
+\item{nb}{number of observations' blocks}
 
 \item{param}{type of parameterisation: MCD or logM}
 }
 \value{
-family
+family needed quantities
 }
 \description{
-...
+Such family contains all the needed functions to fit and post-process the model
 }

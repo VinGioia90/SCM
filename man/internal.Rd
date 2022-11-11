@@ -2,7 +2,7 @@
 % Please edit documentation in R/internal.R
 \name{internal}
 \alias{internal}
-\title{Internal function used by the  family (please do not modify this function)}
+\title{A pool of internal functions used by the family}
 \usage{
 internal()
 }
@@ -10,5 +10,5 @@ internal()
 a list of building functions
 }
 \description{
-Such function masks some functions used internally
+Such function masks some functions used internally (please do not modify this function)
 }

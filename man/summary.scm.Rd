@@ -12,8 +12,8 @@
 \item{intercept}{set to TRUE if you want print the inctercept}
 }
 \value{
-summary
+The summary is printed
 }
 \description{
-This function allows to modify the summary to be printed
+This function allows to modify the summary.gam function, in order to have a bespoke summary
 }

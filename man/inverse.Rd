@@ -2,7 +2,7 @@
 % Please edit documentation in R/precision.R
 \name{inverse}
 \alias{inverse}
-\title{Precision matrix}
+\title{Precision matrix (inverse of the covariance matrix)}
 \usage{
 inverse(X)
 }
