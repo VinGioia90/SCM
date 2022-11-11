@@ -490,8 +490,8 @@ mvn_scm <- function(d = 2, nb = 1, param = NULL){ # manage internally the blocks
     if ( jj <= d ) {
       res[, jj] <- 1 # Mean vector case
     } else { # Covariance/Correlation matrix case
-      jj <- jj - d
-      idx_jj <- which(Cm == jj, arr.ind = TRUE) # identify the row and the column of the C matrix associated the linear predictor index
+      #jj <- jj - d
+      idx_jj <- which(Cm == (jj - d), arr.ind = TRUE) # identify the row and the column of the C matrix associated the linear predictor index
       S_r <- as.numeric(idx_jj[1, 1]) - 1 # extract the row
       S_c <- as.numeric(idx_jj[1, 2]) - 1 # extract the column
 
@@ -508,8 +508,43 @@ mvn_scm <- function(d = 2, nb = 1, param = NULL){ # manage internally the blocks
 
       if ( param == 2 ) internal()$jacobian_logm(eta, res, d, S_r, S_c, cor_flag) #logm
     }
-    return(res)
+
+    if(param == 1){
+      idx_jac <- function(j, d){
+        if (j <= (d + 1) ) idx <- j
+        if (j > (d + 1) &  j <= 2*d) {
+          lidx <- j - d + choose(j - d, 2)
+          idx <- rep(0, lidx)
+          idx[1 : (j-d)] <- (d + 1): j
+          idx[(j - d + 1) : lidx] <- t(Gm)[1 : (j - d -1), 1 : (j - d -1)][upper.tri(t(Gm)[1:(j - d -1),1:(j - d -1)], diag = TRUE)] + 1
+
+        }
+        if (j > 2*d) {
+            lidx <- w[j - 2*d] + 1 + choose(w[j - 2*d] + 1, 2)
+            idx <- rep(0, lidx)
+            idx[1 : (w[j - 2*d] + 1)] <- d + (1 : (w[j - 2*d]+1))
+            idx[(w[j - 2*d] + 2): lidx] <- t(Gm)[1 : w[j - 2*d], 1 : w[j - 2*d]][upper.tri(t(Gm)[1:w[j - 2*d],1:w[j - 2*d]], diag = TRUE)] + 1
+        }
+        return( idx )
+      }
+
+      eta_idx <- idx_jac(jj, d)
+      eta_deriv <- as.matrix(res[,eta_idx])
+    }
+
+    if(param == 2){
+      if(jj <= d){
+        eta_deriv <- as.matrix(res[,jj])
+      } else {
+        eta_idx <- (d+1) : no_eta
+        eta_deriv <- res[,eta_idx ]
+      }
+
+    }
+
+    return(list(DmuDeta = eta_deriv, eta_idx = eta_idx))
   } ## end jacobian
+
 
   rd <- function(mu, wt, scale) { # we need to consider the case of the logm
     ## simulate data given fitted linear predictor matrix in mu
@@ -518,11 +553,23 @@ mvn_scm <- function(d = 2, nb = 1, param = NULL){ # manage internally the blocks
     out <- matrix(NA, nrow(mu), d)
     if ( param == 1 ) {
       for ( i in 1 : nrow(mu) ) {
-        LD <- internal()$mcd_LD(mu[i,], d)
-        C <- t(t(LD)/diag(LD))
-        diag(C) <- diag(LD)
+        Dm2 <- diag(exp(-mu[i,(d+1):(2*d)]))
+        T <- matrix(0, d, d)
+        count <- 2*d + 1
+        for(j in 2:d){
+          for(k in 1:(j-1)){
+            T[j,k] <- mu[i, count]
+            count <- count + 1
+          }
+        }
+        diag(T) <- rep(1,d)
+        Sigma <- solve(t(T) %*% Dm2 %*% T)
+        C <- chol(Sigma)
+        #LD <- internal()$mcd_LD(mu[i,], d)
+        #C <- t(t(LD)/diag(LD))
+        #diag(C) <- diag(LD)
         u <- rmvn(1, rep(0, d), diag(rep(1, d)))
-        out[i,] <- t(mu[i, 1 : d] + C %*% t(u))
+        out[i,] <- t(mu[i, 1 : d] + t(C) %*% t(u))
       }
     }
     if ( param == 2 ) {
