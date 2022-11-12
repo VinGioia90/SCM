@@ -215,20 +215,6 @@ mvn_scm <- function(d = 2, nb = 1, param = NULL){ # manage internally the blocks
     }
   }) ## initialize
 
-# Residuals
-#residuals <- function(object, type = c("response", "deviance")) { #by defualt deviance residuals
-# type <- match.arg(type)
-#
-#    if ( type == "deviance" ) {
-#      n <- dim(object$fitted.values)[1]
-#      res <- matrix(0, n, d)
-#      if ( param == 1 ) internal()$res_dev_mcd(object$fitted.values, object$y, res) #Deviance residuals for mcd
-#      if ( param == 2 ) internal()$res_dev_logm(object$fitted.values, object$y, res) #Deviance residuals for logm
-#    } else {
-#      res <- object$y - object$fitted.values[, 1 : d]
-#    }
-#    res
-#  } ## residuals
 
   ## Residuals
   residuals <- function(object, type = c("response", "deviance", "pearson")) { #by defualt deviance residuals
@@ -250,7 +236,7 @@ mvn_scm <- function(d = 2, nb = 1, param = NULL){ # manage internally the blocks
       }
     }
     res
-  } ## residualsw
+  } ## residuals
 
 
   # ll function
