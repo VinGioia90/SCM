@@ -215,8 +215,23 @@ mvn_scm <- function(d = 2, nb = 1, param = NULL){ # manage internally the blocks
     }
   }) ## initialize
 
+# Residuals
+#residuals <- function(object, type = c("response", "deviance")) { #by defualt deviance residuals
+# type <- match.arg(type)
+#
+#    if ( type == "deviance" ) {
+#      n <- dim(object$fitted.values)[1]
+#      res <- matrix(0, n, d)
+#      if ( param == 1 ) internal()$res_dev_mcd(object$fitted.values, object$y, res) #Deviance residuals for mcd
+#      if ( param == 2 ) internal()$res_dev_logm(object$fitted.values, object$y, res) #Deviance residuals for logm
+#    } else {
+#      res <- object$y - object$fitted.values[, 1 : d]
+#    }
+#    res
+#  } ## residuals
+
   ## Residuals
-  residuals <- function(object, type = c("response", "deviance")) { #by defualt deviance residuals
+  residuals <- function(object, type = c("response", "deviance", "pearson")) { #by defualt deviance residuals
     type <- match.arg(type)
 
     if ( type == "deviance" ) {
@@ -226,9 +241,17 @@ mvn_scm <- function(d = 2, nb = 1, param = NULL){ # manage internally the blocks
       if ( param == 2 ) internal()$res_dev_logm(object$fitted.values, object$y, res) #Deviance residuals for logm
     } else {
       res <- object$y - object$fitted.values[, 1 : d]
+      if(type ==  "pearson") {
+        out <- matrix(0, nrow(object$y), no_eta)
+        cor_flag <- 0
+        if ( param == 1) internal()$pred_mcd(object$fitted.values, out, d, cor_flag) #predicted values for the mcd (mean +varcov)
+        if ( param == 2) internal()$pred_logm(object$fitted.values, out, d, cor_flag) #predicted values for the logm (mean +varcov)
+        res <- res/sqrt(out[,(d+1):(2*d)])
+      }
     }
     res
-  } ## residuals
+  } ## residualsw
+
 
   # ll function
   ll <- function(y, X, coef, wt, family,  offset = NULL,
