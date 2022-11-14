@@ -84,6 +84,9 @@ get_foo <- function ( foo_user, d) {
   # [[2]]: the list of formulas specified by the user
   # [[3]]:
 
+
+  if(foo_len > d){
+
   nrc <- list()
   nrc[[1]] <- matrix(0, foo_len - d, 2)
   nrc[[2]] <- list()
@@ -105,14 +108,14 @@ get_foo <- function ( foo_user, d) {
     }
   }
 
-  if ( nrow(unique(nrc[[1]][,1:2])) <  ( foo_len -d) ) stop ("Two elements are associated to different formulas")
-
   # Facciamno un controllo sulla specificazione del mean model
   mean_foo <- lapply(1 : d, function(x) foo_user2[[x]])  # the first d components of the list lies on mean model specification
   cov_foo <- internal()$formula_init(d) # initialization of the covariance model
   cov_foop <- list() # initialization of the covariance model (to be printed)
   cov_foos <- list() # initialization of the covariance model (auxiliary for the summary)
-
+  for(j in 1: ((d * (d + 1)/2))){
+    cov_foos[[j]] <- numeric()
+  }
 
   # Now, we build the index needed to the formula function to be passed to the gam function
   count <- d + 1
@@ -129,6 +132,7 @@ get_foo <- function ( foo_user, d) {
     }
   }
 
+
   count <- 1
   for(i in 1 : (d * (d + 1)/2)){
     for( i2 in 1: nrow(nrc[[1]])){
@@ -144,6 +148,25 @@ get_foo <- function ( foo_user, d) {
   if(length(foo_eval) > (d + d*(d + 1)/2)) stop("Some problems in model formula")
   foo_print <- c(mean_foo,cov_foop)
   foo_summary <- c(mean_foo, cov_foos)
+  for(j in (d+1):length(foo_summary)){
+    if(class(foo_summary[[j]]) == "formula" ){
+      if(rhs(foo_summary[[j]]) == "~1")   foo_summary[[j]]<-numeric()
+    }
+    if(is.numeric(foo_summary[[j]])) foo_summary[[j]]<-numeric()
+  }
+
+  } else {
+    mean_foo <- lapply(1 : d, function(x) foo_user2[[x]])  # the first d components of the list lies on mean model specification
+    cov_foo <- internal()$formula_init(d) # initialization of the covariance model
+    foo_eval <- foo_print <-   c(mean_foo, cov_foo)
+    if(length(foo_eval) > (d + d*(d + 1)/2)) stop("Some problems in model formula")
+    cov_foos <- list() # initialization of the covariance model (auxiliary for the summary)
+    for(j in 1: ((d * (d + 1)/2)+1)){
+      cov_foos[[j]] <- numeric()
+    }
+    foo_print <- mean_foo
+    foo_summary <- c(mean_foo, cov_foos)
+  }
 
   return (list(foo_eval = foo_eval, foo_print = foo_print, foo_summary = foo_summary))
 
