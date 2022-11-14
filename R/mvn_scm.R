@@ -217,7 +217,7 @@ mvn_scm <- function(d = 2, nb = 1, param = NULL){ # manage internally the blocks
 
 
   ## Residuals
-  residuals <- function(object, type = c("response", "deviance", "pearson")) { #by defualt deviance residuals
+  residuals <- function(object, type = c("response", "deviance",  "pearson")) { #by default deviance residuals
     type <- match.arg(type)
 
     if ( type == "deviance" ) {
