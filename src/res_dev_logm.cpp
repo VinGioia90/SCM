@@ -11,22 +11,18 @@ double res_dev_logm(arma::mat& eta, arma::mat& y, arma::mat& resD){
 
   rowvec r(d, fill::zeros);
 
-  mat Sigma(d,d,fill::zeros);//NumericMatrix Sigma(d, d);
+  mat Sigma(d,d,fill::zeros);
   mat iSigma(d, d, arma::fill::zeros);
-  mat isqrtSigma(d, d, arma::fill::zeros);
-  mat isqrtSigmaj(1, d, arma::fill::zeros);
+  mat C(d, d, arma::fill::zeros);
   rowvec etai(d, fill::zeros);
 
   for(i = 0; i < n; i++){
     etai = eta.row(i);
     Sigma = logM_Sigma(etai, d);
     iSigma = inv_sympd(Sigma);
-    isqrtSigma = sqrtmat_sympd(iSigma);
+    C = chol(iSigma);
     r = y.row(i) - eta(i, span(0, d - 1));
-    for(j = 0; j < d; j++){
-      isqrtSigmaj = isqrtSigma.row(j);
-      resD(i, j) = as_scalar(isqrtSigmaj * r.t());
-    }
+    resD.row(i) = r * C.t();
   }
   return(1.0);
 }
