@@ -1,14 +1,22 @@
+#' List of predicted Sigma matrix
+#'
+#' @description Such function returns a list of the predicted covariance matrix
+#' @param pred_Sigma the matrix n x d(d+1)/2 of the estimated covariance matrix elements (from predict function with type="response" and excluding the mean vector)
+#'
+#' @return a list of n elements, each corresponding to the estimated d x d covariance matrix
+#' @export
+#'
 Sigma_mat <- function(pred_Sigma){
-  #!!!! rendere visibile???? Si costruire una funzione che prenda in input la matrice degli lpi e restituisce una lista
-  # Such function takes the i-th predicted linear predictor element of the covariance modelling
-  #(so excluding the mean vector and when predict is used in combination with type="response")
-  # and return the covariance/correlation matrix (according to the flag)
-  n_el <- length(pred_Sigma)
-  d <- (-1 + sqrt(1 + 8 * n_el))/2
-  res <- matrix(0, d, d)
-  res[upper.tri(res, diag = FALSE)] <-  pred_Sigma[(d + 1) : n_el]
-  res <- res + t(res)
-  diag(res) <- pred_Sigma[1 : d]
-  return(res)
+  no_eta <- dim(as.matrix(pred_Sigma))[2]
+  nobs <- dim(as.matrix(pred_Sigma))[1]
+  d <- (-1 + sqrt(1 + 8 * no_eta))/2
+  out <- list()
+  for ( i in 1 : nobs){
+    out[[i]] <-  matrix(0, d, d)
+    out[[i]][upper.tri(out[[i]], diag = FALSE)] <- pred_Sigma[i, (d + 1) : no_eta]
+    out[[i]] <- out[[i]] + t(out[[i]])
+    diag(out[[i]]) <- pred_Sigma[i, 1 : d]
+  }
+  return (out)
 }
 

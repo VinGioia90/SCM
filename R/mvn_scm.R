@@ -46,6 +46,7 @@ mvn_scm <- function(d = 2, nb = 1, param = NULL){ # manage internally the blocks
     nHel <- d * (d^2 + 15 * d + 2)/6
     if ( d > 2 ) nHel <- nHel + d * (d - 1) * (d - 2)/3
   }
+  #if ( param == 1 ) nHel <- no_eta * (no_eta + 1)/2 #mcd: don't considering the sparsity
   if ( param == 2 ) nHel <- no_eta * (no_eta + 1)/2 #logm: no sparsity
 
   # Quantities defined in the environment:
@@ -562,31 +563,20 @@ mvn_scm <- function(d = 2, nb = 1, param = NULL){ # manage internally the blocks
     out <- matrix(NA, nrow(mu), d)
     if ( param == 1 ) {
       for ( i in 1 : nrow(mu) ) {
-        Dm2 <- diag(exp(-mu[i,(d+1):(2*d)]))
-        T <- matrix(0, d, d)
-        count <- 2*d + 1
-        for(j in 2:d){
-          for(k in 1:(j-1)){
-            T[j,k] <- mu[i, count]
-            count <- count + 1
-          }
-        }
-        diag(T) <- rep(1,d)
-        Sigma <- solve(t(T) %*% Dm2 %*% T)
-        C <- chol(Sigma)
-        #LD <- internal()$mcd_LD(mu[i,], d)
-        #C <- t(t(LD)/diag(LD))
-        #diag(C) <- diag(LD)
+        LD <- internal()$mcd_LD(mu[i,], d)
+        D <- diag(LD)
+        L <- LD
+        diag(L) <- rep(1,d)
         u <- rmvn(1, rep(0, d), diag(rep(1, d)))
-        out[i,] <- t(mu[i, 1 : d] + t(C) %*% t(u))
+        out[i,] <- t(mu[i, 1 : d] + L %*% t(u*D))
       }
     }
     if ( param == 2 ) {
       for ( i in 1 : nrow(mu) ) {
         Sigma <- internal()$logM_Sigma(mu[i,], d)
-        C <- t(chol(Sigma))
-        u <- rmvn(1, rep(0, d), diag(rep(1, d)))
-        out[i,] <- t(mu[i, 1 : d] + C %*% t(u))
+        C <- chol(Sigma)
+        u <- mvnfast::rmvn(1, rep(0, d), diag(rep(1, d)))
+        out[i,] <- t(mu[i, 1 : d] + t(C) %*% t(u))
       }
     }
     return(out)
