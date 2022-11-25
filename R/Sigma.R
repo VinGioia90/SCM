@@ -9,7 +9,8 @@
 Sigma_mat <- function(pred_Sigma){
   no_eta <- dim(as.matrix(pred_Sigma))[2]
   nobs <- dim(as.matrix(pred_Sigma))[1]
-  d <- -3/2 + sqrt(9/4 + 2 * no_eta)
+  #d <- -3/2 + sqrt(9/4 + 2 * no_eta)
+  d <- (-1 + sqrt(1 + 8 * n_el))/2
   out <- list()
   for ( i in 1 : nobs){
     out[[i]] <-  matrix(0, d, d)
