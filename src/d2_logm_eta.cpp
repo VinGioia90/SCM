@@ -115,7 +115,7 @@ double  d2_logm_eta(const arma::mat& eta, const arma::mat& y, arma::mat& d2l, ar
       for(m = d; m < 2*d; m++){
         out(l, m) = -as_scalar(U.row(l) * (U.row(m - d) % Pi.row(m - d)).t());
       }
-      //Block (1,3)
+      //Block (1,3) + Block (2,3)
       for(m = 2 * d; m < q; m++){
         zm = z(m - 2 * d);
         wm = w(m - 2 * d);
