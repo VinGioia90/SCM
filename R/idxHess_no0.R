@@ -19,7 +19,17 @@ idxHess_no0 <- function(no_eta, z, w, param) {
       }
     }
   }
-  # No sparsity in the logm parametrisation
+
+  # if I consider no sparsity in the mcd parametrisation
+  #if(param == 1){
+  #  for(j in 1 : no_eta){
+  #    idx_jk_no0[[j]] <- rep(0, no_eta)
+  #    for(k in  j : no_eta){
+  #      idx_jk_no0[[j]][k] <- k
+  #    }
+  #  }
+  #}
+
   if(param == 2){
     for(j in 1 : no_eta){
       idx_jk_no0[[j]] <- rep(0, no_eta)
