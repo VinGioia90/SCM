@@ -20,8 +20,7 @@ get_foo <- function ( foo_user, d) {
 
   # It is possible to specify a formula for an element no more than on time in the common model formula statement
   # and no more than one time in the term specific model formula
-
-  # Here we detect the common model formula specification:
+    # Here we detect the common model formula specification:
   count<-1
   for(j in 1 : foo_len) {
     idx_bar <- gregexpr("\\|", foo_user[[j]])[[2]]
@@ -67,7 +66,6 @@ get_foo <- function ( foo_user, d) {
   }
 
   foo_user2 <- lapply(foo_bar, formula, env = globalenv())
-
   foo_len <- length(foo_user2)
 
   #if ( foo_len > (d + d*(d + 1)/2) ) stop("More formulas than elements to be modelled")
@@ -77,7 +75,6 @@ get_foo <- function ( foo_user, d) {
   meanlhs <- lhs[which(!word(lhs, 1, sep = "\\Th_")=="")]
   if ( length(meanlhs) != d ) stop("More/Less mean components than d")
   if ( length(meanlhs) > length(unique(meanlhs)) ) stop("A mean component is modelled more than one time")
-
 
   # Build a list where we save:
   # [[1]]: the row and column of the components to be modelled (with a counter)
@@ -93,6 +90,10 @@ get_foo <- function ( foo_user, d) {
   nrc[[3]] <- list()
   for ( j in (d + 1) : foo_len ) {
     if ( nchar(word(as.character(foo_user2[[j]]), 1, sep = "\\~")[2]) == (3 + 2 * d_len) ) {
+      lfoou2 <- length(format(foo_user2[[j]]))
+      if(lfoou2 == 2){
+        foo_user2[[j]] <- paste0(format(foo_user2[[j]])[1],format(foo_user2[[j]])[lfoou2])
+      }
       nrc[[1]][j - d, 1] <- as.integer(substring(format(foo_user2[[j]]), first = 4, last = 4 + d_len - 1))
       if ( nrc[[1]][j - d, 1] == 0 | nrc[[1]][j - d, 1] > d ) stop("Wrong specification of the formula: the elements 0 and the lements greater than d  could not be specified")
       nrc[[1]][j - d, 2] <- as.integer(substring(format(foo_user2[[j]]), first = 4 + d_len, last = 4 + 2 * d_len - 1))
