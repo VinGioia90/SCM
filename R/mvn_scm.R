@@ -10,7 +10,7 @@
 #' @importFrom Rcpp evalCpp
 #' @importFrom mvnfast rmvn
 mvn_scm <- function(d = 2, nb = 1, param = NULL){ # manage internally the blocks division !!!
-
+  # This version works with mgcv-version 42
   if ( d < 2 ) stop("mvn_scm requires to or more dimensional data")
   if ( nb < 1 ) stop("the number of observations' blocks must be greater than 0")
 
@@ -71,24 +71,24 @@ mvn_scm <- function(d = 2, nb = 1, param = NULL){ # manage internally the blocks
   # l3 and l3_l: is the matrix of the third derivatives w.r.t. eta
   getL3 <- function() get(".l3")  # First nb - 1 blocks of observations
   putL3 <- function(.l3) assign(".l3", .l3, envir = environment(sys.function()))
-  getL3_l <- function() get(".l3_l")  # Last block of observations
-  putL3_l <- function(.l3_l) assign(".l3_l", .l3_l, envir = environment(sys.function()))
+  #getL3_l <- function() get(".l3_l")  # Last block of observations
+  #putL3_l <- function(.l3_l) assign(".l3_l", .l3_l, envir = environment(sys.function()))
 
   # d1H is the matrix of the derivatives of the Hessian w.r.t smoothing parameters
-  getd1H <- function() get(".d1H")
-  putd1H <- function(.d1H) assign(".d1H", .d1H, envir = environment(sys.function()))
+  #getd1H <- function() get(".d1H")
+  #putd1H <- function(.d1H) assign(".d1H", .d1H, envir = environment(sys.function()))
 
   # d1eta and d1_eta_l is the matrix of the derivatives of eta w.r.t  smoothing parameters
-  getd1eta <- function() get(".d1eta") # First nb - 1 blocks of observations
-  putd1eta <- function(.d1eta) assign(".d1eta", .d1eta, envir = environment(sys.function()))
-  getd1eta_l <- function() get(".d1eta_l")  # Last block of observations
-  putd1eta_l <- function(.d1eta_l) assign(".d1eta_l", .d1eta_l, envir = environment(sys.function()))
+  #getd1eta <- function() get(".d1eta") # First nb - 1 blocks of observations
+  #putd1eta <- function(.d1eta) assign(".d1eta", .d1eta, envir = environment(sys.function()))
+  #getd1eta_l <- function() get(".d1eta_l")  # Last block of observations
+  #putd1eta_l <- function(.d1eta_l) assign(".d1eta_l", .d1eta_l, envir = environment(sys.function()))
 
   # V matrix: see Wood et al. 2016
-  getV <- function() get(".V") # First nb - 1 blocks of observations
-  putV <- function(.V) assign(".V", .V, envir = environment(sys.function()))
-  getV_l <- function() get(".V_l")  # Last block of observations
-  putV_l <- function(.V_l) assign(".V_l", .V_l, envir = environment(sys.function()))
+  #getV <- function() get(".V") # First nb - 1 blocks of observations
+  #putV <- function(.V) assign(".V", .V, envir = environment(sys.function()))
+  #getV_l <- function() get(".V_l")  # Last block of observations
+  #putV_l <- function(.V_l) assign(".V_l", .V_l, envir = environment(sys.function()))
 
   # Indices for observations' blocks
   getidx_b <- function() get(".idx_b")
@@ -128,6 +128,11 @@ mvn_scm <- function(d = 2, nb = 1, param = NULL){ # manage internally the blocks
   assign(".param", param, envir = environment())
   getparam <- function() get(".param")
   putparam <- function(.param) assign(".param", .param, envir = environment(sys.function()))
+
+  NC <- 0
+  assign(".NC ", NC , envir = environment())
+  getNC <- function() get(".NC ")
+  putNC <- function(.NC ) assign(".NC ", .NC, envir = environment(sys.function()))
 
 
   # Initialize: we initialize the mean vector parameters and only the intercepts related to the decomposition or transformation involved
@@ -299,7 +304,7 @@ mvn_scm <- function(d = 2, nb = 1, param = NULL){ # manage internally the blocks
       idx_b_seq <- cumsum(rep(nset, nb - 1)) - 1
     } else {
       nobs_b <- nlast
-     idx_b_seq <- cumsum(rep(nset, nb)) - 1
+      idx_b_seq <- cumsum(rep(nset, nb)) - 1
     }
 
     l1_l <- try(getL1_l(), TRUE)  #First derivatives matrix (Last block of observations)
@@ -320,7 +325,7 @@ mvn_scm <- function(d = 2, nb = 1, param = NULL){ # manage internally the blocks
       putidx_b(idx_b)
     }
 
-    d1H <- NULL
+    #d1H <- NULL
     if ( deriv > 1 ) { # only for the mcd parametrisation
       idxl3 <- try(getidxl3(), TRUE) # indices for the third derivatives building
       if("try-error" %in% class(idxl3)){
@@ -339,66 +344,71 @@ mvn_scm <- function(d = 2, nb = 1, param = NULL){ # manage internally the blocks
         idxl3_jkq <- internal()$il3_no0_mcd(d, z, w)
         putidxl3_jkq(idxl3_jkq)
       }
-
-      if(nb > 1){
         l3 <- try(getL3(), TRUE)  # Third derivatives matrix: First nb - 1 blocks of observations (the intercepts block case is not considered at the moment)
         if("try-error" %in% class(l3)){
-          l3 <- matrix(0, nset, d * (4 * d^2 + 3 * d + 2)/3)
+          l3 <- matrix(0, n, d * (4 * d^2 + 3 * d + 2)/3)
           putL3(l3)
         }
-      } else { # Such trick allows to pass the matrix l3 in the case nb = 1, avoiding cpp issues
-        l3 <- try(getL3(), TRUE)  # Third derivatives matrix: First nb - 1 blocks of observations
-        if("try-error" %in% class(l3)){
-          l3 <- matrix(0, 1, 1)
-          putL3(l3)
-        }
-      }
 
-      d1H <- try(getd1H(), TRUE) # derivative of hessian w.r.t. smoothing parameters
-      if("try-error" %in% class(d1H)){
-        d1H <- list()
-        m <- ncol(d1b)
-        for ( l in 1 : m ) d1H[[l]] <- matrix(0, p, p)
-        putd1H(d1H)
-      }
+      #if(nb > 1){
+      #  l3 <- try(getL3(), TRUE)  # Third derivatives matrix: First nb - 1 blocks of observations (the intercepts block case is not considered at the moment)
+      #  if("try-error" %in% class(l3)){
+      #    l3 <- matrix(0, nset, d * (4 * d^2 + 3 * d + 2)/3)
+      #    putL3(l3)
+      #  }
+      #} else { # Such trick allows to pass the matrix l3 in the case nb = 1, avoiding cpp issues
+      #  l3 <- try(getL3(), TRUE)  # Third derivatives matrix: First nb - 1 blocks of observations
+      #  if("try-error" %in% class(l3)){
+      #    l3 <- matrix(0, 1, 1)
+      #    putL3(l3)
+      #  }
+      #}
 
-      d1eta <- try(getd1eta(), TRUE) #d1eta is the matrix (First nb - 1 observations' blocks) of the derivatives of eta w.r.t  smoothing parameters
-      if("try-error" %in% class(d1eta)){
-        d1eta <-  matrix(0, nset, no_eta)
-        putd1eta(d1eta)
-      }
+      #d1H <- try(getd1H(), TRUE) # derivative of hessian w.r.t. smoothing parameters
+      #if("try-error" %in% class(d1H)){
+      #  d1H <- list()
+      #  m <- ncol(d1b)
+      #  for ( l in 1 : m ) d1H[[l]] <- matrix(0, p, p)
+      #  putd1H(d1H)
+      #}
 
-      V <- try(getV(), TRUE) # V matrix: see Wood et. al (2016)
-      if("try-error" %in% class(V)){
-        V <-  rep(0, nset)
-        putV(V)
-      }
+      #d1eta <- try(getd1eta(), TRUE) #d1eta is the matrix (First nb - 1 observations' blocks) of the derivatives of eta w.r.t  smoothing parameters
+      #if("try-error" %in% class(d1eta)){
+      #  d1eta <-  matrix(0, nset, no_eta)
+      #  putd1eta(d1eta)
+      #}
+
+      #V <- try(getV(), TRUE) # V matrix: see Wood et. al (2016)
+      #if("try-error" %in% class(V)){
+      #  V <-  rep(0, nset)
+      #  putV(V)
+      #}
 
       if ( nlast == 0 ) nobs_b <- nset
       else  nobs_b <- nlast
 
-      l3_l <- try(getL3_l(), TRUE)  #Third derivatives matrix: Last observations' blocks
-      if("try-error" %in% class(l3_l)){
-        l3_l <- matrix(0, nobs_b, d * (4 * d^2 + 3 * d + 2)/3)
-        putL3_l(l3_l)
-      }
+      #l3_l <- try(getL3_l(), TRUE)  #Third derivatives matrix: Last observations' blocks
+      #if("try-error" %in% class(l3_l)){
+      #  l3_l <- matrix(0, nobs_b, d * (4 * d^2 + 3 * d + 2)/3)
+      #  putL3_l(l3_l)
+      #}
 
-      d1eta_l <- try(getd1eta_l(), TRUE) #d1eta_l is the matrix (Last observations' blocks) of the derivatives of eta w.r.t  smoothing parameters
-      if("try-error" %in% class(d1eta_l)){
-        d1eta_l <-  matrix(0, nobs_b,no_eta)
-        putd1eta_l(d1eta_l)
-      }
+      #d1eta_l <- try(getd1eta_l(), TRUE) #d1eta_l is the matrix (Last observations' blocks) of the derivatives of eta w.r.t  smoothing parameters
+      #if("try-error" %in% class(d1eta_l)){
+      #  d1eta_l <-  matrix(0, nobs_b,no_eta)
+      #  putd1eta_l(d1eta_l)
+      #}
 
-      V_l <- try(getV_l(), TRUE) # V matrix: see Wood et. al (2016)
-      if("try-error" %in% class(V_l)){
-        V_l <-  rep(0, nobs_b)
-        putV_l(V_l)
-      }
+      #V_l <- try(getV_l(), TRUE) # V matrix: see Wood et. al (2016)
+      #if("try-error" %in% class(V_l)){
+      #  V_l <-  rep(0, nobs_b)
+      #  putV_l(V_l)
+      #}
     }
 
     # Building the linear predictor vector
     for ( k in 1 : no_eta )  eta[, k] <- if ( discrete ) Xbd(X$Xd, coef, k = X$kd, ks= X$ks,ts = X$ts, dt =X$dt,v = X$v, qc = X$qc, drop = X$drop, lt = X$lpid[[k]])
-                                         else X[, jj[[k]], drop = FALSE] %*% coef[jj[[k]]]
+    else X[, jj[[k]], drop = FALSE] %*% coef[jj[[k]]]
 
 
     ## log-likelihood
@@ -406,13 +416,19 @@ mvn_scm <- function(d = 2, nb = 1, param = NULL){ # manage internally the blocks
     if ( param == 2 )  l <- internal()$ll_logm(eta, y) #logm
     l <- l - 0.5 * n * d * log(2 * pi)
 
+
     # To return first, second derivatives w.r.t. beta and the derivatives of the Hessian w.r.t. to the smoothing parameters (if bfgs)
     if ( deriv ) {
+      NC <- family$getNC()
+      NC  <-  NC + 1
+      NC <- family$putNC(NC)
+
       ret <- internal()$gamlss.gH_scm(X, jj, eta, y, w, z, t, Gm,
                                       l1, l1_l, l2, l2_v, l2_l, l2_v_l,
                                       idx_b, idx_aux, param = param,
                                       l3, l3_l, idxl3, idxl3_no0, idxl3_jkq,
-                                      d1eta, d1eta_l, V, V_l, d1H,
+                                      #d1eta, d1eta_l, V, V_l,
+                                      #d1H,
                                       d1b = d1b, deriv = deriv - 1, fh = fh, D = D)
     } else ret <- list()
     ret$l <- l
@@ -452,7 +468,7 @@ mvn_scm <- function(d = 2, nb = 1, param = NULL){ # manage internally the blocks
         if ( !is.null(off[[i]]) ) eta[, i] <- eta[, i] + off[[i]]
         if ( se ) { ## variance and covariances for kth l.p.
           ve[, i] <- if ( discrete ) diagXVXd(X$Xd, Vb, k = X$kd, ks = X$ks, ts = X$ts, dt = X$dt, v = X$v,qc = X$qc, drop = X$drop, nthreads = 1, lt = X$lpid[[i]], rt = X$lpid[[i]])
-                     else drop( pmax(0, rowSums((Xi %*% Vb[lpi[[i]], lpi[[i]]])* Xi)))
+          else drop( pmax(0, rowSums((Xi %*% Vb[lpi[[i]], lpi[[i]]])* Xi)))
           ii <- 0
           if ( i < K ) for ( j in (i + 1) : K ) {
             ii <- ii + 1
@@ -530,10 +546,10 @@ mvn_scm <- function(d = 2, nb = 1, param = NULL){ # manage internally the blocks
 
         }
         if (j > 2*d) {
-            lidx <- w[j - 2*d] + 1 + choose(w[j - 2*d] + 1, 2)
-            idx <- rep(0, lidx)
-            idx[1 : (w[j - 2*d] + 1)] <- d + (1 : (w[j - 2*d]+1))
-            idx[(w[j - 2*d] + 2): lidx] <- t(Gm)[1 : w[j - 2*d], 1 : w[j - 2*d]][upper.tri(t(Gm)[1:w[j - 2*d],1:w[j - 2*d]], diag = TRUE)] + 1
+          lidx <- w[j - 2*d] + 1 + choose(w[j - 2*d] + 1, 2)
+          idx <- rep(0, lidx)
+          idx[1 : (w[j - 2*d] + 1)] <- d + (1 : (w[j - 2*d]+1))
+          idx[(w[j - 2*d] + 2): lidx] <- t(Gm)[1 : w[j - 2*d], 1 : w[j - 2*d]][upper.tri(t(Gm)[1:w[j - 2*d],1:w[j - 2*d]], diag = TRUE)] + 1
         }
         return( idx )
       }
@@ -595,18 +611,19 @@ mvn_scm <- function(d = 2, nb = 1, param = NULL){ # manage internally the blocks
                  getL2_l = getL2_l, putL2_l = putL2_l,
                  getL2_v_l = getL2_v_l, putL2_v_l = putL2_v_l,
                  getL3 = getL3, putL3 = putL3,
-                 getL3_l = getL3_l, putL3_l = putL3_l,
-                 getd1H = getd1H, putd1H = putd1H,
-                 getd1eta = getd1eta, putd1eta = putd1eta,
-                 getd1eta_l = getd1eta_l, putd1eta_l = putd1eta_l,
-                 getV = getV, putV = putV,
-                 getV_l = getV_l, putV_l = putV_l,
+                 #getL3_l = getL3_l, putL3_l = putL3_l,
+                 #getd1H = getd1H, putd1H = putd1H,
+                 #getd1eta = getd1eta, putd1eta = putd1eta,
+                 #getd1eta_l = getd1eta_l, putd1eta_l = putd1eta_l,
+                 #getV = getV, putV = putV,
+                 #getV_l = getV_l, putV_l = putV_l,
                  getidx_b = getidx_b, putidx_b = putidx_b,
                  getidx_aux =  getidx_aux, putidx_aux =  putidx_aux,
                  getidxl3 = getidxl3, putidxl3 = putidxl3,
                  getidxl3_no0 = getidxl3_no0, putidxl3_no0 = putidxl3_no0,
                  getidxl3_jkq = getidxl3_jkq, putidxl3_jkq = putidxl3_jkq,
                  getparam =  getparam, putparam =  putparam,
+                 getNC = getNC, putNC = putNC,
                  #postproc=postproc, ##to do???
                  rd = rd,
                  residuals = residuals,
