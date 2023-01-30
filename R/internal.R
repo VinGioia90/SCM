@@ -23,6 +23,7 @@ internal <- function(){
               "jacobian_mcd" = jacobian_mcd,
               "mcd_LD" = mcd_LD,
               "dHess_drho" = dHess_drho,
+              "d3_mcd_eta" = d3_mcd_eta,
               "aux_idx_l3" = aux_idx_l3,
               "il3" = il3,
               "il3_no0_mcd" = il3_no0_mcd ,
