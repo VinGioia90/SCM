@@ -1,2 +1,2 @@
 # SCM
-Smoothing covariance matrix modelling
+Smoothing for Covariance matrix Modelling
