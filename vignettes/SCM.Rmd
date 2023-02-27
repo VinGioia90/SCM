@@ -1,0 +1,294 @@
+---
+title: "An introduction to SCM: Fit an additive covariance matrix model for multivariate normal data "
+author: "Vincenzo Gioia and Matteo Fasiolo"
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+    toc: true
+    number_sections: true
+vignette: >
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteIndexEntry{SCM_vignette}
+  %\VignetteEncoding{UTF-8}
+---
+
+<style>
+body {
+text-align: justify}
+</style>
+
+```{r setup, include=FALSE}
+library(knitr)
+library(rgl)
+opts_chunk$set(out.extra='style="display:block; margin: auto"', fig.align="center", tidy=FALSE)
+knit_hooks$set(webgl = hook_webgl)
+if (!requireNamespace("rmarkdown", quietly = TRUE) ||
+!rmarkdown::pandoc_available("1.14")) {
+warning(call. = FALSE, "These vignettes assume rmarkdown and pandoc
+version 1.14. These were not found. Older versions will not work.")
+knitr::knit_exit()
+}
+```
+
+# Multivariate Gaussian additive models
+Let  $\boldsymbol y_i\sim \mathcal{N}(\boldsymbol \mu_i, \boldsymbol \Sigma_i)$, $i=1, \ldots, n$, be independent response vectors. 
+
+The covariates enter the model through the linear predictor vector $\boldsymbol \eta_i=(\eta_{i1}, \ldots, \eta_{iq})$, with $q= d+d(d+1)/2$, whose components allow specifying parametric and non-parametric components. 
+
+The mean model is specified by $\mu_{ij} = \eta_{ij}$, $j=1, \ldots,d$, while the remaining $\eta_{ij}$, $j=d+1, \ldots,q$, specify the nonredundant, unconstrained elements of a covariance matrix parametrisation. The latter can be stated via the  modified Cholesky decomposition (MCD) by Pourahmadi (1999) or the matrix logarithmic tranformation by Chiu et al. (1996) 
+
+
+<!-- \begin{equation}\boldsymbol \Theta_i=\begin{pmatrix} \eta_{id+1} &  \cdots & \cdots & \cdots& \cdots & \cdots \\ -->
+<!--                                \eta_{2d+1} & \eta_{d+2} &  \cdots & \cdots& \cdots  & \eta_{q-d+3} \\ -->
+
+<!--                                \eta_{2d+2} & \eta_{2d+3} & \eta_{d+3}& \cdots   & \cdots & \eta_{q-d+4} \\ -->
+
+<!--                                \vdots & \vdots & \vdots & \ddots   &  \vdots& \vdots \\ -->
+<!--                                 \vdots & \vdots & \vdots & \vdots   &  \ddots&  \eta_{q} \\ -->
+
+<!--                              \eta_{q-d+2} & \eta_{q-d+3} & \cdots &  \cdots & \eta_{q} & \eta_{2d}\\ -->
+
+<!-- \end{pmatrix}. \end{equation} -->
+
+<!-- functionally related to the entries of the modified Cholesky decomposition (MCD) of $\boldsymbol \Sigma^{-1}$, that is $\boldsymbol \Sigma^{-1}={\boldsymbol T^\top}{ \boldsymbol D^{-2}} {\boldsymbol T}$, and the  matrix logarithmic (logM) transformation of $\boldsymbol \Sigma$, that is $\log \boldsymbol \Sigma_i$ -->
+
+<!-- The diagonal elements of $\boldsymbol \Theta_i$ correspond to  -->
+
+<!-- - $[\boldsymbol \Theta_i]_{jj} = [\log {\boldsymbol D}^2_i]_{jj}$  for the MCD  -->
+
+<!-- - $[\boldsymbol \Theta_i]_{jj} = [\log \boldsymbol \Sigma_i]_{jj}$ for the logM -->
+
+<!-- for $j=1, \ldots, d$. -->
+
+<!-- The out diagonal elements of $\boldsymbol \Theta_i$ correspond to  -->
+
+<!-- - $[\boldsymbol \Theta_i]_{jk} = [{\boldsymbol T_i}]_{kj}$  of the MCD -->
+
+<!-- - $[\boldsymbol \Theta_i]_{jk} = [\log \boldsymbol \Sigma_i]_{jk}$ of the matrix logarithm of the covariance matrix  -->
+
+<!-- for $j= 2, \ldots, d$  and $k=1, \ldots, j$.  -->
+
+<!-- Smoothing parameter optimization can be carried out via -->
+
+<!-- - generalized Fellner-Schall method (available for both mcd and logm)  -->
+
+<!-- - quasi-Newton optimization (only available for the mcd parametrisation)   -->
+
+
+<!-- Here, we aim to introduce the most important functions of the package, by means of the  GefCom2014 Dataset. We consider only the hourly loads from 5pm to 8 pm. -->
+
+
+```{r cleaningData, echo=FALSE, eval=FALSE}
+#######################################################################################
+# Data Pre processing                                                                 #
+# Some notes:                                                                         #
+# 1) I removed the 01/01/2005 since there is not information on the midnight          #
+# 2) I removed the 01/12/2011 since there is only information on the midnight         #
+# 3) There are 3 days with missing observations: 10/03/2006 - 08/27/2011 - 08/28/2011 #
+# 4) I removed also 02/02/2005 due to a load 24 missing value                         #
+#######################################################################################
+# rm(list=ls())
+# library(devtools)
+# library(electBook)
+# 
+# GEF14$doy <- unclass(as.POSIXlt(GEF14$date))$yday + 1
+# GEF14$month <- unclass(as.POSIXlt(GEF14$date))$mon + 1
+# GEF14 <- GEF14[-c(1 : 47, 60528), ]
+# 
+# d <- 24 #(hourly resolution)
+# nobs <- nrow(GEF14)
+# GEF14_load <- GEF14_load24 <- GEF14_temp <- GEF14_temp95 <- matrix(0, nobs/d,d)
+# GEF14_doy <- rep(0, nobs/d)
+# 
+# for(i in unique(GEF14$tod)){
+#   GEF14_load[, i+1] <- GEF14$load[GEF14$tod == i]
+#   GEF14_load24[, i+1] <- GEF14$load24[GEF14$tod == i]
+#   GEF14_temp[, i+1] <- GEF14$temp[GEF14$tod == i]
+#   GEF14_temp95[, i+1] <- GEF14$temp95[GEF14$tod == i]
+# }
+# 
+# GEF14_data <- as.data.frame(cbind(GEF14_load, GEF14_load24, GEF14_temp, GEF14_temp95))
+# 
+# colnames(GEF14_data)[ 1 : d] <- paste0("load_h", 17 : 20)
+# colnames(GEF14_data)[(d + 1) : (2*d)] <- paste0("load24_h", 17 : 20)
+# colnames(GEF14_data)[(2 * d + 1) : (3 * d)] <- paste0("temp_h", 17 : 20)
+# colnames(GEF14_data)[(3 * d + 1) : (4 * d)] <- paste0("temp95_h", 17 : 20)
+# 
+# GEF14_data$doy <- GEF14$doy[GEF14$tod == 0]
+# GEF14_data$dow <- GEF14$dow[GEF14$tod == 0]
+# GEF14_data$month <- GEF14$month[GEF14$tod == 0]
+# GEF14_data$year <- GEF14$year[GEF14$tod == 0]
+# GEF14_data$progtime <- 1 : nrow(GEF14_data)
+# 
+# # Select the hours: 17 - 18 - 19 -20
+# h1_h2 <- 17 : 20
+# subs_var <- c(paste0("load_h", h1_h2),
+#               paste0("load24_h", h1_h2),
+#               paste0("temp_h", h1_h2),
+#               paste0("temp95_h", h1_h2),
+#              "doy", "dow", "month", "year", "progtime")
+# GEF14_d4 <- GEF14_data[, subs_var]
+# 
+# setwd("C:/Users/Gioia/Desktop/SoftwarePaper/README")
+# save(GEF14_d4,  file="GEF14_d4.RData")
+```
+
+The multivariate Gaussian additive model is fitted via the `gam_scm()` wrapper
+```{r fit_mcd, echo=TRUE, eval=FALSE}
+gam_scm(formula, family = mvn_scm(d = 2, param = NULL, nb = 1), optimizer = NULL, data = list(), aGam = list())
+```
+
+
+The inputs of the `gam_scm()` function are:
+
+* `formula`: list of model formulas provided by the user;
+* `mvn_scm`: model family:
+    - `d`: dimension of the outcome vector;
+    - `param`: by default the MCD parametrisation (`"mcd"`), otherwise set (`"logm"`) for the logM one; 
+    - `nb`: number of of blocks for chunking the evaluation of some quantities (default no chunks, while consider to increase such value if memory problem appears);
+* `data`: a data frame or a list containing the outcomes and the covariates; 
+* `optimizer`: optional argument specifying the approach to smoothing parameter optimisation; by default the generalised Fellner-Schall method (`"efs"`) by Wood and Fasiolo (2017), otherwise *only for the MCD parametrisation* the quasi Newton's optimisation  of the Laplace approximate marginal likelihood criterion (`"bfgs"`) according to Wood et al. (2016); 
+* `aGam`: a list of auxiliary arguments that could be passed to the `gam()` function of the **mgcv** package (Wood, 2017). 
+
+
+# Illustration
+We introduce the most important functions of the package by means of the  GefCom2014 dataset (Hong et al., 2016), considering only the hourly loads from 5pm to 8 pm.
+
+```{r loadingData, echo=TRUE}
+#setwd("C:/Users/Gioia/Desktop/SoftwarePaper/README")
+library(SCM)
+load("GEF14_d4.RData")
+d <- 4
+```
+
+
+
+We start specifying the model formula for the mean vector: 
+
+```{r meanmodelformula, echo=TRUE}
+my_k = 15
+my_bs = "cr"
+mformula <- list(load_h17 | load_h18 | load_h19 | load_h20  ~ dow + s(doy, k = my_k, bs = my_bs),
+                 load_h17 ~ load24_h17 + s(temp95_h17),
+                 load_h18 ~ load24_h18 + s(temp95_h18),
+                 load_h19 ~ load24_h19 + s(temp95_h19),
+                 load_h20 ~ load24_h20 + s(temp95_h20))
+```
+
+The model formula is composed by two parts:
+
+* "Common" specification:  by using the `|` operator, all the outcomes of the l.h.s. of `y ~ x` involve the same covariates  (first row);
+* "Single-element" specification: the (rest of the) formula involving element-specific covariates can be stated separately (last 4 rows);
+
+
+Here, we consider the MCD-based additive covariance matrix model, which means modelling the elements of $\log \boldsymbol D^2_i$ and $\boldsymbol T_i$ resulting from $\boldsymbol \Sigma^{-1}_i={\boldsymbol T^\top_i}{ \boldsymbol D^{-2}_i} {\boldsymbol T_i}$.  For this application, it means to specify a model formula for  the non-trivial elements of    
+
+$$ \log \boldsymbol D^2_i = \begin{pmatrix}\eta_{i5}  & 0 & 0  & 0 \\ 0& \eta_{i6} & 0 & 0 \\0  & 0 & \eta_{i7} & 0 \\0 & 0 & 0 & \eta_{i8}\end{pmatrix} \hspace{2cm} \boldsymbol T_i= \begin{pmatrix} 1  & 0 & 0 & 0 \\ \eta_{i9}& 1 & 0 & 0 \\ \eta_{i10}  &  \eta_{i11} & 1 & 0 \\\eta_{i12} & \eta_{i13} & \eta_{i14} &  1\end{pmatrix}$$
+
+We facilitate the model formula specification (implicitly allowing a connection with the logM parametrisation) by introducing a matrix $\boldsymbol \Theta_i$ as in the form 
+
+$$\boldsymbol \Theta_i= \begin{pmatrix} \eta_{i4}  & \eta_{i9} & \eta_{i10} & \eta_{i12} \\ \eta_{i9}& \eta_{i5} & \eta_{i11} & \eta_{i13} \\ \eta_{i10}  &  \eta_{i11} & \eta_{i7} & \eta_{i14} \\\eta_{i12} & \eta_{i13} & \eta_{i14} &  \eta_{i8} \end{pmatrix}$$
+
+whose relation with the matrices $\log \boldsymbol D^2_i$ and $\boldsymbol T_i$ is simply $[\boldsymbol \Theta_i]_{jj}=[\log \boldsymbol D^2_i]_{jj}$, $j=1, \ldots, 4$, and  $[\boldsymbol \Theta_i]_{jk}= [\boldsymbol \Theta_i]_{kj}=  [\boldsymbol T_i]_{jk}$, $1 \leq k < j \leq 4$. 
+
+For instance, consider the following model formula for the covariance matrix model:
+
+```{r covmodelformula, echo=TRUE, eval=TRUE, include=TRUE}
+my_k2 = 10
+my_bs = "tp"
+mformula <- c(mformula, list( 
+                 Th_11 | Th_22 | Th_33 | Th_44 | Th_12 | Th_23 | Th_34  ~ dow + s(doy, k = my_k, bs = my_bs),
+                 Th_11 ~ s(temp95_h17),
+                 Th_22 ~ s(temp95_h18),
+                 Th_33 ~ s(temp95_h19),
+                 Th_44 ~ s(temp95_h20)))
+```
+
+As in the mean model, the covariance matrix model can be stated using a "Common" and a "Single-element" specification. However,  the l.h.s. of the model formula statement `y ~ x` targets the element of  $\boldsymbol \Theta$ to be modelled via the sintax   `Th_st ~ x`, where $s$ and $t$ are the indices targeting the elements of $\boldsymbol \Theta_i$.
+
+
+
+Note that if you don't specify a model formula for a component of $\Theta$, such element is automatically modelled via intercept, while the model foprmula for a menan vector compnent requires to be specified in any case.
+
+
+The model is then fitted via 
+```{r fit1, echo=TRUE, eval=TRUE, include=TRUE}
+fit1 <- gam_scm(mformula, family = mvn_scm(d=4), data = GEF14_d4)
+```
+
+The resulting object is of class `"scm"` and can be explored via
+
+- plot of the smooth effects, as in `gam`   
+```{r gam plot, echo=TRUE, eval=FALSE, include = TRUE} 
+plot(fit1, scale = FALSE, pages = 1) 
+```
+
+- summary of linear and smooth effects (`intercept = FALSE` avoids printing the intercepts)  
+```{r summary, echo=TRUE, eval=FALSE, include = TRUE} 
+summary(fit1, intercept = FALSE) 
+```
+
+- residuals: raw residuals (`type = "response"`), uncorrelated standard normal residuals (default, `"deviance"`) and Pearson's residuals (`"pearson"`)  
+
+```{r residuals, echo=TRUE, eval=FALSE}
+head(residuals(fit1, type = "deviance"))
+```
+
+- fitted values in terms of $\boldsymbol \eta$ 
+
+```{r pred1, echo=TRUE, eval=FALSE} 
+head(predict(fit1))
+```
+
+- fitted values in terms of (mean vector, variances, correlations) 
+
+```{r pred2, echo=TRUE, eval=FALSE} 
+head(predict(fit1, type = "response")) 
+``` 
+
+- fitted values in terms of (mean vector, variances, covariances)
+```{r pred3, echo=TRUE, eval=TRUE} 
+fit1$family$put_cflag(FALSE) 
+Sigma_pred <- predict(fit1, type = "response")
+head(Sigma_pred)
+``` 
+
+The function `Sigma_mat()` allows to organise the covariance matrices in a list, for instance  
+```{r pred4, echo=TRUE, eval=TRUE} 
+Sigma_mat(Sigma_pred[,-c(1:d)])[[1]]
+``` 
+
+The **mgcViz** package by Fasiolo et al. (2020) allows to obtain the residual diagnostics and the accumulated local effects (ALEs) by Apley and Zhu (2020). 
+For instance, the centered ALE of the variable `doy' on the variance of the net-demand at 5 p.m. is obtained via  
+```{r , echo=TRUE, eval=TRUE, message = F} 
+library(mgcViz)
+``` 
+
+```{r ALEs, echo=TRUE, eval=TRUE} 
+Sigma_el <- SCM:::sel_elem(d)
+var_y1 <- ALE(fit1, x = "doy", type = "response",
+                      oind = Sigma_el(1, 1), center = 1)
+plot(var_y1)
+``` 
+
+
+
+
+
+References
+==========
+- Apley, D. W. and Zhu, J. (2020) Visualizing the effects of predictor variables in black box supervised learning models. Journal of the Royal Statistical Society: Series B (Statistical Methodology), 82 (4), 1059 -- 1086.  
+
+- Chiu, T. Y. M., Leonard, T. and Tsui, K.-W. (1996) The matrix-logarithmic covariance model. Journal of the American Statistical Association, 91 (433), 198 -- 210.    
+
+-   Fasiolo, M., Nedellec, R., Goude, Y. and Wood, S.N., 2020. Scalable visualization methods for modern generalized additive models. Journal of computational and Graphical Statistics, 29 (1), 78--86.
+
+- Hong, T., Pinson, P., Fan, S., Zareipour, H., Troccoli, A., and Hyndman, R.J. (2016). Probabilistic energy forecasting: global energy forecasting competition 2014 and beyond. International Journal of Forecasting, 32, 896 -- 913.
+
+- Pourahmadi, M. (1999) Joint mean-covariance models with applications to longitudinal data: unconstrained parameterisation. Biometrika,  86 (3), 677 -- 690.
+
+- Wood, S. N., Pya, N. and S\"{a}fken, B. (2016) Smoothing parameter and model selection for general smooth models (with discussion).  Journal of the American Statistical Association, 111 (516), 1548 -- 1575.
+
+-  Wood, S. N. (2017) Generalized Additive Models: An Introduction with R, 2nd ed. Boca Raton, FL, USA: Chapman and Hall/CRC.
+
+-  Wood, S. N. and Fasiolo, M.  (2017). A generalized Fellner-Schall method for smoothing parameter optimization with application to Tweedie location, scale and shape models.  Biometrics, 73 (4), 1071 -- 1081.
