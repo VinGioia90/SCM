@@ -12,3 +12,4 @@ RoxygenNote: 7.1.2
 Imports:
    fields, stringr, mgcv, parallel, Rcpp(>= 1.0.6), stats, BMisc, mvnfast
 LinkingTo: Rcpp, RcppArmadillo
+URL: https://vingioia90.github.io/SCM/
