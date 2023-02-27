@@ -1,9 +1,10 @@
 Package: SCM
-Title: What the Package Does (One Line, Title Case)
+Title: Smoothing for Covariance matrix Modelling
 Version: 0.0.0.9000
 Authors@R: 
     person("Vincenzo", "Gioia", , "gioia.vincenzo@spes.uniud.it", role = c("aut", "cre"),
-           comment = c(ORCID = "0000-0001-7983-8911 "))
+           comment = c(ORCID = "0000-0001-7983-8911 "), 
+    person("Matteo", "Fasiolo", email = "matteo.fasiolo@gmail.com", role = c("aut")))
 Description: What the package does (one paragraph).
 License: MIT + file LICENSE 
 Encoding: UTF-8
