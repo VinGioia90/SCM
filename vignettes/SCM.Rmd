@@ -58,7 +58,7 @@ The inputs of the `gam_scm()` function are:
 # Illustration
 We introduce the most important functions of the package by means of the  GefCom2014 dataset (Hong et al., 2016), considering only the hourly loads from 5pm to 8 pm.
 
- ```{r loadingData, echo=TRUE}
+```{r loadingData, echo=TRUE}
 library(SCM) 
 data(GEF14_d4)
 d <- 4 
