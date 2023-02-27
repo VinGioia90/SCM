@@ -1,15 +1,16 @@
 ---
-title: "An introduction to SCM: Fit an additive covariance matrix model for multivariate normal data "
+title: 'An introduction to SCM: Fit an additive covariance matrix model for multivariate
+  normal data '
 author: "Vincenzo Gioia and Matteo Fasiolo"
 date: "`r Sys.Date()`"
-output: 
+output:
   html_document:
-    toc: true
-    number_sections: true
-vignette: >
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteIndexEntry{SCM}
-  %\VignetteEncoding{UTF-8}
+    toc: yes
+    number_sections: yes
+  pdf_document:
+    toc: yes
+vignette: |
+  %\VignetteEngine{knitr::rmarkdown} %\VignetteIndexEntry{SCM} %\VignetteEncoding{UTF-8}
 ---
 
 <style>
