@@ -65,6 +65,10 @@ $$ \log \boldsymbol D^2_i = \begin{pmatrix}\eta_{i5}  & 0 & 0  & 0 \\ 0& \eta_{i
 
 We facilitate the model formula specification (implicitly allowing a connection with the logM parametrisation) by introducing a matrix $\boldsymbol \Theta_i$ as in the form 
 
+$$\boldsymbol \Theta_i=\left(\begin{array}{cc} 0.8944272 & 0.4472136\\
+-0.4472136 & -0.8944272
+\end{array}\right)$$
+
 $$\boldsymbol \Theta_i= \begin{pmatrix} \eta_{i4}  & \eta_{i9} & \eta_{i10} & \eta_{i12} \\ \eta_{i9}& \eta_{i5} & \eta_{i11} & \eta_{i13} \\ \eta_{i10}  &  \eta_{i11} & \eta_{i7} & \eta_{i14} \\\eta_{i12} & \eta_{i13} & \eta_{i14} &  \eta_{i8} \end{pmatrix}$$
 
 whose relation with the matrices $\log \boldsymbol D^2_i$ and $\boldsymbol T_i$ is simply $[\boldsymbol \Theta_i]_{jj}=[\log \boldsymbol D^2_i]_{jj}$, $j=1, \ldots, 4$, and  $[\boldsymbol \Theta_i]_{jk}= [\boldsymbol \Theta_i]_{kj}=  [\boldsymbol T_i]_{jk}$, $1 \leq k < j \leq 4$. 
