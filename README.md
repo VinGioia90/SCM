@@ -78,11 +78,11 @@ $$\boldsymbol \Theta_i=\left(\begin{array}{cccc} \eta_{i4}  & \eta_{i9} & \eta_{
                                                  \eta_{i9}& \eta_{i5} & \eta_{i11} & \eta_{i13}\\ 
                                                  \eta_{i10}  &  \eta_{i11} & \eta_{i7} & \eta_{i14}\\ 
                                                  \eta_{i12} & \eta_{i13} & \eta_{i14} &  \eta_{i8}
-\end{array}\right)$$
+\end{array}\right).$$
 
 
 
-whose relation with the matrices $\log \boldsymbol D^2_i$ and $\boldsymbol T_i$ is simply $(\boldsymbol \Theta_i)_{jj}=(\log \boldsymbol D^2_i)_{jj}$, $j=1, \ldots, 4$, and  $(\boldsymbol \Theta_i)_{jk}= (\boldsymbol \Theta_i)_{kj}=  (\boldsymbol T_i)_{jk}$, $1 \leq k < j \leq 4$. 
+The relation between $\boldsymbol \Theta$ and the matrices $\log \boldsymbol D^2_i$ and $\boldsymbol T_i$ is simply $\boldsymbol \Theta_{jj}=\log \boldsymbol D^2_{jj}$, $j=1, \ldots, 4$, and  $\boldsymbol \Theta_{jk}= \boldsymbol T_{jk}$, $1 \leq k < j \leq 4$. 
 
 For instance, consider the following model formula for the covariance matrix model:
 
@@ -97,7 +97,7 @@ mformula <- c(mformula, list(
                  Th_44 ~ s(temp95_h20)))
 ```
 
-As in the mean model, the covariance matrix model can be stated using a "Common" and a "Single-element" specification. However,  the l.h.s. of the model formula statement `y ~ x` targets the element of  $\boldsymbol \Theta$ to be modelled via the sintax   `Th_st ~ x`, where $s$ and $t$ are the indices targeting the elements of $\boldsymbol \Theta_i$.
+As for the mean vector model, the covariance matrix model can be stated using a "Common" and a "Single-element" specification. However,  the l.h.s. of the model formula statement `y ~ x` targets the element of  $\boldsymbol \Theta$ to be modelled via the sintax   `Th_st ~ x`, where $s$ and $t$ are the indices targeting the elements of $\boldsymbol \Theta_i$.
 
 
 
