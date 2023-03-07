@@ -11,16 +11,10 @@ devtools::install_github("VinGioia90/SCM@master")
 
 # Multivariate Gaussian additive models
 
-Let
-![\\boldsymbol y\_i\\sim \\mathcal{N}(\\boldsymbol \\mu\_i, \\boldsymbol \\Sigma\_i)](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Cboldsymbol%20y_i%5Csim%20%5Cmathcal%7BN%7D%28%5Cboldsymbol%20%5Cmu_i%2C%20%5Cboldsymbol%20%5CSigma_i%29 "\boldsymbol y_i\sim \mathcal{N}(\boldsymbol \mu_i, \boldsymbol \Sigma_i)"),
-![i=1, \\ldots, n](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;i%3D1%2C%20%5Cldots%2C%20n "i=1, \ldots, n"),
-be independent response vectors.
+Let $\boldsymbol y\_i\\sim \\mathcal{N}(\\boldsymbol \\mu\_i, \\boldsymbol \\Sigma\_i), i=1, \ldots, n,$ be independent response vectors.
 
-The covariates enter the model through the linear predictor vector
-![\\boldsymbol \\eta\_i=(\\eta\_{i1}, \\ldots, \\eta\_{iq})](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Cboldsymbol%20%5Ceta_i%3D%28%5Ceta_%7Bi1%7D%2C%20%5Cldots%2C%20%5Ceta_%7Biq%7D%29 "\boldsymbol \eta_i=(\eta_{i1}, \ldots, \eta_{iq})"),
-with
-![q= d+d(d+1)/2](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;q%3D%20d%2Bd%28d%2B1%29%2F2 "q= d+d(d+1)/2"),
-whose components allow specifying linear and smooth effects.
+The covariates enter the model through the linear predictor vector $\\boldsymbol \\eta\_i=(\\eta\_{i1}, \\ldots, \\eta\_{iq})$, with
+$q= d+d(d+1)/2$, whose components allow specifying linear and smooth effects.
 
 The mean model is specified by
 ![\\mu\_{ij} = \\eta\_{ij}](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Cmu_%7Bij%7D%20%3D%20%5Ceta_%7Bij%7D "\mu_{ij} = \eta_{ij}"),
