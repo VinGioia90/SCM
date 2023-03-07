@@ -264,9 +264,7 @@ var_y1 <- ALE(fit1, x = "doy", type = "response",
 plot(var_y1)
 ```
 
-<img src="https://github.com/VinGioia90/SCM/tree/master/vignettes/SCM_files/figure-gfm/ALEs-1.png" style="display:block; margin: auto" style="display: block; margin: auto;" />
-![This is an image](https://github.com/VinGioia90/SCM/tree/master/vignettes/SCM_files/figure-gfm/ALEs-1.png)
-
+/../master/vignettes/SCM_files/figure-gfm/ALEs-1.png
 # References
 
 -   Apley, D. W. and Zhu, J. (2020) Visualizing the effects of predictor
