@@ -13,19 +13,12 @@ devtools::install_github("VinGioia90/SCM@master")
 
 Let $\boldsymbol y\_i\\sim \\mathcal{N}(\\boldsymbol \\mu\_i, \\boldsymbol \\Sigma\_i), i=1, \ldots, n,$ be independent response vectors.
 
-The covariates enter the model through the linear predictor vector $\\boldsymbol \\eta\_i=(\\eta\_{i1}, \\ldots, \\eta\_{iq})$, with
+The covariates enter the model through the linear predictor vector $\\boldsymbol \\eta\_i=(\\eta\_{i1}, \\ldots, \\eta\_{iq})^\top$, with
 $q= d+d(d+1)/2$, whose components allow specifying linear and smooth effects.
 
 The mean model is specified by
-![\\mu\_{ij} = \\eta\_{ij}](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Cmu_%7Bij%7D%20%3D%20%5Ceta_%7Bij%7D "\mu_{ij} = \eta_{ij}"),
-![j=1, \\ldots,d](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;j%3D1%2C%20%5Cldots%2Cd "j=1, \ldots,d"),
-while the remaining
-![\\eta\_{ij}](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Ceta_%7Bij%7D "\eta_{ij}"),
-![j=d+1, \\ldots,q](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;j%3Dd%2B1%2C%20%5Cldots%2Cq "j=d+1, \ldots,q"),
-specify the nonredundant, unconstrained elements of a covariance matrix
-parametrisation. The latter can be stated via the modified Cholesky
-decomposition (MCD) by Pourahmadi (1999) or the matrix logarithmic
-tranformation by Chiu et al. (1996)
+$\\mu\_{ij} = \\eta\_{ij}, j=1, \\ldots,d$ while the remaining
+$\\eta\_{ij}, j=d+1, \\ldots,q$, specify the nonredundant, unconstrained elements of a covariance matrix parametrisation. The latter can be stated via the modified Cholesky decomposition (MCD) by Pourahmadi (1999) or the matrix logarithmic tranformation by Chiu et al. (1996).
 
 The multivariate Gaussian additive models are fitted via the `gam_scm()`
 wrapper
@@ -64,10 +57,7 @@ daily basis are considered as the outcome variables. The dataset,
 spanning the period from 2005/01/02 to 2011/11/30, includes the day of
 the year (`doy`), the day of the week (`dow`), the exponentially
 smoothed temperature (`temp95_h<k>`) and the loads of the previous day
-(`load24_h<k>`) at the
-![k](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;k "k")-th
-hour,
-![k=17,\\ldots, 20](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;k%3D17%2C%5Cldots%2C%2020 "k=17,\ldots, 20").
+(`load24_h<k>`) at the $k$-th hour, $k=17,\\ldots, 20$.
 
 ``` r
 library(SCM)
