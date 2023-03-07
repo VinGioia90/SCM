@@ -91,10 +91,7 @@ For this application, it means to specify a model formula for the non-trivial el
 
 ![ \\log \\boldsymbol D^2\_i = \\begin{pmatrix}\\eta\_{i5}  & 0 & 0  & 0 \\\\ 0& \\eta\_{i6} & 0 & 0 \\\\0  & 0 & \\eta\_{i7} & 0 \\\\0 & 0 & 0 & \\eta\_{i8}\\end{pmatrix} \\hspace{2cm} \\boldsymbol T\_i= \\begin{pmatrix} 1  & 0 & 0 & 0 \\\\ \\eta\_{i9}& 1 & 0 & 0 \\\\ \\eta\_{i10}  &  \\eta\_{i11} & 1 & 0 \\\\\\eta\_{i12} & \\eta\_{i13} & \\eta\_{i14} &  1\\end{pmatrix}](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%20%5Clog%20%5Cboldsymbol%20D%5E2_i%20%3D%20%5Cbegin%7Bpmatrix%7D%5Ceta_%7Bi5%7D%20%20%26%200%20%26%200%20%20%26%200%20%5C%5C%200%26%20%5Ceta_%7Bi6%7D%20%26%200%20%26%200%20%5C%5C0%20%20%26%200%20%26%20%5Ceta_%7Bi7%7D%20%26%200%20%5C%5C0%20%26%200%20%26%200%20%26%20%5Ceta_%7Bi8%7D%5Cend%7Bpmatrix%7D%20%5Chspace%7B2cm%7D%20%5Cboldsymbol%20T_i%3D%20%5Cbegin%7Bpmatrix%7D%201%20%20%26%200%20%26%200%20%26%200%20%5C%5C%20%5Ceta_%7Bi9%7D%26%201%20%26%200%20%26%200%20%5C%5C%20%5Ceta_%7Bi10%7D%20%20%26%20%20%5Ceta_%7Bi11%7D%20%26%201%20%26%200%20%5C%5C%5Ceta_%7Bi12%7D%20%26%20%5Ceta_%7Bi13%7D%20%26%20%5Ceta_%7Bi14%7D%20%26%20%201%5Cend%7Bpmatrix%7D " \log \boldsymbol D^2_i = \begin{pmatrix}\eta_{i5}  & 0 & 0  & 0 \\ 0& \eta_{i6} & 0 & 0 \\0  & 0 & \eta_{i7} & 0 \\0 & 0 & 0 & \eta_{i8}\end{pmatrix} \hspace{2cm} \boldsymbol T_i= \begin{pmatrix} 1  & 0 & 0 & 0 \\ \eta_{i9}& 1 & 0 & 0 \\ \eta_{i10}  &  \eta_{i11} & 1 & 0 \\\eta_{i12} & \eta_{i13} & \eta_{i14} &  1\end{pmatrix}")
 
-We facilitate the model formula specification (implicitly allowing a
-connection with the logM parametrisation) by introducing a matrix
-![\\boldsymbol \\Theta\_i](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Cboldsymbol%20%5CTheta_i "\boldsymbol \Theta_i")
-as in the form
+We facilitate the model formula specification (implicitly allowing a connection with the logM parametrisation) by introducing a matrix $\\boldsymbol \\Theta\_i$ as in the form
 
 ![\\boldsymbol \\Theta\_i= \\begin{pmatrix} \\eta\_{i4}  & \\eta\_{i9} & \\eta\_{i10} & \\eta\_{i12} \\\\ \\eta\_{i9}& \\eta\_{i5} & \\eta\_{i11} & \\eta\_{i13} \\\\ \\eta\_{i10}  &  \\eta\_{i11} & \\eta\_{i7} & \\eta\_{i14} \\\\\\eta\_{i12} & \\eta\_{i13} & \\eta\_{i14} &  \\eta\_{i8} \\end{pmatrix}](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Cboldsymbol%20%5CTheta_i%3D%20%5Cbegin%7Bpmatrix%7D%20%5Ceta_%7Bi4%7D%20%20%26%20%5Ceta_%7Bi9%7D%20%26%20%5Ceta_%7Bi10%7D%20%26%20%5Ceta_%7Bi12%7D%20%5C%5C%20%5Ceta_%7Bi9%7D%26%20%5Ceta_%7Bi5%7D%20%26%20%5Ceta_%7Bi11%7D%20%26%20%5Ceta_%7Bi13%7D%20%5C%5C%20%5Ceta_%7Bi10%7D%20%20%26%20%20%5Ceta_%7Bi11%7D%20%26%20%5Ceta_%7Bi7%7D%20%26%20%5Ceta_%7Bi14%7D%20%5C%5C%5Ceta_%7Bi12%7D%20%26%20%5Ceta_%7Bi13%7D%20%26%20%5Ceta_%7Bi14%7D%20%26%20%20%5Ceta_%7Bi8%7D%20%5Cend%7Bpmatrix%7D "\boldsymbol \Theta_i= \begin{pmatrix} \eta_{i4}  & \eta_{i9} & \eta_{i10} & \eta_{i12} \\ \eta_{i9}& \eta_{i5} & \eta_{i11} & \eta_{i13} \\ \eta_{i10}  &  \eta_{i11} & \eta_{i7} & \eta_{i14} \\\eta_{i12} & \eta_{i13} & \eta_{i14} &  \eta_{i8} \end{pmatrix}")
 
@@ -120,19 +117,11 @@ mformula <- c(mformula, list(
 As in the mean model, the covariance matrix model can be stated using a
 “Common” and a “Single-element” specification. However, the l.h.s. of
 the model formula statement `y ~ x` targets the element of
-![\\boldsymbol \\Theta](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Cboldsymbol%20%5CTheta "\boldsymbol \Theta")
-to be modelled via the sintax `Th_st ~ x`, where
-![s](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;s "s")
-and
-![t](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;t "t")
-are the indices targeting the elements of
-![\\boldsymbol \\Theta\_i](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Cboldsymbol%20%5CTheta_i "\boldsymbol \Theta_i").
+$\\boldsymbol \\Theta$
+to be modelled via the sintax `Th_st ~ x`, where $s$ and $t$ are the indices targeting the elements of $\\boldsymbol \\Theta\_i$.
 
-Note that not specifying a model formula for a component of
-![\\Theta](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5CTheta "\Theta")
-that implies such element is automatically modelled via intercept. In
-contrast, the model formula for the mean vector components requires to
-be specified in any case.
+Note that not specifying a model formula for a component of $\\Theta$ that implies such element is automatically modelled via intercept. In
+contrast, the model formula for the mean vector components requires to be specified in any case.
 
 The model is then fitted via
 
