@@ -61,7 +61,15 @@ The model formula is composed by two parts:
 
 For simplicity, we consider the MCD-based additive covariance matrix model, which means modelling the elements of $\log \boldsymbol D^2_i$ and $\boldsymbol T_i$ resulting from $\boldsymbol \Sigma^{-1}_i={\boldsymbol T^\top_i}{ \boldsymbol D^{-2}_i} {\boldsymbol T_i}$.  For this application, it means to specify a model formula for  the non-trivial elements of    
 
-$$ \log \boldsymbol D^2_i = \begin{pmatrix}\eta_{i5}  & 0 & 0  & 0 \\ 0& \eta_{i6} & 0 & 0 \\0  & 0 & \eta_{i7} & 0 \\0 & 0 & 0 & \eta_{i8}\end{pmatrix} \hspace{2cm} \boldsymbol T_i= \begin{pmatrix} 1  & 0 & 0 & 0 \\ \eta_{i9}& 1 & 0 & 0 \\ \eta_{i10}  &  \eta_{i11} & 1 & 0 \\\eta_{i12} & \eta_{i13} & \eta_{i14} &  1\end{pmatrix}$$
+$$ \log \boldsymbol D^2_i = \left(\begin{array}{cccc}\eta_{i5}  & 0 & 0  & 0\\ 
+                                                     0& \eta_{i6} & 0 & 0\\
+                                                     0  & 0 & \eta_{i7} & 0\\
+                                                     0 & 0 & 0 & \eta_{i8}\end{array}\right) \hspace{2cm} 
+   \boldsymbol T_i=\left(\begin{array}{cccc} 1  & 0 & 0 & 0\\
+                                             \eta_{i9}& 1 & 0 & 0\\ 
+                                             \eta_{i10}  &  \eta_{i11} & 1 & 0\\
+                                             \eta_{i12} & \eta_{i13} & \eta_{i14} &  1
+                                             \end{array}\right)$$
 
 We facilitate the model formula specification (implicitly allowing a connection with the logM parametrisation) by introducing a matrix $\boldsymbol \Theta_i$ as in the form 
 
@@ -71,7 +79,7 @@ $$\boldsymbol \Theta_i=\left(\begin{array}{cccc} \eta_{i4}  & \eta_{i9} & \eta_{
                                                  \eta_{i12} & \eta_{i13} & \eta_{i14} &  \eta_{i8}
 \end{array}\right)$$
 
-$$\boldsymbol \Theta_i= \begin{pmatrix} \eta_{i4}  & \eta_{i9} & \eta_{i10} & \eta_{i12} \\ \eta_{i9}& \eta_{i5} & \eta_{i11} & \eta_{i13} \\ \eta_{i10}  &  \eta_{i11} & \eta_{i7} & \eta_{i14} \\\eta_{i12} & \eta_{i13} & \eta_{i14} &  \eta_{i8} \end{pmatrix}$$
+
 
 whose relation with the matrices $\log \boldsymbol D^2_i$ and $\boldsymbol T_i$ is simply $[\boldsymbol \Theta_i]_{jj}=[\log \boldsymbol D^2_i]_{jj}$, $j=1, \ldots, 4$, and  $[\boldsymbol \Theta_i]_{jk}= [\boldsymbol \Theta_i]_{kj}=  [\boldsymbol T_i]_{jk}$, $1 \leq k < j \leq 4$. 
 
