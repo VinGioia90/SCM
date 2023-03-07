@@ -82,7 +82,7 @@ $$\boldsymbol \Theta_i=\left(\begin{array}{cccc} \eta_{i4}  & \eta_{i9} & \eta_{
 
 
 
-whose relation with the matrices $\log \boldsymbol D^2_i$ and $\boldsymbol T_i$ is simply $[\boldsymbol \Theta_i]_{jj}=[\log \boldsymbol D^2_i]_{jj}$, $j=1, \ldots, 4$, and  $[\boldsymbol \Theta_i]_{jk}= [\boldsymbol \Theta_i]_{kj}=  [\boldsymbol T_i]_{jk}$, $1 \leq k < j \leq 4$. 
+whose relation with the matrices $\log \boldsymbol D^2_i$ and $\boldsymbol T_i$ is simply $(\boldsymbol \Theta_i)_{jj}=(\log \boldsymbol D^2_i)_{jj}$, $j=1, \ldots, 4$, and  $(\boldsymbol \Theta_i)_{jk}= (\boldsymbol \Theta_i)_{kj}=  (\boldsymbol T_i)_{jk}$, $1 \leq k < j \leq 4$. 
 
 For instance, consider the following model formula for the covariance matrix model:
 
