@@ -2,10 +2,7 @@
 title: "An introduction to SCM: Fit an additive covariance matrix model for multivariate normal data "
 author: "Vincenzo Gioia and Matteo Fasiolo"
 date: "`r Sys.Date()`"
-output: 
-  html_document:
-    toc: true
-    number_sections: true
+output: github_document
 vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteIndexEntry{SCM}
@@ -35,7 +32,7 @@ Let  $\boldsymbol y_i\sim \mathcal{N}(\boldsymbol \mu_i, \boldsymbol \Sigma_i)$,
 
 The covariates enter the model through the linear predictor vector $\boldsymbol \eta_i=(\eta_{i1}, \ldots, \eta_{iq})$, with $q= d+d(d+1)/2$, whose components allow specifying linear and smooth effects. 
 
-The mean model is specified by $\mu_{ij} = \eta_{ij}$, $j=1, \ldots,d$, while the remaining $\eta_{ij}$, $j=d+1, \ldots,q$, specify the nonredundant, unconstrained elements of a covariance matrix parametrisation. The latter can be stated via the  modified Cholesky decomposition (MCD) by Pourahmadi (1999) or the matrix logarithmic tranformation by Chiu et al. (1996) 
+The mean model is specified by $\mu_{ij} = \eta_{ij}$, $j=1, \ldots,d$, while the remaining $\eta_{ij}$, $j=d+1, \ldots,q$, specify the nonredundant, unconstrained elements of a covariance matrix parametrisation. The latter can be stated via the  modified Cholesky decomposition (MCD) by Pourahmadi (1999) or the matrix logarithmic tranformation by Chiu et al. (1996)
 
 
 The multivariate Gaussian additive models are fitted via the `gam_scm()` wrapper
@@ -158,11 +155,30 @@ head(predict(fit1, type = "response"))
 fit1$family$put_cflag(FALSE) 
 Sigma_pred <- predict(fit1, type = "response")
 head(Sigma_pred)
+##        [,1]      [,2]      [,3]      [,4]      [,5]      [,6]      [,7]
+## 1 115.57999 109.29417 107.12426 107.55051 345.00041 380.41531 404.21131
+## 2 103.62242  95.79812  92.15967  90.95859 194.88233 211.45315 218.47222
+## 3  90.72186  82.53147  78.76657  77.47152  75.38906  82.02693  87.68686
+## 4  91.27840  82.81718  78.84653  77.25713  82.63282  88.90992  93.91295
+## 5  90.34403  81.23424  76.69174  74.78123  74.13510  80.50152  87.18804
+## 6 101.00277  93.29391  88.97594  87.38839 146.50549 154.48771 162.74744
+##        [,8]      [,9]     [,10]     [,11]     [,12]     [,13]     [,14]
+## 1 430.83223 361.22653 370.78073 391.54811 380.85143 402.90381 416.52786
+## 2 224.53788 202.14192 204.03489 214.30886 205.08170 216.00432 220.79684
+## 3  93.52467  78.10238  79.82161  84.38060  81.34185  86.35829  90.14268
+## 4  98.78637  85.00924  86.13507  90.80895  86.98921  92.20045  95.88335
+## 5  94.53048  76.63749  78.63748  83.23227  80.58371  85.71751  90.29103
+## 6 172.51746 149.85170 152.78919 158.12093 155.89525 161.74611 166.90203
 ``` 
 
 The function `Sigma_mat()` allows to organise the covariance matrices in a list, for instance  
 ```{r pred4, echo=TRUE, eval=TRUE} 
 Sigma_mat(Sigma_pred[,-c(1:d)])[[1]]
+##          [,1]     [,2]     [,3]     [,4]
+## [1,] 345.0004 361.2265 370.7807 380.8514
+## [2,] 361.2265 380.4153 391.5481 402.9038
+## [3,] 370.7807 391.5481 404.2113 416.5279
+## [4,] 380.8514 402.9038 416.5279 430.8322
 ``` 
 
 The **mgcViz** package by Fasiolo et al. (2020) allows to obtain the residual diagnostics and the accumulated local effects (ALEs) by Apley and Zhu (2020). 
