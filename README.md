@@ -85,14 +85,9 @@ The model formula is composed by two parts:
     element-specific covariates can be stated separately (last 4 rows);
 
 For simplicity, we consider the MCD-based additive covariance matrix
-model, which means modelling the elements of
-![\\log \\boldsymbol D^2\_i](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Clog%20%5Cboldsymbol%20D%5E2_i "\log \boldsymbol D^2_i")
-and
-![\\boldsymbol T\_i](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Cboldsymbol%20T_i "\boldsymbol T_i")
-resulting from
-![\\boldsymbol \\Sigma^{-1}\_i={\\boldsymbol T^\\top\_i}{ \\boldsymbol D^{-2}\_i} {\\boldsymbol T\_i}](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Cboldsymbol%20%5CSigma%5E%7B-1%7D_i%3D%7B%5Cboldsymbol%20T%5E%5Ctop_i%7D%7B%20%5Cboldsymbol%20D%5E%7B-2%7D_i%7D%20%7B%5Cboldsymbol%20T_i%7D "\boldsymbol \Sigma^{-1}_i={\boldsymbol T^\top_i}{ \boldsymbol D^{-2}_i} {\boldsymbol T_i}").
-For this application, it means to specify a model formula for the
-non-trivial elements of
+model, which means modelling the elements of $\\log \\boldsymbol D^2\_i$ and $\\boldsymbol T\_i$ resulting from
+$\\boldsymbol \\Sigma^{-1}\_i={\\boldsymbol T^\\top\_i}{ \\boldsymbol D^{-2}\_i} {\\boldsymbol T\_i}$.
+For this application, it means to specify a model formula for the non-trivial elements of
 
 ![ \\log \\boldsymbol D^2\_i = \\begin{pmatrix}\\eta\_{i5}  & 0 & 0  & 0 \\\\ 0& \\eta\_{i6} & 0 & 0 \\\\0  & 0 & \\eta\_{i7} & 0 \\\\0 & 0 & 0 & \\eta\_{i8}\\end{pmatrix} \\hspace{2cm} \\boldsymbol T\_i= \\begin{pmatrix} 1  & 0 & 0 & 0 \\\\ \\eta\_{i9}& 1 & 0 & 0 \\\\ \\eta\_{i10}  &  \\eta\_{i11} & 1 & 0 \\\\\\eta\_{i12} & \\eta\_{i13} & \\eta\_{i14} &  1\\end{pmatrix}](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%20%5Clog%20%5Cboldsymbol%20D%5E2_i%20%3D%20%5Cbegin%7Bpmatrix%7D%5Ceta_%7Bi5%7D%20%20%26%200%20%26%200%20%20%26%200%20%5C%5C%200%26%20%5Ceta_%7Bi6%7D%20%26%200%20%26%200%20%5C%5C0%20%20%26%200%20%26%20%5Ceta_%7Bi7%7D%20%26%200%20%5C%5C0%20%26%200%20%26%200%20%26%20%5Ceta_%7Bi8%7D%5Cend%7Bpmatrix%7D%20%5Chspace%7B2cm%7D%20%5Cboldsymbol%20T_i%3D%20%5Cbegin%7Bpmatrix%7D%201%20%20%26%200%20%26%200%20%26%200%20%5C%5C%20%5Ceta_%7Bi9%7D%26%201%20%26%200%20%26%200%20%5C%5C%20%5Ceta_%7Bi10%7D%20%20%26%20%20%5Ceta_%7Bi11%7D%20%26%201%20%26%200%20%5C%5C%5Ceta_%7Bi12%7D%20%26%20%5Ceta_%7Bi13%7D%20%26%20%5Ceta_%7Bi14%7D%20%26%20%201%5Cend%7Bpmatrix%7D " \log \boldsymbol D^2_i = \begin{pmatrix}\eta_{i5}  & 0 & 0  & 0 \\ 0& \eta_{i6} & 0 & 0 \\0  & 0 & \eta_{i7} & 0 \\0 & 0 & 0 & \eta_{i8}\end{pmatrix} \hspace{2cm} \boldsymbol T_i= \begin{pmatrix} 1  & 0 & 0 & 0 \\ \eta_{i9}& 1 & 0 & 0 \\ \eta_{i10}  &  \eta_{i11} & 1 & 0 \\\eta_{i12} & \eta_{i13} & \eta_{i14} &  1\end{pmatrix}")
 
@@ -104,15 +99,9 @@ as in the form
 ![\\boldsymbol \\Theta\_i= \\begin{pmatrix} \\eta\_{i4}  & \\eta\_{i9} & \\eta\_{i10} & \\eta\_{i12} \\\\ \\eta\_{i9}& \\eta\_{i5} & \\eta\_{i11} & \\eta\_{i13} \\\\ \\eta\_{i10}  &  \\eta\_{i11} & \\eta\_{i7} & \\eta\_{i14} \\\\\\eta\_{i12} & \\eta\_{i13} & \\eta\_{i14} &  \\eta\_{i8} \\end{pmatrix}](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Cboldsymbol%20%5CTheta_i%3D%20%5Cbegin%7Bpmatrix%7D%20%5Ceta_%7Bi4%7D%20%20%26%20%5Ceta_%7Bi9%7D%20%26%20%5Ceta_%7Bi10%7D%20%26%20%5Ceta_%7Bi12%7D%20%5C%5C%20%5Ceta_%7Bi9%7D%26%20%5Ceta_%7Bi5%7D%20%26%20%5Ceta_%7Bi11%7D%20%26%20%5Ceta_%7Bi13%7D%20%5C%5C%20%5Ceta_%7Bi10%7D%20%20%26%20%20%5Ceta_%7Bi11%7D%20%26%20%5Ceta_%7Bi7%7D%20%26%20%5Ceta_%7Bi14%7D%20%5C%5C%5Ceta_%7Bi12%7D%20%26%20%5Ceta_%7Bi13%7D%20%26%20%5Ceta_%7Bi14%7D%20%26%20%20%5Ceta_%7Bi8%7D%20%5Cend%7Bpmatrix%7D "\boldsymbol \Theta_i= \begin{pmatrix} \eta_{i4}  & \eta_{i9} & \eta_{i10} & \eta_{i12} \\ \eta_{i9}& \eta_{i5} & \eta_{i11} & \eta_{i13} \\ \eta_{i10}  &  \eta_{i11} & \eta_{i7} & \eta_{i14} \\\eta_{i12} & \eta_{i13} & \eta_{i14} &  \eta_{i8} \end{pmatrix}")
 
 whose relation with the matrices
-![\\log \\boldsymbol D^2\_i](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Clog%20%5Cboldsymbol%20D%5E2_i "\log \boldsymbol D^2_i")
-and
-![\\boldsymbol T\_i](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Cboldsymbol%20T_i "\boldsymbol T_i")
-is simply
-![\[\\boldsymbol \\Theta\_i\]\_{jj}=\[\\log \\boldsymbol D^2\_i\]\_{jj}](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5B%5Cboldsymbol%20%5CTheta_i%5D_%7Bjj%7D%3D%5B%5Clog%20%5Cboldsymbol%20D%5E2_i%5D_%7Bjj%7D "[\boldsymbol \Theta_i]_{jj}=[\log \boldsymbol D^2_i]_{jj}"),
-![j=1, \\ldots, 4](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;j%3D1%2C%20%5Cldots%2C%204 "j=1, \ldots, 4"),
-and
-![\[\\boldsymbol \\Theta\_i\]\_{jk}= \[\\boldsymbol \\Theta\_i\]\_{kj}= \[\\boldsymbol T\_i\]\_{jk}](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5B%5Cboldsymbol%20%5CTheta_i%5D_%7Bjk%7D%3D%20%5B%5Cboldsymbol%20%5CTheta_i%5D_%7Bkj%7D%3D%20%5B%5Cboldsymbol%20T_i%5D_%7Bjk%7D "[\boldsymbol \Theta_i]_{jk}= [\boldsymbol \Theta_i]_{kj}= [\boldsymbol T_i]_{jk}"),
-![1 \\leq k &lt; j \\leq 4](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;1%20%5Cleq%20k%20%3C%20j%20%5Cleq%204 "1 \leq k < j \leq 4").
+$\\log \\boldsymbol D^2\_i$ and $\\boldsymbol T\_i$ is simply $\[\\boldsymbol \\Theta\_i\]\_{jj}=\[\\log \\boldsymbol D^2\_i\]\_{jj}$, $j=1, \\ldots, 4$, and
+$\[\\boldsymbol \\Theta\_i\]\_{jk}= \[\\boldsymbol \\Theta\_i\]\_{kj}= \[\\boldsymbol T\_i\]\_{jk}$,
+$1 \\leq k &lt; j \\leq 4$.
 
 For instance, consider the following model formula for the covariance
 matrix model:
