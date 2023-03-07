@@ -65,7 +65,10 @@ $$ \log \boldsymbol D^2_i = \begin{pmatrix}\eta_{i5}  & 0 & 0  & 0 \\ 0& \eta_{i
 
 We facilitate the model formula specification (implicitly allowing a connection with the logM parametrisation) by introducing a matrix $\boldsymbol \Theta_i$ as in the form 
 
-$$\boldsymbol \Theta_i=\left(\begin{array}{cccc} \eta_{i4}  & \eta_{i9} & \eta_{i10} & \eta_{i12}\\ \eta_{i9}& \eta_{i5} & \eta_{i11} & \eta_{i13}\\ \eta_{i10}  &  \eta_{i11} & \eta_{i7} & \eta_{i14}\\ \eta_{i12} & \eta_{i13} & \eta_{i14} &  \eta_{i8}
+$$\boldsymbol \Theta_i=\left(\begin{array}{cccc} \eta_{i4}  & \eta_{i9} & \eta_{i10} & \eta_{i12}\\ 
+                                                 \eta_{i9}& \eta_{i5} & \eta_{i11} & \eta_{i13}\\ 
+                                                 \eta_{i10}  &  \eta_{i11} & \eta_{i7} & \eta_{i14}\\ 
+                                                 \eta_{i12} & \eta_{i13} & \eta_{i14} &  \eta_{i8}
 \end{array}\right)$$
 
 $$\boldsymbol \Theta_i= \begin{pmatrix} \eta_{i4}  & \eta_{i9} & \eta_{i10} & \eta_{i12} \\ \eta_{i9}& \eta_{i5} & \eta_{i11} & \eta_{i13} \\ \eta_{i10}  &  \eta_{i11} & \eta_{i7} & \eta_{i14} \\\eta_{i12} & \eta_{i13} & \eta_{i14} &  \eta_{i8} \end{pmatrix}$$
