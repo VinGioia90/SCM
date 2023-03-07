@@ -265,6 +265,7 @@ plot(var_y1)
 ```
 
 <img src="https://github.com/VinGioia90/SCM/tree/master/vignettes/SCM_files/figure-gfm/ALEs-1.png" style="display:block; margin: auto" style="display: block; margin: auto;" />
+![This is an image](https://github.com/VinGioia90/SCM/tree/master/vignettes/SCM_files/figure-gfm/ALEs-1.png)
 
 # References
 
