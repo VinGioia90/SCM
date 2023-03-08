@@ -2,30 +2,13 @@
 title: "An introduction to SCM: Fit an additive covariance matrix model for multivariate normal data "
 author: "Vincenzo Gioia and Matteo Fasiolo"
 date: "`r Sys.Date()`"
-output: github_document
+output: rmarkdown::html_vignette
 vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteIndexEntry{SCM}
   %\VignetteEncoding{UTF-8}
 ---
 
-<style>
-body {
-text-align: justify}
-</style>
-
-```{r setup, include=FALSE}
-library(knitr)
-library(rgl)
-opts_chunk$set(out.extra='style="display:block; margin: auto"', fig.align="center", tidy=FALSE)
-knit_hooks$set(webgl = hook_webgl)
-if (!requireNamespace("rmarkdown", quietly = TRUE) ||
-!rmarkdown::pandoc_available("1.14")) {
-warning(call. = FALSE, "These vignettes assume rmarkdown and pandoc
-version 1.14. These were not found. Older versions will not work.")
-knitr::knit_exit()
-}
-```
 
 # Multivariate Gaussian additive models
 Let  $\boldsymbol y_i\sim \mathcal{N}(\boldsymbol \mu_i, \boldsymbol \Sigma_i)$, $i=1, \ldots, n$, be independent response vectors. 

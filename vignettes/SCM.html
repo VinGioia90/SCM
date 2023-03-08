@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Vincenzo Gioia and Matteo Fasiolo" />
+
+<meta name="date" content="2023-03-07" />
+
+<title>An introduction to SCM: Fit an additive covariance matrix model for multivariate normal data</title>
+
+<script src="data:application/javascript;base64,Ly8gUGFuZG9jIDIuOSBhZGRzIGF0dHJpYnV0ZXMgb24gYm90aCBoZWFkZXIgYW5kIGRpdi4gV2UgcmVtb3ZlIHRoZSBmb3JtZXIgKHRvCi8vIGJlIGNvbXBhdGlibGUgd2l0aCB0aGUgYmVoYXZpb3Igb2YgUGFuZG9jIDwgMi44KS4KZG9jdW1lbnQuYWRkRXZlbnRMaXN0ZW5lcignRE9NQ29udGVudExvYWRlZCcsIGZ1bmN0aW9uKGUpIHsKICB2YXIgaHMgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yQWxsKCJkaXYuc2VjdGlvbltjbGFzcyo9J2xldmVsJ10gPiA6Zmlyc3QtY2hpbGQiKTsKICB2YXIgaSwgaCwgYTsKICBmb3IgKGkgPSAwOyBpIDwgaHMubGVuZ3RoOyBpKyspIHsKICAgIGggPSBoc1tpXTsKICAgIGlmICghL15oWzEtNl0kL2kudGVzdChoLnRhZ05hbWUpKSBjb250aW51ZTsgIC8vIGl0IHNob3VsZCBiZSBhIGhlYWRlciBoMS1oNgogICAgYSA9IGguYXR0cmlidXRlczsKICAgIHdoaWxlIChhLmxlbmd0aCA+IDApIGgucmVtb3ZlQXR0cmlidXRlKGFbMF0ubmFtZSk7CiAgfQp9KTsK"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<link rel="stylesheet" href="data:text/css,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" type="text/css" />
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">An introduction to SCM: Fit an additive covariance matrix model for multivariate normal data</h1>
+<h4 class="author">Vincenzo Gioia and Matteo Fasiolo</h4>
+<h4 class="date">2023-03-07</h4>
+
+
+
+<style>
+body {
+text-align: justify}
+</style>
+<div id="multivariate-gaussian-additive-models" class="section level1">
+<h1>Multivariate Gaussian additive models</h1>
+<p>Let <span class="math inline">\(\boldsymbol y_i\sim \mathcal{N}(\boldsymbol \mu_i, \boldsymbol \Sigma_i)\)</span>, <span class="math inline">\(i=1, \ldots, n\)</span>, be independent response vectors.</p>
+<p>The covariates enter the model through the linear predictor vector <span class="math inline">\(\boldsymbol \eta_i=(\eta_{i1}, \ldots, \eta_{iq})\)</span>, with <span class="math inline">\(q= d+d(d+1)/2\)</span>, whose components allow specifying linear and smooth effects.</p>
+<p>The mean model is specified by <span class="math inline">\(\mu_{ij} = \eta_{ij}\)</span>, <span class="math inline">\(j=1, \ldots,d\)</span>, while the remaining <span class="math inline">\(\eta_{ij}\)</span>, <span class="math inline">\(j=d+1, \ldots,q\)</span>, specify the nonredundant, unconstrained elements of a covariance matrix parametrisation. The latter can be stated via the modified Cholesky decomposition (MCD) by Pourahmadi (1999) or the matrix logarithmic tranformation by Chiu et al. (1996)</p>
+<p>The multivariate Gaussian additive models are fitted via the <code>gam_scm()</code> wrapper</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">gam_scm</span>(formula, <span class="at">family =</span> <span class="fu">mvn_scm</span>(<span class="at">d =</span> <span class="dv">2</span>, <span class="at">param =</span> <span class="cn">NULL</span>, <span class="at">nb =</span> <span class="dv">1</span>), <span class="at">optimizer =</span> <span class="cn">NULL</span>, <span class="at">data =</span> <span class="fu">list</span>(), <span class="at">aGam =</span> <span class="fu">list</span>())</span></code></pre></div>
+<p>The inputs of the <code>gam_scm()</code> function are:</p>
+<ul>
+<li><code>formula</code>: list of model formulas;</li>
+<li><code>mvn_scm</code>: model family:
+<ul>
+<li><code>d</code>: dimension of the outcome vector;</li>
+<li><code>param</code>: by default the MCD parametrisation (<code>&quot;mcd&quot;</code>), otherwise set (<code>&quot;logm&quot;</code>) for the logM one;</li>
+<li><code>nb</code>: number of of blocks for chunking the evaluation of some quantities (default no chunks, while consider to increase such value if memory problem appears);</li>
+</ul></li>
+<li><code>data</code>: a data frame or a list containing the outcomes and the covariates;</li>
+<li><code>optimizer</code>: optional argument specifying the approach to smoothing parameter optimisation; by default the generalised Fellner-Schall method (<code>&quot;efs&quot;</code>) by Wood and Fasiolo (2017), otherwise <em>only for the MCD parametrisation</em> the quasi Newton’s optimisation of the Laplace approximate marginal likelihood criterion (<code>&quot;bfgs&quot;</code>) according to Wood et al. (2016);</li>
+<li><code>aGam</code>: a list of auxiliary arguments that could be passed to the <code>gam()</code> function of the <strong>mgcv</strong> package (Wood, 2017).</li>
+</ul>
+</div>
+<div id="illustration" class="section level1">
+<h1>Illustration</h1>
+<p>We introduce the most important functions of the package by means of the GefCom2014 dataset (Hong et al., 2016). For illustrative purposes, the hourly loads (in MW) from 5 p.m. (<code>load_h17</code>) to 8 p.m (<code>load_h20</code>) on a daily basis are considered as the outcome variables. The dataset, spanning the period from 2005/01/02 to 2011/11/30, includes the day of the year (<code>doy</code>), the day of the week (<code>dow</code>), the exponentially smoothed temperature (<code>temp95_h&lt;k&gt;</code>) and the loads of the previous day (<code>load24_h&lt;k&gt;</code>) at the <span class="math inline">\(k\)</span>-th hour, <span class="math inline">\(k=17,\ldots, 20\)</span>.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(SCM)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(GEF14_d4)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="dv">4</span></span></code></pre></div>
+<p>We start specifying the model formula for the mean vector:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>my_k <span class="ot">=</span> <span class="dv">15</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>my_bs <span class="ot">=</span> <span class="st">&quot;cr&quot;</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>mformula <span class="ot">&lt;-</span> <span class="fu">list</span>(load_h17 <span class="sc">|</span> load_h18 <span class="sc">|</span> load_h19 <span class="sc">|</span> load_h20  <span class="sc">~</span> dow <span class="sc">+</span> <span class="fu">s</span>(doy, <span class="at">k =</span> my_k, <span class="at">bs =</span> my_bs),</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>                 load_h17 <span class="sc">~</span> load24_h17 <span class="sc">+</span> <span class="fu">s</span>(temp95_h17),</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>                 load_h18 <span class="sc">~</span> load24_h18 <span class="sc">+</span> <span class="fu">s</span>(temp95_h18),</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>                 load_h19 <span class="sc">~</span> load24_h19 <span class="sc">+</span> <span class="fu">s</span>(temp95_h19),</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>                 load_h20 <span class="sc">~</span> load24_h20 <span class="sc">+</span> <span class="fu">s</span>(temp95_h20))</span></code></pre></div>
+<p>The model formula is composed by two parts:</p>
+<ul>
+<li>“Common” specification: by using the <code>|</code> operator, all the outcomes of the l.h.s. of <code>y ~ x</code> involve the same covariates (first row);</li>
+<li>“Single-element” specification: the (rest of the) formula involving element-specific covariates can be stated separately (last 4 rows);</li>
+</ul>
+<p>For simplicity, we consider the MCD-based additive covariance matrix model, which means modelling the elements of <span class="math inline">\(\log \boldsymbol D^2_i\)</span> and <span class="math inline">\(\boldsymbol T_i\)</span> resulting from <span class="math inline">\(\boldsymbol \Sigma^{-1}_i={\boldsymbol T^\top_i}{ \boldsymbol D^{-2}_i} {\boldsymbol T_i}\)</span>. For this application, it means to specify a model formula for the non-trivial elements of</p>
+<p><span class="math display">\[ \log \boldsymbol D^2_i = \begin{pmatrix}\eta_{i5}  &amp; 0 &amp; 0  &amp; 0 \\ 0&amp; \eta_{i6} &amp; 0 &amp; 0 \\0  &amp; 0 &amp; \eta_{i7} &amp; 0 \\0 &amp; 0 &amp; 0 &amp; \eta_{i8}\end{pmatrix} \hspace{2cm} \boldsymbol T_i= \begin{pmatrix} 1  &amp; 0 &amp; 0 &amp; 0 \\ \eta_{i9}&amp; 1 &amp; 0 &amp; 0 \\ \eta_{i10}  &amp;  \eta_{i11} &amp; 1 &amp; 0 \\\eta_{i12} &amp; \eta_{i13} &amp; \eta_{i14} &amp;  1\end{pmatrix}\]</span></p>
+<p>We facilitate the model formula specification (implicitly allowing a connection with the logM parametrisation) by introducing a matrix <span class="math inline">\(\boldsymbol \Theta_i\)</span> as in the form</p>
+<p><span class="math display">\[\boldsymbol \Theta_i= \begin{pmatrix} \eta_{i4}  &amp; \eta_{i9} &amp; \eta_{i10} &amp; \eta_{i12} \\ \eta_{i9}&amp; \eta_{i5} &amp; \eta_{i11} &amp; \eta_{i13} \\ \eta_{i10}  &amp;  \eta_{i11} &amp; \eta_{i7} &amp; \eta_{i14} \\\eta_{i12} &amp; \eta_{i13} &amp; \eta_{i14} &amp;  \eta_{i8} \end{pmatrix}\]</span></p>
+<p>whose relation with the matrices <span class="math inline">\(\log \boldsymbol D^2_i\)</span> and <span class="math inline">\(\boldsymbol T_i\)</span> is simply <span class="math inline">\([\boldsymbol \Theta_i]_{jj}=[\log \boldsymbol D^2_i]_{jj}\)</span>, <span class="math inline">\(j=1, \ldots, 4\)</span>, and <span class="math inline">\([\boldsymbol \Theta_i]_{jk}= [\boldsymbol \Theta_i]_{kj}= [\boldsymbol T_i]_{jk}\)</span>, <span class="math inline">\(1 \leq k &lt; j \leq 4\)</span>.</p>
+<p>For instance, consider the following model formula for the covariance matrix model:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>my_k2 <span class="ot">=</span> <span class="dv">10</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>my_bs <span class="ot">=</span> <span class="st">&quot;tp&quot;</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>mformula <span class="ot">&lt;-</span> <span class="fu">c</span>(mformula, <span class="fu">list</span>( </span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>                 Th_11 <span class="sc">|</span> Th_22 <span class="sc">|</span> Th_33 <span class="sc">|</span> Th_44 <span class="sc">|</span> Th_12 <span class="sc">|</span> Th_23 <span class="sc">|</span> Th_34  <span class="sc">~</span> dow <span class="sc">+</span> <span class="fu">s</span>(doy, <span class="at">k =</span> my_k, <span class="at">bs =</span> my_bs),</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>                 Th_11 <span class="sc">~</span> <span class="fu">s</span>(temp95_h17),</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>                 Th_22 <span class="sc">~</span> <span class="fu">s</span>(temp95_h18),</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>                 Th_33 <span class="sc">~</span> <span class="fu">s</span>(temp95_h19),</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>                 Th_44 <span class="sc">~</span> <span class="fu">s</span>(temp95_h20)))</span></code></pre></div>
+<p>As in the mean model, the covariance matrix model can be stated using a “Common” and a “Single-element” specification. However, the l.h.s. of the model formula statement <code>y ~ x</code> targets the element of <span class="math inline">\(\boldsymbol \Theta\)</span> to be modelled via the sintax <code>Th_st ~ x</code>, where <span class="math inline">\(s\)</span> and <span class="math inline">\(t\)</span> are the indices targeting the elements of <span class="math inline">\(\boldsymbol \Theta_i\)</span>.</p>
+<p>Note that not specifying a model formula for a component of <span class="math inline">\(\Theta\)</span> that implies such element is automatically modelled via intercept. In contrast, the model formula for the mean vector components requires to be specified in any case.</p>
+<p>The model is then fitted via</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>fit1 <span class="ot">&lt;-</span> <span class="fu">gam_scm</span>(mformula, <span class="at">family =</span> <span class="fu">mvn_scm</span>(<span class="at">d=</span><span class="dv">4</span>), <span class="at">data =</span> GEF14_d4)</span></code></pre></div>
+<p>The resulting object <code>fit1</code> is of class <code>&quot;scm&quot;</code> and can be explored via</p>
+<ul>
+<li><code>plot()</code>: to obtain the plot of the smooth effects on the linear predictor scale</li>
+</ul>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(fit1, <span class="at">scale =</span> <span class="cn">FALSE</span>, <span class="at">pages =</span> <span class="dv">1</span>) </span></code></pre></div>
+<ul>
+<li><code>summary()</code>: summary of linear and smooth effects (<code>intercept = FALSE</code> avoids printing the intercepts)</li>
+</ul>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit1, <span class="at">intercept =</span> <span class="cn">FALSE</span>) </span></code></pre></div>
+<ul>
+<li><code>residuals()</code>: raw residuals (<code>type = &quot;response&quot;</code>), uncorrelated standard normal residuals (default, <code>&quot;deviance&quot;</code>) and Pearson’s residuals (<code>&quot;pearson&quot;</code>)</li>
+</ul>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">residuals</span>(fit1, <span class="at">type =</span> <span class="st">&quot;deviance&quot;</span>))</span></code></pre></div>
+<p>The <code>predict()</code> function allows to obtain:</p>
+<ul>
+<li>fitted values in terms of <span class="math inline">\(\boldsymbol \eta\)</span></li>
+</ul>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">predict</span>(fit1))</span></code></pre></div>
+<ul>
+<li>fitted values in terms of mean vector, variances and correlations (Note that the first four columns corresponds to the mean vector, the columns 5-8 the variances and the last six columns correspon to the correlations following the row-wise ordering, that is (2,1), (3,1), (3,2), (4,1), (4,2) and (4,3))</li>
+</ul>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">predict</span>(fit1, <span class="at">type =</span> <span class="st">&quot;response&quot;</span>)) </span></code></pre></div>
+<ul>
+<li>fitted values in terms of (mean vector, variances, covariances)</li>
+</ul>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>fit1<span class="sc">$</span>family<span class="sc">$</span><span class="fu">put_cflag</span>(<span class="cn">FALSE</span>) </span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>Sigma_pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(fit1, <span class="at">type =</span> <span class="st">&quot;response&quot;</span>)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(Sigma_pred)</span></code></pre></div>
+<pre><code>##        [,1]      [,2]      [,3]      [,4]      [,5]      [,6]      [,7]
+## 1 115.57999 109.29417 107.12426 107.55051 345.00041 380.41531 404.21131
+## 2 103.62242  95.79812  92.15967  90.95859 194.88233 211.45315 218.47222
+## 3  90.72186  82.53147  78.76657  77.47152  75.38906  82.02693  87.68686
+## 4  91.27840  82.81718  78.84653  77.25713  82.63282  88.90992  93.91295
+## 5  90.34403  81.23424  76.69174  74.78123  74.13510  80.50152  87.18804
+## 6 101.00277  93.29391  88.97594  87.38839 146.50549 154.48771 162.74744
+##        [,8]      [,9]     [,10]     [,11]     [,12]     [,13]     [,14]
+## 1 430.83223 361.22653 370.78073 391.54811 380.85143 402.90381 416.52786
+## 2 224.53788 202.14192 204.03489 214.30886 205.08170 216.00432 220.79684
+## 3  93.52467  78.10238  79.82161  84.38060  81.34185  86.35829  90.14268
+## 4  98.78637  85.00924  86.13507  90.80895  86.98921  92.20045  95.88335
+## 5  94.53048  76.63749  78.63748  83.23227  80.58371  85.71751  90.29103
+## 6 172.51746 149.85170 152.78919 158.12093 155.89525 161.74611 166.90203</code></pre>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="do">##        [,1]      [,2]      [,3]      [,4]      [,5]      [,6]      [,7]</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 115.57999 109.29417 107.12426 107.55051 345.00041 380.41531 404.21131</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="do">## 2 103.62242  95.79812  92.15967  90.95859 194.88233 211.45315 218.47222</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="do">## 3  90.72186  82.53147  78.76657  77.47152  75.38906  82.02693  87.68686</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="do">## 4  91.27840  82.81718  78.84653  77.25713  82.63282  88.90992  93.91295</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="do">## 5  90.34403  81.23424  76.69174  74.78123  74.13510  80.50152  87.18804</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="do">## 6 101.00277  93.29391  88.97594  87.38839 146.50549 154.48771 162.74744</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="do">##        [,8]      [,9]     [,10]     [,11]     [,12]     [,13]     [,14]</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 430.83223 361.22653 370.78073 391.54811 380.85143 402.90381 416.52786</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="do">## 2 224.53788 202.14192 204.03489 214.30886 205.08170 216.00432 220.79684</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="do">## 3  93.52467  78.10238  79.82161  84.38060  81.34185  86.35829  90.14268</span></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a><span class="do">## 4  98.78637  85.00924  86.13507  90.80895  86.98921  92.20045  95.88335</span></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a><span class="do">## 5  94.53048  76.63749  78.63748  83.23227  80.58371  85.71751  90.29103</span></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a><span class="do">## 6 172.51746 149.85170 152.78919 158.12093 155.89525 161.74611 166.90203</span></span></code></pre></div>
+<p>The function <code>Sigma_mat()</code> allows to organise the covariance matrices in a list, for instance</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Sigma_mat</span>(Sigma_pred[,<span class="sc">-</span><span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span>d)])[[<span class="dv">1</span>]]</span></code></pre></div>
+<pre><code>##          [,1]     [,2]     [,3]     [,4]
+## [1,] 345.0004 361.2265 370.7807 380.8514
+## [2,] 361.2265 380.4153 391.5481 402.9038
+## [3,] 370.7807 391.5481 404.2113 416.5279
+## [4,] 380.8514 402.9038 416.5279 430.8322</code></pre>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="do">##          [,1]     [,2]     [,3]     [,4]</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="do">## [1,] 345.0004 361.2265 370.7807 380.8514</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="do">## [2,] 361.2265 380.4153 391.5481 402.9038</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="do">## [3,] 370.7807 391.5481 404.2113 416.5279</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="do">## [4,] 380.8514 402.9038 416.5279 430.8322</span></span></code></pre></div>
+<p>The <strong>mgcViz</strong> package by Fasiolo et al. (2020) allows to obtain the residual diagnostics and the accumulated local effects (ALEs) by Apley and Zhu (2020). For instance, the centered ALE of the variable `doy’ on the variance of the net-demand at 5 p.m. is obtained via</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mgcViz)</span></code></pre></div>
+<pre><code>## Warning: il pacchetto &#39;nlme&#39; è stato creato con R versione 4.1.3</code></pre>
+<pre><code>## Warning: il pacchetto &#39;ggplot2&#39; è stato creato con R versione 4.1.3</code></pre>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>Sigma_el <span class="ot">&lt;-</span> SCM<span class="sc">:::</span><span class="fu">sel_elem</span>(d)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>var_y1 <span class="ot">&lt;-</span> <span class="fu">ALE</span>(fit1, <span class="at">x =</span> <span class="st">&quot;doy&quot;</span>, <span class="at">type =</span> <span class="st">&quot;response&quot;</span>,</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>                      <span class="at">oind =</span> <span class="fu">Sigma_el</span>(<span class="dv">1</span>, <span class="dv">1</span>), <span class="at">center =</span> <span class="dv">1</span>)</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(var_y1)</span></code></pre></div>
+<p><img src="data:image/png;base64,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" style="display:block; margin: auto" style="display: block; margin: auto;" /></p>
+</div>
+<div id="references" class="section level1">
+<h1>References</h1>
+<ul>
+<li><p>Apley, D. W. and Zhu, J. (2020) Visualizing the effects of predictor variables in black box supervised learning models. Journal of the Royal Statistical Society: Series B (Statistical Methodology), 82 (4), 1059 – 1086.</p></li>
+<li><p>Chiu, T. Y. M., Leonard, T. and Tsui, K.-W. (1996) The matrix-logarithmic covariance model. Journal of the American Statistical Association, 91 (433), 198 – 210.</p></li>
+<li><p>Fasiolo, M., Nedellec, R., Goude, Y. and Wood, S.N., 2020. Scalable visualization methods for modern generalized additive models. Journal of computational and Graphical Statistics, 29 (1), 78–86.</p></li>
+<li><p>Hong, T., Pinson, P., Fan, S., Zareipour, H., Troccoli, A., and Hyndman, R.J. (2016). Probabilistic energy forecasting: global energy forecasting competition 2014 and beyond. International Journal of Forecasting, 32, 896 – 913.</p></li>
+<li><p>Pourahmadi, M. (1999) Joint mean-covariance models with applications to longitudinal data: unconstrained parameterisation. Biometrika, 86 (3), 677 – 690.</p></li>
+<li><p>Wood, S. N., Pya, N. and S&quot;{a}fken, B. (2016) Smoothing parameter and model selection for general smooth models (with discussion). Journal of the American Statistical Association, 111 (516), 1548 – 1575.</p></li>
+<li><p>Wood, S. N. (2017) Generalized Additive Models: An Introduction with R, 2nd ed. Boca Raton, FL, USA: Chapman and Hall/CRC.</p></li>
+<li><p>Wood, S. N. and Fasiolo, M. (2017). A generalized Fellner-Schall method for smoothing parameter optimization with application to Tweedie location, scale and shape models. Biometrics, 73 (4), 1071 – 1081.</p></li>
+</ul>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

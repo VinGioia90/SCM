@@ -1,10 +1,9 @@
 Package: SCM
 Title: Smoothing for Covariance matrix Modelling
 Version: 0.0.0.9000
-Authors@R: 
-    person("Vincenzo", "Gioia", , "gioia.vincenzo@spes.uniud.it", role = c("aut","cre"),
-           comment = c(ORCID = "0000-0001-7983-8911 "))
-Description: What the package does (one paragraph).
+Authors@R: c(person("Vincenzo", "Gioia", email = "gioia.vincenzo@spes.uniud.it", role = c("aut","cre")), 
+             person("Matteo", "Fasiolo", email = "matteo.fasiolo@gmail.com", role = c("aut")))
+Description:  The package offers methods for fitting multivariate Gaussian additive models, where the unconstrained entries of a covariance matrix parametrisation are allowed to vary with smooth functions of the covariates. The model fitting routines are those of the 'mgcv' package, while the diagnostic and model visualising tools of the 'mgcViz' package can be used. 
 License: MIT + file LICENSE 
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
