@@ -1,8 +1,9 @@
 #' Processing the summary to be printed
 #' @description  This function allows to modify the summary.gam function, in order to have a bespoke summary
 #'
-#' @param obj an object of class scm
-#' @param intercept set to TRUE if you want print the inctercept
+#' @param object an object of class scm
+#' @param intercept set to TRUE if you want print the intercept
+#' @param ... further arguments to be passed to gam
 #'
 #' @return The summary is printed
 #' @export summary.scm
@@ -12,7 +13,7 @@
 #' @importFrom mgcv summary.gam
 #' @name summary.scm
 #' @examples
-summary.scm <- function(obj, intercept = FALSE){
+summary.scm <- function(object, intercept = FALSE, ...){
 
   print.summary.gam <-function (x, parcoef, smooth, digits = max(3, getOption("digits") - 3), signif.stars = getOption("show.signif.stars"), ...) {
     print(x$family)
@@ -49,7 +50,7 @@ summary.scm <- function(obj, intercept = FALSE){
     invisible(x)
   }
 
-  sgam <- summary.gam(obj)
+  sgam <- summary.gam(object)
 
   sgam.pt <- sgam$p.table
   lab_pt<-rownames(sgam.pt)
@@ -58,15 +59,15 @@ summary.scm <- function(obj, intercept = FALSE){
 
     if(detlp[[1]][1] == -1){
       # Detect the lhs of the formula of the first terms
-      lhs_foo <- word(as.character(obj$foo_summary[[1]]), 1, sep = "\\~")[2]
+      lhs_foo <- word(as.character(object$foo_summary[[1]]), 1, sep = "\\~")[2]
       lab_pt[i] <- paste0(lab_pt[i],".", lhs_foo)
     } else {
       # Detect the lhs of the formula of the first terms
-      lhs_foo <- word(as.character(obj$foo_summary[[ as.integer(substring(lab_pt[i], first = detlp[[1]][length(detlp[[1]])]+1)) + 1]]), 1, sep = "\\~")[2]
+      lhs_foo <- word(as.character(object$foo_summary[[ as.integer(substring(lab_pt[i], first = detlp[[1]][length(detlp[[1]])]+1)) + 1]]), 1, sep = "\\~")[2]
       if(!is.na(lhs_foo)){
         lab_pt[i] <- paste0(substring(lab_pt[i], first=1, last = detlp[[1]][length(detlp[[1]])]), lhs_foo)
       } else {
-        lab_pt[i] <- paste0("(Intercept).",internal()$labTh(obj$family$getd(), as.integer(substring(lab_pt[i], first = detlp[[1]][length(detlp[[1]])]+1)) + 1))
+        lab_pt[i] <- paste0("(Intercept).",internal()$labTh(object$family$getd(), as.integer(substring(lab_pt[i], first = detlp[[1]][length(detlp[[1]])]+1)) + 1))
       }
       }
   }
@@ -79,11 +80,11 @@ summary.scm <- function(obj, intercept = FALSE){
     detlpbl<-gregexpr("\\(", lab_st[i])
     if(detlp[[1]][1] == -1){
       # Detect the lhs of the formula of the first terms
-      lhs_foo <- word(as.character(obj$foo_summary[[1]]), 1, sep = "\\~")[2]
+      lhs_foo <- word(as.character(object$foo_summary[[1]]), 1, sep = "\\~")[2]
       lab_st[i] <- paste0(lab_st[i],".", lhs_foo)
     } else {
     # Detect the lhs of the formula of the first terms
-    lhs_foo <- word(as.character(obj$foo_summary[[ as.integer(substring(lab_st[i], first = detlp[[1]][length(detlp[[1]])]+1,last = detlpbl[[1]][length(detlpbl[[1]])]-1)) + 1]]), 1, sep = "\\~")[2]
+    lhs_foo <- word(as.character(object$foo_summary[[ as.integer(substring(lab_st[i], first = detlp[[1]][length(detlp[[1]])]+1,last = detlpbl[[1]][length(detlpbl[[1]])]-1)) + 1]]), 1, sep = "\\~")[2]
     lab_st[i] <- paste0(substring(lab_st[i], first=1, last=1), substring(lab_st[i], first = detlpbl[[1]][length(detlp[[1]])], last=nchar(lab_st[i])),".",lhs_foo)
     }
   }
@@ -91,5 +92,5 @@ summary.scm <- function(obj, intercept = FALSE){
 
   if ( !intercept ) sgam.pt <- sgam.pt[-which(grepl( "(Intercept)", row.names(sgam.pt), fixed = TRUE)),] #(intercepts are removed)
   class(sgam) <- "summary.scm"
-  return(print.summary.gam(obj, sgam.pt, sgam.st))
+  return(print.summary.gam(object, sgam.pt, sgam.st))
 }
