@@ -71,24 +71,18 @@ mvn_scm <- function(d = 2, nb = 1, param = NULL){ # manage internally the blocks
   # l3 and l3_l: is the matrix of the third derivatives w.r.t. eta
   getL3 <- function() get(".l3")  # First nb - 1 blocks of observations
   putL3 <- function(.l3) assign(".l3", .l3, envir = environment(sys.function()))
-  #getL3_l <- function() get(".l3_l")  # Last block of observations
-  #putL3_l <- function(.l3_l) assign(".l3_l", .l3_l, envir = environment(sys.function()))
+  getL3_l <- function() get(".l3_l")  # Last block of observations
+  putL3_l <- function(.l3_l) assign(".l3_l", .l3_l, envir = environment(sys.function()))
 
-  # d1H is the matrix of the derivatives of the Hessian w.r.t smoothing parameters
-  #getd1H <- function() get(".d1H")
-  #putd1H <- function(.d1H) assign(".d1H", .d1H, envir = environment(sys.function()))
+  # d1H is the vector of the derivatives of the Gradient w.r.t smoothing parameters
+  getd1H <- function() get(".d1H")
+  putd1H <- function(.d1H) assign(".d1H", .d1H, envir = environment(sys.function()))
 
-  # d1eta and d1_eta_l is the matrix of the derivatives of eta w.r.t  smoothing parameters
-  #getd1eta <- function() get(".d1eta") # First nb - 1 blocks of observations
-  #putd1eta <- function(.d1eta) assign(".d1eta", .d1eta, envir = environment(sys.function()))
-  #getd1eta_l <- function() get(".d1eta_l")  # Last block of observations
-  #putd1eta_l <- function(.d1eta_l) assign(".d1eta_l", .d1eta_l, envir = environment(sys.function()))
-
-  # V matrix: see Wood et al. 2016
-  #getV <- function() get(".V") # First nb - 1 blocks of observations
-  #putV <- function(.V) assign(".V", .V, envir = environment(sys.function()))
-  #getV_l <- function() get(".V_l")  # Last block of observations
-  #putV_l <- function(.V_l) assign(".V_l", .V_l, envir = environment(sys.function()))
+  # a vector: new formulation for LAML
+  geta <- function() get(".a") # First nb - 1 blocks of observations
+  puta <- function(.a) assign(".a", .a, envir = environment(sys.function()))
+  geta_l <- function() get(".a_l")  # Last block of observations
+  puta_l <- function(.a_l) assign(".a_l", .a_l, envir = environment(sys.function()))
 
   # Indices for observations' blocks
   getidx_b <- function() get(".idx_b")
@@ -253,6 +247,7 @@ mvn_scm <- function(d = 2, nb = 1, param = NULL){ # manage internally the blocks
     jj <- attr(X, "lpi") ## extract linear predictor index
     p <- ncol(X)
     n <- nrow(y)
+    m <- ncol(d1b)
     eta <- matrix(0, n, no_eta) #linear predictor matrix
 
     # number of observations in each block (nb - 1 blocks with the same observations; the last could differ)
@@ -325,7 +320,7 @@ mvn_scm <- function(d = 2, nb = 1, param = NULL){ # manage internally the blocks
       putidx_b(idx_b)
     }
 
-    #d1H <- NULL
+
     if ( deriv > 1 ) { # only for the mcd parametrisation
       idxl3 <- try(getidxl3(), TRUE) # indices for the third derivatives building
       if("try-error" %in% class(idxl3)){
@@ -344,66 +339,49 @@ mvn_scm <- function(d = 2, nb = 1, param = NULL){ # manage internally the blocks
         idxl3_jkq <- internal()$il3_no0_mcd(d, z, w)
         putidxl3_jkq(idxl3_jkq)
       }
+
+      if(nb > 1){
         l3 <- try(getL3(), TRUE)  # Third derivatives matrix: First nb - 1 blocks of observations (the intercepts block case is not considered at the moment)
         if("try-error" %in% class(l3)){
-          l3 <- matrix(0, n, d * (4 * d^2 + 3 * d + 2)/3)
+          l3 <- matrix(0, nset, d * (4 * d^2 + 3 * d + 2)/3)
           putL3(l3)
         }
+      } else { # Such trick allows to pass the matrix l3 in the case nb = 1, avoiding cpp issues
+        l3 <- try(getL3(), TRUE)  # Third derivatives matrix: First nb - 1 blocks of observations
+        if("try-error" %in% class(l3)){
+          l3 <- matrix(0, 1, 1)
+          putL3(l3)
+        }
+      }
 
-      #if(nb > 1){
-      #  l3 <- try(getL3(), TRUE)  # Third derivatives matrix: First nb - 1 blocks of observations (the intercepts block case is not considered at the moment)
-      #  if("try-error" %in% class(l3)){
-      #    l3 <- matrix(0, nset, d * (4 * d^2 + 3 * d + 2)/3)
-      #    putL3(l3)
-      #  }
-      #} else { # Such trick allows to pass the matrix l3 in the case nb = 1, avoiding cpp issues
-      #  l3 <- try(getL3(), TRUE)  # Third derivatives matrix: First nb - 1 blocks of observations
-      #  if("try-error" %in% class(l3)){
-      #    l3 <- matrix(0, 1, 1)
-      #    putL3(l3)
-      #  }
-      #}
+      # New version
+      d1H <- try(getd1H(), TRUE) # derivative of hessian w.r.t. smoothing parameters
+       if("try-error" %in% class(d1H)){
+         m <- ncol(d1b)
+         d1H <- rep(0,m)
+         putd1H(d1H)
+      }
 
-      #d1H <- try(getd1H(), TRUE) # derivative of hessian w.r.t. smoothing parameters
-      #if("try-error" %in% class(d1H)){
-      #  d1H <- list()
-      #  m <- ncol(d1b)
-      #  for ( l in 1 : m ) d1H[[l]] <- matrix(0, p, p)
-      #  putd1H(d1H)
-      #}
-
-      #d1eta <- try(getd1eta(), TRUE) #d1eta is the matrix (First nb - 1 observations' blocks) of the derivatives of eta w.r.t  smoothing parameters
-      #if("try-error" %in% class(d1eta)){
-      #  d1eta <-  matrix(0, nset, no_eta)
-      #  putd1eta(d1eta)
-      #}
-
-      #V <- try(getV(), TRUE) # V matrix: see Wood et. al (2016)
-      #if("try-error" %in% class(V)){
-      #  V <-  rep(0, nset)
-      #  putV(V)
-      #}
+      a <- try(geta(), TRUE) # a vector
+      if("try-error" %in% class(a)){
+        a <-  rep(0, nset)
+        puta(a)
+      }
 
       if ( nlast == 0 ) nobs_b <- nset
       else  nobs_b <- nlast
 
-      #l3_l <- try(getL3_l(), TRUE)  #Third derivatives matrix: Last observations' blocks
-      #if("try-error" %in% class(l3_l)){
-      #  l3_l <- matrix(0, nobs_b, d * (4 * d^2 + 3 * d + 2)/3)
-      #  putL3_l(l3_l)
-      #}
+      l3_l <- try(getL3_l(), TRUE)  #Third derivatives matrix: Last observations' blocks
+      if("try-error" %in% class(l3_l)){
+       l3_l <- matrix(0, nobs_b, d * (4 * d^2 + 3 * d + 2)/3)
+       putL3_l(l3_l)
+      }
 
-      #d1eta_l <- try(getd1eta_l(), TRUE) #d1eta_l is the matrix (Last observations' blocks) of the derivatives of eta w.r.t  smoothing parameters
-      #if("try-error" %in% class(d1eta_l)){
-      #  d1eta_l <-  matrix(0, nobs_b,no_eta)
-      #  putd1eta_l(d1eta_l)
-      #}
-
-      #V_l <- try(getV_l(), TRUE) # V matrix: see Wood et. al (2016)
-      #if("try-error" %in% class(V_l)){
-      #  V_l <-  rep(0, nobs_b)
-      #  putV_l(V_l)
-      #}
+      a_l <- try(geta_l(), TRUE) # a vector
+      if("try-error" %in% class(a_l)){
+        a_l <-  rep(0, nobs_b)
+        puta_l(a_l)
+      }
     }
 
     # Building the linear predictor vector
@@ -427,8 +405,7 @@ mvn_scm <- function(d = 2, nb = 1, param = NULL){ # manage internally the blocks
                                       l1, l1_l, l2, l2_v, l2_l, l2_v_l,
                                       idx_b, idx_aux, param = param,
                                       l3, l3_l, idxl3, idxl3_no0, idxl3_jkq,
-                                      #d1eta, d1eta_l, V, V_l,
-                                      #d1H,
+                                      d1eta, d1eta_l,  a, a_l, d1H, #V, V_l,
                                       d1b = d1b, deriv = deriv - 1, fh = fh, D = D)
     } else ret <- list()
     ret$l <- l
@@ -611,12 +588,9 @@ mvn_scm <- function(d = 2, nb = 1, param = NULL){ # manage internally the blocks
                  getL2_l = getL2_l, putL2_l = putL2_l,
                  getL2_v_l = getL2_v_l, putL2_v_l = putL2_v_l,
                  getL3 = getL3, putL3 = putL3,
-                 #getL3_l = getL3_l, putL3_l = putL3_l,
-                 #getd1H = getd1H, putd1H = putd1H,
-                 #getd1eta = getd1eta, putd1eta = putd1eta,
-                 #getd1eta_l = getd1eta_l, putd1eta_l = putd1eta_l,
-                 #getV = getV, putV = putV,
-                 #getV_l = getV_l, putV_l = putV_l,
+                 getL3_l = getL3_l, putL3_l = putL3_l,
+                 getd1H = getd1H, putd1H = putd1H,
+                 geta = geta, puta = puta, geta_l = geta_l, puta_l = puta_l,
                  getidx_b = getidx_b, putidx_b = putidx_b,
                  getidx_aux =  getidx_aux, putidx_aux =  putidx_aux,
                  getidxl3 = getidxl3, putidxl3 = putidxl3,
