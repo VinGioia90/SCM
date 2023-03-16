@@ -29,8 +29,8 @@ d3_mcd_eta <- function(eta, y, res, z, w, G, t, h, h2, h3, idx3_1, idx3_2, idx3_
     .Call(`_SCM_d3_mcd_eta`, eta, y, res, z, w, G, t, h, h2, h3, idx3_1, idx3_2, idx3_3, idx3_4, idx3_5, idx3_6, idx_neq0)
 }
 
-dHess_drho <- function(X, eta, y, jj, K, l3, l3_l, ig, d1b, d1eta, d1eta_l, V, V_l, d1H, z, w, G, t, idx_l3, idx_neq0, idx_jkq) {
-    .Call(`_SCM_dHess_drho`, X, eta, y, jj, K, l3, l3_l, ig, d1b, d1eta, d1eta_l, V, V_l, d1H, z, w, G, t, idx_l3, idx_neq0, idx_jkq)
+dHess_drho <- function(X, eta, y, jj, K, l3, l3_l, ig, d1b, a, a_l, d1H, fh, z, w, G, t, idx_l3, idx_neq0, idx_jkq) {
+    .Call(`_SCM_dHess_drho`, X, eta, y, jj, K, l3, l3_l, ig, d1b, a, a_l, d1H, fh, z, w, G, t, idx_l3, idx_neq0, idx_jkq)
 }
 
 idx_zwGt <- function(d, z, w, G, t) {
