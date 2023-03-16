@@ -169,8 +169,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // dHess_drho
-double dHess_drho(arma::mat& X, arma::mat& eta, arma::mat& y, Rcpp::List& jj, uint32_t& K, arma::mat& l3, arma::mat& l3_l, arma::uvec& ig, arma::mat& d1b, arma::mat& d1eta, arma::mat& d1eta_l, arma::vec& V, arma::vec& V_l, Rcpp::List& d1H, arma::vec& z, arma::vec& w, arma::mat& G, arma::vec& t, Rcpp::List& idx_l3, Rcpp::List& idx_neq0, Rcpp::List& idx_jkq);
-RcppExport SEXP _SCM_dHess_drho(SEXP XSEXP, SEXP etaSEXP, SEXP ySEXP, SEXP jjSEXP, SEXP KSEXP, SEXP l3SEXP, SEXP l3_lSEXP, SEXP igSEXP, SEXP d1bSEXP, SEXP d1etaSEXP, SEXP d1eta_lSEXP, SEXP VSEXP, SEXP V_lSEXP, SEXP d1HSEXP, SEXP zSEXP, SEXP wSEXP, SEXP GSEXP, SEXP tSEXP, SEXP idx_l3SEXP, SEXP idx_neq0SEXP, SEXP idx_jkqSEXP) {
+double dHess_drho(arma::mat& X, arma::mat& eta, arma::mat& y, Rcpp::List& jj, uint32_t& K, arma::mat& l3, arma::mat& l3_l, arma::uvec& ig, arma::mat& d1b, arma::vec& a, arma::vec& a_l, arma::vec& d1H, arma::mat& fh, arma::vec& z, arma::vec& w, arma::mat& G, arma::vec& t, Rcpp::List& idx_l3, Rcpp::List& idx_neq0, Rcpp::List& idx_jkq);
+RcppExport SEXP _SCM_dHess_drho(SEXP XSEXP, SEXP etaSEXP, SEXP ySEXP, SEXP jjSEXP, SEXP KSEXP, SEXP l3SEXP, SEXP l3_lSEXP, SEXP igSEXP, SEXP d1bSEXP, SEXP aSEXP, SEXP a_lSEXP, SEXP d1HSEXP, SEXP fhSEXP, SEXP zSEXP, SEXP wSEXP, SEXP GSEXP, SEXP tSEXP, SEXP idx_l3SEXP, SEXP idx_neq0SEXP, SEXP idx_jkqSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -183,11 +183,10 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< arma::mat& >::type l3_l(l3_lSEXP);
     Rcpp::traits::input_parameter< arma::uvec& >::type ig(igSEXP);
     Rcpp::traits::input_parameter< arma::mat& >::type d1b(d1bSEXP);
-    Rcpp::traits::input_parameter< arma::mat& >::type d1eta(d1etaSEXP);
-    Rcpp::traits::input_parameter< arma::mat& >::type d1eta_l(d1eta_lSEXP);
-    Rcpp::traits::input_parameter< arma::vec& >::type V(VSEXP);
-    Rcpp::traits::input_parameter< arma::vec& >::type V_l(V_lSEXP);
-    Rcpp::traits::input_parameter< Rcpp::List& >::type d1H(d1HSEXP);
+    Rcpp::traits::input_parameter< arma::vec& >::type a(aSEXP);
+    Rcpp::traits::input_parameter< arma::vec& >::type a_l(a_lSEXP);
+    Rcpp::traits::input_parameter< arma::vec& >::type d1H(d1HSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type fh(fhSEXP);
     Rcpp::traits::input_parameter< arma::vec& >::type z(zSEXP);
     Rcpp::traits::input_parameter< arma::vec& >::type w(wSEXP);
     Rcpp::traits::input_parameter< arma::mat& >::type G(GSEXP);
@@ -195,7 +194,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< Rcpp::List& >::type idx_l3(idx_l3SEXP);
     Rcpp::traits::input_parameter< Rcpp::List& >::type idx_neq0(idx_neq0SEXP);
     Rcpp::traits::input_parameter< Rcpp::List& >::type idx_jkq(idx_jkqSEXP);
-    rcpp_result_gen = Rcpp::wrap(dHess_drho(X, eta, y, jj, K, l3, l3_l, ig, d1b, d1eta, d1eta_l, V, V_l, d1H, z, w, G, t, idx_l3, idx_neq0, idx_jkq));
+    rcpp_result_gen = Rcpp::wrap(dHess_drho(X, eta, y, jj, K, l3, l3_l, ig, d1b, a, a_l, d1H, fh, z, w, G, t, idx_l3, idx_neq0, idx_jkq));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -416,7 +415,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_SCM_d2_logm_eta", (DL_FUNC) &_SCM_d2_logm_eta, 10},
     {"_SCM_d2_mcd_eta", (DL_FUNC) &_SCM_d2_mcd_eta, 12},
     {"_SCM_d3_mcd_eta", (DL_FUNC) &_SCM_d3_mcd_eta, 17},
-    {"_SCM_dHess_drho", (DL_FUNC) &_SCM_dHess_drho, 21},
+    {"_SCM_dHess_drho", (DL_FUNC) &_SCM_dHess_drho, 20},
     {"_SCM_idx_zwGt", (DL_FUNC) &_SCM_idx_zwGt, 5},
     {"_SCM_jacobian_logm", (DL_FUNC) &_SCM_jacobian_logm, 6},
     {"_SCM_jacobian_mcd", (DL_FUNC) &_SCM_jacobian_mcd, 8},
