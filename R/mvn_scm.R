@@ -49,6 +49,12 @@ mvn_scm <- function(d = 2, nb = 1, param = NULL){ # manage internally the blocks
   #if ( param == 1 ) nHel <- no_eta * (no_eta + 1)/2 #mcd: don't considering the sparsity
   if ( param == 2 ) nHel <- no_eta * (no_eta + 1)/2 #logm: no sparsity
 
+
+  #llik <- list()
+  #assign(".llik", TRUE, envir = environment())
+  #getllik <- function() get(".llik")   # only the first nb - 1 blocks of observations
+  #putllik <- function(.llik) assign(".llik", .lllik, envir = environment(sys.function()))
+
   # Quantities defined in the environment:
   # l1 and l1_l: matrix of the 1st derivatives
   getL1 <- function() get(".l1")   # only the first nb - 1 blocks of observations
@@ -409,6 +415,10 @@ mvn_scm <- function(d = 2, nb = 1, param = NULL){ # manage internally the blocks
                                       d1b = d1b, deriv = deriv - 1, fh = fh, D = D)
     } else ret <- list()
     ret$l <- l
+    #count <- 1
+    #llik <- family$getllik()
+    #llik[[count]] <- family$putllik(l)
+    #count <- count + 1
     ret
   } ## end ll
 
@@ -581,6 +591,7 @@ mvn_scm <- function(d = 2, nb = 1, param = NULL){ # manage internally the blocks
                  getd = getd, putd = putd,
                  getno_eta = getno_eta, putno_eta = putno_eta,
                  getcflag = getcflag, put_cflag = putcflag,
+                 #getllik = getllik, putllik = putllik,
                  getL1 = getL1, putL1 = putL1,
                  getL1_l = getL1_l, putL1_l = putL1_l,
                  getL2 = getL2, putL2 = putL2,
