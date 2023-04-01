@@ -164,18 +164,18 @@ Sigma_mat(Sigma_pred[,-c(1:d)])[[1]]
 ## [4,] 380.8514 402.9038 416.5279 430.8322
 ``` 
 
-The **mgcViz** package by Fasiolo et al. (2020) allows to obtain the residual diagnostics and the accumulated local effects (ALEs) by Apley and Zhu (2020). 
-For instance, the centered ALE of the variable `doy' on the variance of the net-demand at 5 p.m. is obtained via  
-```{r , echo=TRUE, eval=TRUE, message = F} 
-library(mgcViz)
-``` 
+<!-- The **mgcViz** package by Fasiolo et al. (2020) allows to obtain the residual diagnostics and the accumulated local effects (ALEs) by Apley and Zhu (2020).  -->
+<!-- For instance, the centered ALE of the variable `doy' on the variance of the net-demand at 5 p.m. is obtained via   -->
+<!-- ```{r , echo=TRUE, eval=TRUE, message = F}  -->
+<!-- library(mgcViz) -->
+<!-- ```  -->
 
-```{r ALEs, echo=TRUE, eval=TRUE} 
-Sigma_el <- SCM:::sel_elem(d)
-var_y1 <- ALE(fit1, x = "doy", type = "response",
-                      oind = Sigma_el(1, 1), center = 1)
-plot(var_y1)
-``` 
+<!-- ```{r ALEs, echo=TRUE, eval=TRUE}  -->
+<!-- Sigma_el <- SCM:::sel_elem(d) -->
+<!-- var_y1 <- ALE(fit1, x = "doy", type = "response", -->
+<!--                       oind = Sigma_el(1, 1), center = 1) -->
+<!-- plot(var_y1) -->
+<!-- ```  -->
 
 
 
