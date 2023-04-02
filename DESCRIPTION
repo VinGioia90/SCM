@@ -7,7 +7,7 @@ Description:  The package offers methods for fitting multivariate Gaussian addit
 License: MIT + file LICENSE 
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.3
 Imports:
    fields, stringr, mgcv, parallel, Rcpp(>= 1.0.6), stats, BMisc, mvnfast
 LinkingTo: Rcpp, RcppArmadillo
