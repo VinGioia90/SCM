@@ -31,13 +31,12 @@ gam_scm <- function(formula, family = mvn_scm(d = 2, nb = 1, param = NULL), opti
 
   # Fit the model
   obj <- do.call("gam", c(list("formula" = foo$foo_eval, "family" = family,
-                               "data"= data, "optimizer" = opt), aGam))
+                               "data" = data, "optimizer" = opt), aGam))
 
   # foo_print and foo_summary are the formulas by the  summary function
   obj$foo_print <- foo$foo_print
   obj$foo_summary <- foo$foo_summary
 
   class(obj) <- c("scm", class(obj))
-
   return(obj)
 }
