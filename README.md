@@ -156,7 +156,7 @@ head(residuals(fit1, type = "deviance"))
 The `predict()` function allows to obtain:
 
 -   fitted values in terms of
-    $$\\boldsymbol \\eta$$
+    $\\boldsymbol \\eta$
 
 ``` r
 head(predict(fit1))
