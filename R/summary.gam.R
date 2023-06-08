@@ -3,6 +3,7 @@
 #'
 #' @param object an object of class scm
 #' @param intercept set to TRUE if you want print the intercept
+#' @param print print the summary
 #' @param ... further arguments to be passed to gam
 #'
 #' @return The summary is printed
@@ -13,7 +14,7 @@
 #' @importFrom mgcv summary.gam
 #' @name summary.scm
 #' @examples
-summary.scm <- function(object, intercept = FALSE, ...){
+summary.scm <- function(object, intercept = FALSE, print = TRUE, ...){
 
   print.summary.gam <-function (x, parcoef, smooth, digits = max(3, getOption("digits") - 3), signif.stars = getOption("show.signif.stars"), ...) {
     print(x$family)
@@ -91,6 +92,19 @@ summary.scm <- function(object, intercept = FALSE, ...){
   rownames(sgam.st) <- lab_st
 
   if ( !intercept ) sgam.pt <- sgam.pt[-which(grepl( "(Intercept)", row.names(sgam.pt), fixed = TRUE)),] #(intercepts are removed)
-  class(sgam) <- "summary.scm"
-  return(print.summary.gam(object, sgam.pt, sgam.st))
+  if(print){
+    print.summary.gam(object, sgam.pt, sgam.st)
+  }
+  ret <- with(sgam, list(p.coeff = p.coeff, se = se, p.t = p.t, p.pv = p.pv,
+                         residual.df = residual.df, m = m, chi.sq = chi.sq, s.pv = s.pv,
+                         scale = dispersion, r.sq = r.sq, family = object$family,
+                         formula = object$formula, n = nobs, dev.expl = dev.expl,
+                         edf = edf, dispersion = dispersion, pTerms.pv = pTerms.pv,
+                         pTerms.chi.sq = pTerms.chi.sq, pTerms.df = pTerms.df,
+                         cov.unscaled = cov.unscaled, cov.scaled = cov.scaled,
+                         p.table = sgam.pt, pTerms.table = pTerms.table, s.table = sgam.st,
+                         method = object$method, sp.criterion = object$gcv.ubre,
+                         rank = object$rank, np = length(object$coefficients)))
+  class(ret) <- "summary.scm"
+  return(ret)
 }
