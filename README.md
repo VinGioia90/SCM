@@ -156,7 +156,7 @@ head(residuals(fit1, type = "deviance"))
 The `predict()` function allows to obtain:
 
 -   fitted values in terms of
-    ![\\boldsymbol \\eta](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Cboldsymbol%20%5Ceta "\boldsymbol \eta")
+    $$\\boldsymbol \\eta$$
 
 ``` r
 head(predict(fit1))
