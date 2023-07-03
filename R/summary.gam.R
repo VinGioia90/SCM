@@ -106,5 +106,5 @@ summary.scm <- function(object, intercept = FALSE, print = TRUE, ...){
                          method = object$method, sp.criterion = object$gcv.ubre,
                          rank = object$rank, np = length(object$coefficients)))
   class(ret) <- "summary.scm"
-  return(ret)
+  return(invisible(ret))
 }
