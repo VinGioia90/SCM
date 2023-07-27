@@ -406,13 +406,15 @@ mvn_scm <- function(d = 2, nb = 1, param = NULL){ # manage internally the blocks
       NC <- family$getNC()
       NC  <-  NC + 1
       NC <- family$putNC(NC)
-
+      old <- Sys.time()
       ret <- internal()$gamlss.gH_scm(X, jj, eta, y, w, z, t, Gm,
                                       l1, l1_l, l2, l2_v, l2_l, l2_v_l,
                                       idx_b, idx_aux, param = param,
                                       l3, l3_l, idxl3, idxl3_no0, idxl3_jkq,
                                       d1eta, d1eta_l,  a, a_l, d1H, #V, V_l,
                                       d1b = d1b, deriv = deriv - 1, fh = fh, D = D)
+      new <- Sys.time() - old
+      print(new)
     } else ret <- list()
     ret$l <- l
     #count <- 1
