@@ -247,18 +247,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// ll_logm
-double ll_logm(arma::mat& eta, arma::mat& y);
-RcppExport SEXP _SCM_ll_logm(SEXP etaSEXP, SEXP ySEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::mat& >::type eta(etaSEXP);
-    Rcpp::traits::input_parameter< arma::mat& >::type y(ySEXP);
-    rcpp_result_gen = Rcpp::wrap(ll_logm(eta, y));
-    return rcpp_result_gen;
-END_RCPP
-}
 // ll_mcd
 double ll_mcd(const arma::mat& eta, const arma::mat& y);
 RcppExport SEXP _SCM_ll_mcd(SEXP etaSEXP, SEXP ySEXP) {
@@ -268,6 +256,18 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const arma::mat& >::type eta(etaSEXP);
     Rcpp::traits::input_parameter< const arma::mat& >::type y(ySEXP);
     rcpp_result_gen = Rcpp::wrap(ll_mcd(eta, y));
+    return rcpp_result_gen;
+END_RCPP
+}
+// ll_logm
+double ll_logm(arma::mat& eta, arma::mat& y);
+RcppExport SEXP _SCM_ll_logm(SEXP etaSEXP, SEXP ySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::mat& >::type eta(etaSEXP);
+    Rcpp::traits::input_parameter< arma::mat& >::type y(ySEXP);
+    rcpp_result_gen = Rcpp::wrap(ll_logm(eta, y));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -419,8 +419,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_SCM_idx_zwGt", (DL_FUNC) &_SCM_idx_zwGt, 5},
     {"_SCM_jacobian_logm", (DL_FUNC) &_SCM_jacobian_logm, 6},
     {"_SCM_jacobian_mcd", (DL_FUNC) &_SCM_jacobian_mcd, 8},
-    {"_SCM_ll_logm", (DL_FUNC) &_SCM_ll_logm, 2},
     {"_SCM_ll_mcd", (DL_FUNC) &_SCM_ll_mcd, 2},
+    {"_SCM_ll_logm", (DL_FUNC) &_SCM_ll_logm, 2},
     {"_SCM_logM_Sigma", (DL_FUNC) &_SCM_logM_Sigma, 2},
     {"_SCM_logm_decomposition", (DL_FUNC) &_SCM_logm_decomposition, 1},
     {"_SCM_lt_inversion", (DL_FUNC) &_SCM_lt_inversion, 1},
