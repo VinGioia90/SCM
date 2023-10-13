@@ -1,6 +1,6 @@
 #' Processing the model formula provided by the users
 #'
-#' @description This function take the list of formulas provided by the user, then they are  processed to be passed to the gam function and to be estimated by gam_scm model
+#' @description This function takes the list of formulas provided by the user, then they are  processed to be passed to the gam function and to be estimated by gam_scm model
 #'
 #' @param foo_user formula provided by the user
 #' @param d dimension of the outcome
@@ -36,9 +36,15 @@ get_foo <- function ( foo_user, d) {
   }
 
 
-  if ( length(unique(unlist(foo_bar_lhs))) <  length(unlist(foo_bar_lhs)) ) stop ("It is not possible to specify two formulas for the same element in common formula statement specification")
+  if ( length(unique(unlist(foo_bar_lhs))) <  length(unlist(foo_bar_lhs)) ){
+    stop ("It is not possible to specify two formulas for the same element in common formula statement specification")
+  }
+
   nsp_foonames <- lapply((1 : foo_len)[-el_bar], function(x) lhs.vars(foo_user[[x]]))
-  if ( length(unique(unlist(nsp_foonames))) <  length(unlist(nsp_foonames)) ) stop ("It is not possible to specify two formulas for the same element in term specific formula statement specification")
+
+  if ( length(unique(unlist(nsp_foonames))) <  length(unlist(nsp_foonames)) ){
+    stop ("It is not possible to specify two formulas for the same element in term specific formula statement specification")
+  }
 
   foob_len <- length(foo_bar)
   if(foob_len > 0){
@@ -89,19 +95,19 @@ get_foo <- function ( foo_user, d) {
   nrc[[2]] <- list()
   nrc[[3]] <- list()
   for ( j in (d + 1) : foo_len ) {
-    if ( nchar(word(as.character(foo_user2[[j]]), 1, sep = "\\~")[2]) == (3 + 2 * d_len) ) {
+    if ( nchar(word(as.character(foo_user2[[j]]), 1, sep = "\\~")[2]) == (3 + 2 * d_len +   1) ) {
       lfoou2 <- length(format(foo_user2[[j]]))
       if(lfoou2 == 2){
         foo_user2[[j]] <- paste0(format(foo_user2[[j]])[1],format(foo_user2[[j]])[lfoou2])
       }
       nrc[[1]][j - d, 1] <- as.integer(substring(format(foo_user2[[j]]), first = 4, last = 4 + d_len - 1))
       if ( nrc[[1]][j - d, 1] == 0 | nrc[[1]][j - d, 1] > d ) stop("Wrong specification of the formula: the elements 0 and the lements greater than d  could not be specified")
-      nrc[[1]][j - d, 2] <- as.integer(substring(format(foo_user2[[j]]), first = 4 + d_len, last = 4 + 2 * d_len - 1))
+      nrc[[1]][j - d, 2] <- as.integer(substring(format(foo_user2[[j]]), first = 4 + d_len + 1, last = 4 + 2 * d_len))
       if ( nrc[[1]][j - d, 2] == 0 | nrc[[1]][j - d, 2] > d ) stop("Wrong specification of the formula: the elements 0 and the lements greater than d  could not be specified")
       if ( nrc[[1]][j - d, 1] >  nrc[[1]][j - d, 2] ) {
         nrc[[1]][j - d,] <- nrc[[1]][j - d, c(2:1)]
       }
-      nrc[[2]][[j - d]] <- substring(format(foo_user2[[j]]), first = 4 + 2 * d_len)
+      nrc[[2]][[j - d]] <- substring(format(foo_user2[[j]]), first = 5 + 2 * d_len + 1)
       nrc[[3]][[j - d]] <- format(foo_user2[[j]])
     } else {
       stop("Wrong formula initialization, if the dimension of the outcome is < 10 specify two digits after Th_,
