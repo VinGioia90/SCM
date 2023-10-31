@@ -84,11 +84,9 @@ get_foo <- function ( foo_user , d) {
     }
   }
 
-
   if ( length(unique(unlist(foo_bar_lhs))) <  length(unlist(foo_bar_lhs)) ){
     stop ("It is not possible to specify two formulas for the same element in common formula statement specification")
   }
-
 
   nsp_foonames <- lapply((1 : foo_len)[-el_bar], function(x) lhs.vars(foo_user[[x]]))
 
@@ -97,8 +95,14 @@ get_foo <- function ( foo_user , d) {
   }
 
   if(d_len > 1){
-    for(j in (d + 1) : (d + d * (d + 1)/2)  ){
-      if(! grepl("\\.", foo_user[[j]][[2]])) stop("You must specify the separator between the indices of the matrix elements to be modelled")
+    if(length(foo_bar)>0){
+     for(j in (d + 1) : (d + d * (d + 1)/2)  ){
+       if(! grepl("\\.", foo_bar[[j]])) stop("You must specify the separator between the indices of the matrix elements to be modelled")
+     }
+    } else {
+      for(j in (d + 1) : (d + d * (d + 1)/2)  ){
+        if(! grepl("\\.", foo_user[[j]])[[2]]) stop("You must specify the separator between the indices of the matrix elements to be modelled")
+      }
     }
   }
 

@@ -4,10 +4,10 @@ labTh <- function(d, k){
   d_len <- nchar(d)
   if(d_len == 1){
     for ( i in 1 : d ) {
-      Thmat[i, i] <- paste0("Th_", i, i)
+      Thmat[i, i] <- paste0("Th_", i,".", i)
       if ( i > 1 ) {
         for(j in 1:(i-1)){
-          Thmat[j,i] <- paste0("Th_", j, i)
+          Thmat[j,i] <- paste0("Th_", j,".", i)
         }
       }
     }
@@ -15,26 +15,26 @@ labTh <- function(d, k){
     for ( i in 1 : d ) {
       i_len <- nchar(i)
       if(i_len < d_len){
-        Thmat[i, i] <- paste0("Th_", rep("0",d_len-i_len), i, rep("0",d_len-i_len),i)
+        Thmat[i, i] <- paste0("Th_", i, ".",i)
         if ( i > 1 ) {
           for(j in 1:(i-1)){
             j_len <- nchar(j)
             if(j_len < d_len){
-              Thmat[j,i] <- paste0("Th_", rep("0",d_len-j_len), j, rep("0",d_len-i_len),i)
+              Thmat[j,i] <- paste0("Th_", j, ".", i)
             } else {
-              Thmat[j,i] <- paste0("Th_",j, rep("0",d_len-j_len),i)
+              Thmat[j,i] <- paste0("Th_",j, ".",i)
             }
           }
         }
       } else {
-        Thmat[i, i] <- paste0("Th_", i, i)
+        Thmat[i, i] <- paste0("Th_", i, ".", i)
         if ( i > 1 ) {
           for(j in 1:(i-1)){
             j_len <- nchar(j)
             if(j_len < d_len){
-              Thmat[j,i] <- paste0("Th_", rep("0",d_len-j_len), j,i)
+              Thmat[j,i] <- paste0("Th_", j,".", i)
             } else {
-              Thmat[j,i] <- paste0("Th_",j,i)
+              Thmat[j,i] <- paste0("Th_",j,".", i)
             }
           }
         }
