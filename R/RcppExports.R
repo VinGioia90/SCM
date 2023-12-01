@@ -45,12 +45,12 @@ jacobian_mcd <- function(eta, res, d, S_r, S_c, rc_idx_s, rc_idx_t, cor_flag) {
     .Call(`_SCM_jacobian_mcd`, eta, res, d, S_r, S_c, rc_idx_s, rc_idx_t, cor_flag)
 }
 
-ll_logm <- function(eta, y) {
-    .Call(`_SCM_ll_logm`, eta, y)
-}
-
 ll_mcd <- function(eta, y) {
     .Call(`_SCM_ll_mcd`, eta, y)
+}
+
+ll_logm <- function(eta, y) {
+    .Call(`_SCM_ll_logm`, eta, y)
 }
 
 logM_Sigma <- function(x, d) {

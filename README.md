@@ -5,7 +5,7 @@ The models are fitted using the `gam_scm()` wrapper,  which uses the model fitti
 <!--See the vignettes for an introduction to the main functionality of the  `SCM` package.-->
 To install the package use 
 ``` r
-devtools::install_github("VinGioia90/SCM@master")
+devtools::install_github("VinGioia90/SCM")
 ```
 
 
