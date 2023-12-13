@@ -97,25 +97,25 @@ get_foo <- function ( foo_user , d) {
   if(d_len > 1){
     if(length(foo_bar)>0){
      #for(j in (d + 1) : (d + d * (d + 1)/2)  ){
-     for(j in (d + 1) : length(foo_bar)){
-       if(! grepl("\\.", foo_bar[[j]])) stop("You must specify the separator between the indices of the matrix elements to be modelled")
-     }
+      for(j in (d + 1) : length(foo_bar)){
+        if(! grepl("\\.", foo_bar[[j]])) stop("You must specify the separator between the indices of the matrix elements to be modelled")
+      }
     } else {
       if(length(foo_user)>d){
       #for(j in (d + 1) : (d + d * (d + 1)/2)  ){
         for(j in (d + 1) : length(foo_user)){
           if(! grepl("\\.", foo_user[[j]])[[2]]) stop("You must specify the separator between the indices of the matrix elements to be modelled")
         }
-     for(j in (d + 1) : (d + d * (d + 1)/2)  ){
-       if(! grepl("\\.", foo_bar[[j]])) stop("You must specify the separator between the indices of the matrix elements to be modelled")
-     }
-    } else {
-      for(j in (d + 1) : (d + d * (d + 1)/2)  ){
-        if(! grepl("\\.", foo_user[[j]])[[2]]) stop("You must specify the separator between the indices of the matrix elements to be modelled")
+        for(j in (d + 1) : (d + d * (d + 1)/2)  ){
+          if(! grepl("\\.", foo_bar[[j]])) stop("You must specify the separator between the indices of the matrix elements to be modelled")
+        }
+      } else {
+        for(j in (d + 1) : (d + d * (d + 1)/2)  ){
+          if(! grepl("\\.", foo_user[[j]])[[2]]) stop("You must specify the separator between the indices of the matrix elements to be modelled")
+        }
       }
     }
   }
-
 
   foob_len <- length(foo_bar)
   if(foob_len > 0){
