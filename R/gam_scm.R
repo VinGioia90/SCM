@@ -49,8 +49,8 @@ gam_scm <- function(formula, family = mvn_scm(d = 2, nb = 1, param = NULL), opti
     obj$foo_print <- foo$foo_print
     obj$foo_summary <- foo$foo_summary
   } else {
-    obj$foo_print <- G$foo_print
-    obj$foo_summary <- G$foo_summary
+    obj$foo_print <- aGam$G$foo_print
+    obj$foo_summary <- aGam$G$foo_summary
   }
   
   class(obj) <- c("scm", class(obj))
