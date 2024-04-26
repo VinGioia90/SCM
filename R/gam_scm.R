@@ -12,31 +12,44 @@
 #' @importFrom mgcv gam
 #' @export
 gam_scm <- function(formula, family = mvn_scm(d = 2, nb = 1, param = NULL), optimizer = NULL, data = list(), aGam = list()){
-  d <- family$getd()
-  q <- d + d * (d + 1)/2 #number of lpi
-
-  param <- family$getparam()
-  if (is.null(optimizer) | param == "logm")    opt <- "efs" else opt <- optimizer
-
-  # Check on the model formula provided by the users: check if there are variables in the dataset called  Th_<something>
-  idxTh <- which(grepl( "Th_", colnames(data), fixed = TRUE))
-  if ( !(identical(idxTh, integer(0))) ) {
-    Th_v <- rep(0, length(idxTh))
-    for(j in 1 : length(idxTh)) Th_v[j] <- gregexpr("Th_", colnames(data[idxTh[j]]))[[1]][1]
-    if(1 %in% Th_v) stop("Some variables in the data frame are specified as Th_<something>: Please change the label of such variables")
+  
+  if( is.null(aGam$G) ){
+    d <- family$getd()
+    q <- d + d * (d + 1)/2 #number of lpi
+    
+    param <- family$getparam()
+    if (is.null(optimizer) || param == "logm") opt <- "efs" else opt <- optimizer
+    
+    # Check on the model formula provided by the users: check if there are variables in the dataset called  Th_<something>
+    idxTh <- which(grepl( "Th_", colnames(data), fixed = TRUE))
+    if ( !(identical(idxTh, integer(0))) ) {
+      Th_v <- rep(0, length(idxTh))
+      for(j in 1 : length(idxTh)) Th_v[j] <- gregexpr("Th_", colnames(data[idxTh[j]]))[[1]][1]
+      if(1 %in% Th_v) stop("Some variables in the data frame are specified as Th_<something>: Please change the label of such variables")
+    }
+    
+    # Processing the model formula to the formula  used by the family mvn_scm
+    foo <- get_foo(formula, d = d)
+    
+    call_list <- list("formula" = foo$foo_eval, "family" = family,
+                      "data" = data, "optimizer" = opt)
+  } else {
+    
+    param <- aGam$G$family$getparam()
+    if (is.null(optimizer) || param == "logm") opt <- "efs" else opt <- optimizer
+    call_list <- list(optimizer = opt)
+    
   }
-
-  # Processing the model formula to the formula  used by the family mvn_scm
-  foo <- get_foo(formula, d = d)
-
+  
   # Fit the model
-  obj <- do.call("gam", c(list("formula" = foo$foo_eval, "family" = family,
-                               "data" = data, "optimizer" = opt), aGam))
-
-  # foo_print and foo_summary are the formulas by the  summary function
-  obj$foo_print <- foo$foo_print
-  obj$foo_summary <- foo$foo_summary
-
+  obj <- do.call("gam", c(call_list, aGam))
+  
+  if( !is.null(aGam$fit) && aGam$fit == TRUE ){
+    # foo_print and foo_summary are the formulas by the summary function
+    obj$foo_print <- foo$foo_print
+    obj$foo_summary <- foo$foo_summary
+  }
+  
   class(obj) <- c("scm", class(obj))
   return(obj)
 }
