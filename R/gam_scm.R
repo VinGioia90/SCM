@@ -44,7 +44,7 @@ gam_scm <- function(formula, family = mvn_scm(d = 2, nb = 1, param = NULL), opti
   # Fit the model
   obj <- do.call("gam", c(call_list, aGam))
   
-  if( !is.null(aGam$fit) && aGam$fit == TRUE ){
+  if( is.null(aGam$G) ){
     # foo_print and foo_summary are the formulas by the summary function
     obj$foo_print <- foo$foo_print
     obj$foo_summary <- foo$foo_summary
