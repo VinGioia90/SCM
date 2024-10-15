@@ -179,11 +179,17 @@ get_foo <- function (foo_user , d) {
     for ( j in (d + 1) : foo_len ) {
       lfoou2 <- length(format(foo_user2[[j]]))
       ## Stupid think but take into account the problem of having a formula exceeding the right side: to impreve!!!!
-      if(lfoou2 == 2){
-        foo_user2[[j]] <- paste0(format(foo_user2[[j]])[1],format(foo_user2[[j]])[lfoou2])
+      if(lfoou2 > 1){
+        app_foo <- format(foo_user2[[j]])[1]
+        for(k in 2:lfoou2){
+        app_foo <-   paste0(app_foo,format(foo_user2[[j]])[k])
+        }
+        foo_user2[[j]] <- app_foo #paste0(format(foo_user2[[j]])[1],format(foo_user2[[j]])[lfoou2])
+        getlhsTilde <- word(as.character(foo_user2[[j]]), 1, sep = "\\~")#[2]
+      } else {
+        getlhsTilde <- word(as.character(foo_user2[[j]]), 1, sep = "\\~")[2]
       }
 
-      getlhsTilde <- word(as.character(foo_user2[[j]]), 1, sep = "\\~")[2]
       nrc[[1]][j - d, 1] <-   as.numeric(substring(format(foo_user2[[j]]), first = 4, last=  gregexpr("\\.",  getlhsTilde)[[1]][1] - 1))
       if ( nrc[[1]][j - d, 1] == 0 | nrc[[1]][j - d, 1] > d ) stop("Wrong specification of the formula: the elements 0 and the elements greater than d  could not be specified")
       nrc[[1]][j - d, 2] <-   as.numeric(substring(format(foo_user2[[j]]), first = gregexpr("\\.",  getlhsTilde)[[1]][1]+1, last=  nchar( getlhsTilde)))
