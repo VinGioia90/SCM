@@ -8,9 +8,8 @@
 #' @export
 #'
 #' @importFrom stringr word
-#' @importFrom BMisc rhs lhs.vars
-#' @examples
-
+#' @importFrom stats as.formula terms formula make.link 
+#' 
 get_foo <- function (foo_user , d) {
 
   d_len <- nchar(d) # number of characters to distinguish if d <10 from d>=10
@@ -78,7 +77,7 @@ get_foo <- function (foo_user , d) {
       idx_bar <- c(0, idx_bar, (nchar( word(as.character(foo_user[[j]]), 1, sep = "\\~")[2])) + 1)
       for(i in 1: (length(idx_bar) - 1)){
         foo_bar_lhs[[count]] <- substring(as.character(foo_user[[j]])[2], first = idx_bar[i] + 1, last = idx_bar[i + 1] -1)
-        foo_bar[[count]] <- paste(foo_bar_lhs[[count]], "~", as.character(rhs(foo_user[[j]]))[2])
+        foo_bar[[count]] <- paste(foo_bar_lhs[[count]], "~", as.character(.rhs(foo_user[[j]]))[2])
         count <- count + 1
       }
     }
@@ -88,7 +87,7 @@ get_foo <- function (foo_user , d) {
     stop ("It is not possible to specify two formulas for the same element in common formula statement specification")
   }
 
-  nsp_foonames <- lapply((1 : foo_len)[-el_bar], function(x) lhs.vars(foo_user[[x]]))
+  nsp_foonames <- lapply((1 : foo_len)[-el_bar], function(x) .lhs.vars(foo_user[[x]]))
 
   if ( length(unique(unlist(nsp_foonames))) <  length(unlist(nsp_foonames)) ){
     stop ("It is not possible to specify two formulas for the same element in term specific formula statement specification")
@@ -133,8 +132,8 @@ get_foo <- function (foo_user , d) {
   if(foob_len > 0){
     for(j in (1 : foo_len)[-el_bar]){
       for(k in 1 : foob_len) {
-        if ( lhs.vars(foo_user[[j]]) ==  lhs.vars(formula(foo_bar[[k]])) ) {
-          foo_bar[[k]] <- paste(foo_bar[[k]], as.character(rhs(foo_user[[j]]))[2], sep = "+")
+        if ( .lhs.vars(foo_user[[j]]) ==  .lhs.vars(formula(foo_bar[[k]])) ) {
+          foo_bar[[k]] <- paste(foo_bar[[k]], as.character(.rhs(foo_user[[j]]))[2], sep = "+")
           el_bar2[j] <- j
         }
       }
@@ -149,7 +148,7 @@ get_foo <- function (foo_user , d) {
 
     count <- foob_len + 1
     for(j in (1 : foo_len)[-c(el_bar, el_bar2)]){
-      if ( !(as.character(lhs.vars(foo_user[[j]])) %in%   name_lhs) ) foo_bar[[count]] <- foo_user[[j]]
+      if ( !(as.character(.lhs.vars(foo_user[[j]])) %in%   name_lhs) ) foo_bar[[count]] <- foo_user[[j]]
       count <- count + 1
     }
   }
@@ -243,8 +242,8 @@ get_foo <- function (foo_user , d) {
     foo_print <- c(mean_foo,cov_foop)
     foo_summary <- c(mean_foo, cov_foos)
     for(j in (d+1):length(foo_summary)){
-      if(class(foo_summary[[j]]) == "formula" ){
-        if(rhs(foo_summary[[j]]) == "~1")   foo_summary[[j]]<-numeric()
+      if(inherits(foo_summary[[j]], "formula")){
+        if(.rhs(foo_summary[[j]]) == "~1")   foo_summary[[j]]<-numeric()
       }
       if(is.numeric(foo_summary[[j]])) foo_summary[[j]]<-numeric()
     }
@@ -264,4 +263,35 @@ get_foo <- function (foo_user , d) {
 
   return (list(foo_eval = foo_eval, foo_print = foo_print, foo_summary = foo_summary))
 
+}
+
+
+.rhs <- function (formula) 
+{
+  .toformula(NULL, .rhs.vars(formula))
+}
+
+.toformula <- function (yname, xnames) 
+{
+  if (length(xnames) == 0) {
+    return(as.formula(paste0(yname, " ~ 1")))
+  }
+  out <- paste0(yname, "~")
+  xpart <- paste0(xnames, collapse = "+")
+  out <- paste0(out, xpart)
+  out <- as.formula(out)
+  out
+}
+
+.rhs.vars <- function (formula) 
+{
+  labels(terms(formula))
+}
+
+.lhs.vars <- function (formula) 
+{
+  if (length(formula) == 2) {
+    return(NULL)
+  }
+  all.vars(formula)[1]
 }

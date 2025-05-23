@@ -2,6 +2,7 @@
 % Please edit documentation in R/zzz.R
 \docType{package}
 \name{SCM}
+\alias{SCM-package}
 \alias{SCM}
 \title{SCM: A package for multivariate gaussian additive models with smoothing covariance modelling}
 \description{
@@ -19,3 +20,19 @@ precision
 plot_EPCD
 }
 
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://vingioia90.github.io/SCM/}
+}
+
+}
+\author{
+\strong{Maintainer}: Vincenzo Gioia \email{gioia.vincenzo@spes.uniud.it}
+
+Authors:
+\itemize{
+  \item Matteo Fasiolo \email{matteo.fasiolo@gmail.com}
+}
+
+}

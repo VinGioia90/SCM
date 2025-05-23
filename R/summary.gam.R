@@ -12,8 +12,9 @@
 #'
 #' @importFrom stringr word
 #' @importFrom mgcv summary.gam
+#' @importFrom stats printCoefmat
 #' @name summary.scm
-#' @examples
+#'
 summary.scm <- function(object, intercept = FALSE, print = TRUE, ...){
 
   print.summary.gam <-function (x, parcoef, smooth, digits = max(3, getOption("digits") - 3), signif.stars = getOption("show.signif.stars"), ...) {

@@ -15,7 +15,7 @@ plotECPD(ecov, trans = NULL, lab = NULL, di = FALSE, ...)
 
 \item{di}{logical. If FALSE (default) the diagonal elements are not showed}
 
-\item{...}{optional arguments to pass to hcl.colors of the image.plot function}
+\item{...}{optional arguments to pass to hcl.colors of the fields::image.plot function}
 }
 \value{
 The empirical covariance, precision or decomposition matrix.

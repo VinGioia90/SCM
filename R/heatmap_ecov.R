@@ -5,12 +5,11 @@
 #' @param trans an optional function that allows to obtain a transformation of the empirical covariance matrix
 #' @param lab an optional vector that allows to specify the label of the variables
 #' @param di logical. If FALSE (default) the diagonal elements are not showed
-#' @param ... optional arguments to pass to hcl.colors of the image.plot function
+#' @param ... optional arguments to pass to hcl.colors of the fields::image.plot function
 #'
 #' @return The empirical covariance, precision or decomposition matrix.
 #' @export
 #'
-#' @importFrom fields image.plot
 #' @importFrom grDevices hcl.colors
 #' @importFrom graphics axis points title
 #'
@@ -25,6 +24,14 @@ plotECPD <- function(ecov,
                      lab = NULL,
                      di = FALSE,
                      ...){
+  
+  # Needed for image.plot, see below
+  pack <- requireNamespace("fields", quietly=TRUE)
+  if( !pack ){
+    message("Please install the fields package to use this function.")
+    return(NULL)
+  }
+  
   d <- ncol(ecov)
   if ( is.null(lab) ) lab <- 1 : d
 

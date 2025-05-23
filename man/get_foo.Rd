@@ -15,5 +15,5 @@ get_foo(foo_user, d)
 Three list of formulas:one need to be passed to the gam function and the other two are useful for the summary function
 }
 \description{
-This function take the list of formulas provided by the user, then they are  processed to be passed to the gam function and to be estimated by gam_scm model
+This function takes the list of formulas provided by the user, then they are  processed to be passed to the gam function and to be estimated by gam_scm model
 }

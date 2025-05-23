@@ -9,6 +9,9 @@
 #' @export
 #' @importFrom Rcpp evalCpp
 #' @importFrom mvnfast rmvn
+#' @importFrom mgcv gam Xbd diagXVXd
+#' @importFrom Matrix Matrix 
+#' 
 mvn_scm <- function(d = 2, nb = 1, param = NULL){ # manage internally the blocks division !!!
   # This version works with mgcv-version 42
   if ( d < 2 ) stop("mvn_scm requires to or more dimensional data")
@@ -410,7 +413,7 @@ mvn_scm <- function(d = 2, nb = 1, param = NULL){ # manage internally the blocks
                                       l1, l1_l, l2, l2_v, l2_l, l2_v_l,
                                       idx_b, idx_aux, param = param,
                                       l3, l3_l, idxl3, idxl3_no0, idxl3_jkq,
-                                      d1eta, d1eta_l,  a, a_l, d1H, #V, V_l,
+                                      a, a_l, d1H, #V, V_l,
                                       d1b = d1b, deriv = deriv - 1, fh = fh, D = D)
       
     } else ret <- list()

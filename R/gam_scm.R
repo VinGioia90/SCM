@@ -9,7 +9,6 @@
 #' @param aGam list of further arguments to be passed to [mgcv::gam]
 #' @return An object of class "scm"
 #' @name gam_scm
-#' @importFrom mgcv gam
 #' @export
 gam_scm <- function(formula, family = mvn_scm(d = 2, nb = 1, param = NULL), optimizer = NULL, data = list(), aGam = list()){
   

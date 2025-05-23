@@ -12,8 +12,6 @@
 #' precision
 #' plot_EPCD
 #'
-#' @docType package
 #' @name SCM
 #' @useDynLib SCM, .registration=TRUE
-NULL
-#> NULL
+"_PACKAGE"

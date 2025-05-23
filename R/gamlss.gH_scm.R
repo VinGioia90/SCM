@@ -1,7 +1,7 @@
 gamlss.gH_scm <- function (X, jj, eta, y, w, z, t, Gm, # l3 = 0,
                            l1, l1_l, l2, l2_v, l2_l, l2_v_l, idx_b, idx_aux, param = 1, #by default param=1 for the mcd parameterisation
                            l3, l3_l, idx_l3, idx_neq0, idx_jkq,
-                           d1eta, d1eta_l, a, a_l, d1H, # V, V_l,
+                           a, a_l, d1H, # V, V_l,
                            l4 = 0, i4 = 0, d1b = 0, d2b = 0, deriv = 0, fh = NULL, D = NULL){
   K <- length(jj) # no_eta
   sparse <- discrete <- FALSE

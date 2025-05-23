@@ -4,12 +4,14 @@
 \alias{summary.scm}
 \title{Processing the summary to be printed}
 \usage{
-\method{summary}{scm}(object, intercept = FALSE, ...)
+\method{summary}{scm}(object, intercept = FALSE, print = TRUE, ...)
 }
 \arguments{
 \item{object}{an object of class scm}
 
 \item{intercept}{set to TRUE if you want print the intercept}
+
+\item{print}{print the summary}
 
 \item{...}{further arguments to be passed to gam}
 }
