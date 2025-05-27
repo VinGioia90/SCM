@@ -45,7 +45,7 @@ plotECPD <- function(ecov,
 
 
   res[lower.tri(res, diag = !di)] <- NA
-  do.call("image.plot", c(list(res, "axes" = FALSE), arg))
+  do.call("image.plot", c(list(res, "axes" = FALSE), arg), envir = environment(fields::image.plot))
   axis(2, at = seq(0, 1, length = d), labels = lab)
   axis(3, at = seq(0, 1, length = d), labels = lab)
 
